@@ -1,0 +1,66 @@
+.titulo {
+  font-family: "Inter", sans-serif; /* Fuente utilizada: sans-serif*/
+  margin: 0;                        /* Elimina el margen por defecto */
+  background: #f7f8fc;            /* Color de fondo */
+  color: #1f2937;                 /* Color del texto */
+  display: flex;                    /* Utiliza Flexbox para centrar el contenido */
+  justify-content: center;          /* Centrado horizontal */
+  align-items: center;              /* Centrado vertical */
+  height: 10vh;                     /* Altura del título */
+}
+
+.subtitulo {
+  font-family: "Inter", sans-serif; 
+  margin: 0;
+  background: #f7f8fc;
+  color: #1f2937;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 2vh;
+}
+
+.subtitulo-mvo {
+  font-family: "Inter", sans-serif; 
+  margin: 10px 100px 20px;
+  background: #f7f8fc;
+  color: #1f2937;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 2vh;
+  text-align: center;
+}
+
+.contenedor-botones { /* Contenedor para los botones del menú */
+    display: flex; /* Utiliza Flexbox */
+    justify-content: center;    /* Los centra */
+    gap: 15px;             /* El espacio entre botones sin usar <br> */
+    margin-top: 20px; /* Margen superior */
+    font-size: 25px; /* Tamaño de fuente */
+}
+
+.btn-menu { /* Clase para el diseño de cada uno de los botones */
+    height: 50px;      /* Altura del botón */
+    padding: 10px 20px; /* Espaciado interno */
+    cursor: pointer;    /* Cambia el cursor al pasar sobre el botón */
+    border-radius: 5px; /* Bordes redondeados */
+    transition-duration: 0.4s;
+    border:#04AA6D solid 3px;
+}
+
+.btn-menu:hover {
+  color: white; /* Color del texto al pasar el cursor */
+  background-color: #04AA6D; /* Verde al pasar el cursor */
+}
+
+.lista-valores {
+  font-family: "Inter", sans-serif; 
+  margin: 50px 100px 20px;
+  color: #1f2937;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: auto;
+  font-size: 20px;
+}
