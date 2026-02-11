@@ -1,66 +1,125 @@
+/* Configuración General */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Inter", sans-serif;
+    background: #f7f8fc;
+    color: #1f2937;
+}
+
+/* Encabezados */
 .titulo {
-  font-family: "Inter", sans-serif; /* Fuente utilizada: sans-serif*/
-  margin: 0;                        /* Elimina el margen por defecto */
-  background: #f7f8fc;            /* Color de fondo */
-  color: #1f2937;                 /* Color del texto */
-  display: flex;                    /* Utiliza Flexbox para centrar el contenido */
-  justify-content: center;          /* Centrado horizontal */
-  align-items: center;              /* Centrado vertical */
-  height: 10vh;                     /* Altura del título */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 10vh;
+    text-align: center;
 }
 
 .subtitulo {
-  font-family: "Inter", sans-serif; 
-  margin: 0;
-  background: #f7f8fc;
-  color: #1f2937;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 2vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 20px;
+    text-align: center;
 }
 
-.subtitulo-mvo {
-  font-family: "Inter", sans-serif; 
-  margin: 10px 100px 20px;
-  background: #f7f8fc;
-  color: #1f2937;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 2vh;
-  text-align: center;
+/* Navegación */
+.contenedor-botones {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 20px 0;
 }
 
-.contenedor-botones { /* Contenedor para los botones del menú */
-    display: flex; /* Utiliza Flexbox */
-    justify-content: center;    /* Los centra */
-    gap: 15px;             /* El espacio entre botones sin usar <br> */
-    margin-top: 20px; /* Margen superior */
-    font-size: 25px; /* Tamaño de fuente */
-}
-
-.btn-menu { /* Clase para el diseño de cada uno de los botones */
-    height: 50px;      /* Altura del botón */
-    padding: 10px 20px; /* Espaciado interno */
-    cursor: pointer;    /* Cambia el cursor al pasar sobre el botón */
-    border-radius: 5px; /* Bordes redondeados */
-    transition-duration: 0.4s;
-    border:#04AA6D solid 3px;
+.btn-menu {
+    height: 50px;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: 0.4s;
+    border: #04AA6D solid 3px;
+    background: transparent;
+    font-weight: bold;
 }
 
 .btn-menu:hover {
-  color: white; /* Color del texto al pasar el cursor */
-  background-color: #04AA6D; /* Verde al pasar el cursor */
+    color: white;
+    background-color: #04AA6D;
 }
 
-.lista-valores {
-  font-family: "Inter", sans-serif; 
-  margin: 50px 100px 20px;
-  color: #1f2937;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: auto;
-  font-size: 20px;
+/* CONTENEDOR DE LA GALERÍA */
+.contenedor-galeria {
+    display: grid;
+    /* 2 columnas que ocupan el mismo espacio */
+    grid-template-columns: 1fr 1fr; 
+    /* Espacio de separación entre las tarjetas */
+    gap: 40px; 
+    padding: 40px;
+    max-width: 1000px;
+    margin: 0 auto; /* Centra toda la cuadrícula */
+}
+
+/* Cada tarjeta individual */
+.tarjeta-habitacion {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.imagen-habitacion {
+    width: 100%; /* La imagen se adapta al ancho de la columna */
+    max-width: 400px; 
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Botón Reservar */
+.btn-reservar {
+    padding: 15px 40px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: 0.4s;
+    border: #04AA6D solid 3px;
+    background-color: white;
+    font-weight: bold;
+    font-size: 16px;
+    text-transform: uppercase;
+}
+
+.btn-reservar:hover {
+    color: white;
+    background-color: #04AA6D;
+}
+
+/*Si se ve en celular, que se ponga en 1 sola columna */
+@media (max-width: 768px) {
+    .contenedor-galeria {
+        grid-template-columns: 1fr;
+        padding: 20px;
+    }
+}
+
+.seccion-inicio {
+
+    display: flex;           /* Activamos Flexbox */
+    flex-direction: column;  /* Apilamos elementos (Imagen arriba, Texto abajo) */
+    align-items: center;     /* Centramos horizontalmente */
+    justify-content: center; /* Centramos verticalmente si fuera necesario */
+    gap: 20px;              /* Espacio exacto entre la imagen y el texto */
+    margin: 40px 0;
+
+}
+
+.imagen-inicio {
+
+    width: 500px;
+    height: auto;
+    width: auto;            
+    height: auto;
+    border-radius: 5px;     
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+
 }
