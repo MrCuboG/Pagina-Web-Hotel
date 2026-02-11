@@ -48,7 +48,7 @@ input:focus {
     background-color: #f9fbff;
 }
 
-button[type="submit"] {
+button {
     width: 100%;
     background-color: #3498db;
     color: white;
@@ -62,7 +62,7 @@ button[type="submit"] {
     margin-top: 10px;
 }   
 
-button[type="submit"]:hover {
+button:hover {
     background-color: #2980b9;
 }
 
@@ -90,4 +90,8 @@ padding: 0 18px;
 background-color: rgb(231, 230, 230);
 display: none;
 overflow: hidden;
+}
+#cancelar {
+    background-color: #e74c3c;
+    margin-top: 15px;
 }
