@@ -1,125 +1,40 @@
-/* Configuración General */
-body {
-    margin: 0;
-    padding: 0;
-    font-family: "Inter", sans-serif;
-    background: #f7f8fc;
-    color: #1f2937;
+:root {
+
+    --color-primario: #f6d6e6;    /* Un rosa suave y elegante */
+    --color-secundario: #d03381;  /* Un rosa más intenso para acentos y botones */
+    --color-obscuro: #3a0020;    /* Un tono oscuro para texto y elementos destacados */
+    --color-acento: #ff69b4;     /* Un rosa vibrante para destacar elementos importantes */
+    --color-fondo: #ffffff;     /* Un fondo claro y acogedor */
 }
 
-/* Encabezados */
-.titulo {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 10vh;
-    text-align: center;
+/* Aplicación a componentes de Bootstrap */
+.bg-primary {
+    background-color: var(--color-primario) !important;
 }
 
-.subtitulo {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 10px 20px;
-    text-align: center;
+.bg-secondary {
+    background-color: var(--color-obscuro) !important;
 }
 
-/* Navegación */
-.contenedor-botones {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin: 20px 0;
+.btn-primary {
+    background-color: var(--color-primario) !important;
+    border-color: var(--color-primario) !important;
 }
 
-.btn-menu {
-    height: 50px;
-    padding: 10px 20px;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: 0.4s;
-    border: #04AA6D solid 3px;
-    background: transparent;
-    font-weight: bold;
+.text-primary {
+    color: var(--color-primario) !important;
 }
 
-.btn-menu:hover {
-    color: white;
-    background-color: #04AA6D;
+.btn-success {
+    background-color: var(--color-secundario) !important;
+    border-color: var(--color-secundario) !important;
+    color: white !important;
 }
 
-/* CONTENEDOR DE LA GALERÍA */
-.contenedor-galeria {
-    display: grid;
-    /* 2 columnas que ocupan el mismo espacio */
-    grid-template-columns: 1fr 1fr; 
-    /* Espacio de separación entre las tarjetas */
-    gap: 40px; 
-    padding: 40px;
-    max-width: 1000px;
-    margin: 0 auto; /* Centra toda la cuadrícula */
+.bg-light {
+    background-color: var(--color-fondo) !important;
 }
 
-/* Cada tarjeta individual */
-.tarjeta-habitacion {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-}
-
-.imagen-habitacion {
-    width: 100%; /* La imagen se adapta al ancho de la columna */
-    max-width: 400px; 
-    height: auto;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
-/* Botón Reservar */
-.btn-reservar {
-    padding: 15px 40px;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: 0.4s;
-    border: #04AA6D solid 3px;
-    background-color: white;
-    font-weight: bold;
-    font-size: 16px;
-    text-transform: uppercase;
-}
-
-.btn-reservar:hover {
-    color: white;
-    background-color: #04AA6D;
-}
-
-/*Si se ve en celular, que se ponga en 1 sola columna */
-@media (max-width: 768px) {
-    .contenedor-galeria {
-        grid-template-columns: 1fr;
-        padding: 20px;
-    }
-}
-
-.seccion-inicio {
-
-    display: flex;           /* Activamos Flexbox */
-    flex-direction: column;  /* Apilamos elementos (Imagen arriba, Texto abajo) */
-    align-items: center;     /* Centramos horizontalmente */
-    justify-content: center; /* Centramos verticalmente si fuera necesario */
-    gap: 20px;              /* Espacio exacto entre la imagen y el texto */
-    margin: 40px 0;
-
-}
-
-.imagen-inicio {
-
-    width: 500px;
-    height: auto;
-    width: auto;            
-    height: auto;
-    border-radius: 5px;     
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-
+.text-primary {
+    color: var(--color-obscuro) !important;
 }
