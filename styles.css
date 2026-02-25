@@ -5,6 +5,7 @@
     --color-obscuro: #3a0020;    /* Un tono oscuro para texto y elementos destacados */
     --color-acento: #ff69b4;     /* Un rosa vibrante para destacar elementos importantes */
     --color-fondo: #ffffff;     /* Un fondo claro y acogedor */
+    --gradiente: linear-gradient(135deg, #4a154a, #e91e63, #ff5722); /* Un gradiente que combina tonos de rosa y naranja para un efecto visual atractivo */
 }
 
 /* Aplicación a componentes de Bootstrap */
@@ -13,7 +14,9 @@
 }
 
 .bg-secondary {
-    background-color: var(--color-obscuro) !important;
+    background: var(--gradiente) !important;
+        /*background-color: var(--color-obscuro) !important;*/
+
 }
 
 .btn-primary {
@@ -37,4 +40,14 @@
 
 .text-primary {
     color: var(--color-obscuro) !important;
+}
+
+
+.card-body {
+    padding: 20% 10% 20% 10%;
+    
+}
+#info {
+    background: var(--gradiente) !important;
+    padding: 10% 5%;
 }
