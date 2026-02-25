@@ -1,0 +1,52 @@
+.footer {
+    background-color: #333; /* color rosa mexicano en un tono claro */
+    color: white;
+    padding: 40px 20px 20px;
+    font-family: sans-serif;    
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between; /* Separa las columnas equitativamente */
+    flex-wrap: wrap; /* Para que en celular se pongan una debajo de otra */
+    gap: 30px;
+}
+
+.footer-section {
+    flex: 1; /* Hace que todas las columnas midan lo mismo */
+    min-width: 200px;
+}
+
+.footer-section h3, .footer-section h4 {
+    margin-bottom: 15px;
+    color: #f0f0f0;
+}
+
+.footer-section a {
+    color: #bbb;
+    text-decoration: none;
+    display: block;
+    margin-bottom: 8px;
+    transition: 0.3s;
+}
+
+.footer-section a:hover {
+    color: white; /* Brilla cuando pasas el mouse */
+}
+
+.social-links {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.footer-bottom {
+    text-align: center;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #444;
+    font-size: 0.9em;
+    color: #888;
+}

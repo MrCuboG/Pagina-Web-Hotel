@@ -1,0 +1,76 @@
+.topnav {
+    /* Un degradado rico que va de un morado profundo, pasando por el rosa mexicano hasta un naranja intenso */
+    background: linear-gradient(135deg, #4a154a, #e91e63, #ff5722);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 40px;
+    /* Un poco más de espacio lateral se ve más elegante */
+    box-shadow: 0 4px 20px rgba(233, 30, 99, 0.3);
+    /* Una sombra suave con el color principal */
+    border-bottom: 2px solid rgba(255, 87, 34, 0.5);
+    /* Un borde sutil naranja abajo para definir */
+}
+
+.logo {
+    color: #ffffff;
+    /* Texto blanco para que resalte */
+    font-size: 24px;
+    /* Ligeramente más grande */
+    font-weight: 800;
+    /* Más grueso */
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    /* Espaciado entre letras da elegancia */
+}
+
+.nav-links {
+    display: flex;
+    gap: 10px;
+}
+
+.topnav a {
+    color: #ffffff;
+    /* Enlaces blancos */
+    text-align: center;
+    padding: 12px 18px;
+    text-decoration: none;
+    font-size: 17px;
+    font-weight: 500;
+    border-radius: 8px;
+    /* Bordes redondeados pero no completamente redondos */
+    transition: all 0.3s ease;
+}
+
+/* Hover para enlaces normales */
+.topnav a:not(.logo):not(.btn-habitaciones):hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    /* Efecto de luz al pasar el mouse */
+    transform: translateY(-2px);
+    /* Pequeño efecto de elevación */
+}
+
+/* Estilo especial para el botón de Habitaciones - EL ACENTO */
+.btn-habitaciones {
+    /* Usamos un color de contraste fuerte del folklore: Un azul Talavera profundo o un dorado */
+    background: linear-gradient(to right, #ff9800, #f57c00);
+    /* Naranja dorado intenso */
+    color: white !important;
+    font-weight: bold;
+    border-radius: 30px;
+    /* Botón tipo pastilla, muy moderno */
+    box-shadow: 0 4px 10px rgba(255, 152, 0, 0.4);
+}
+
+.btn-habitaciones:hover {
+    background: linear-gradient(to right, #f57c00, #e65100) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(255, 152, 0, 0.6);
+}
+
+/* Mantener el logo estable */
+.topnav a.logo:hover {
+    background-color: transparent !important;
+    color: #ffffff !important;
+    cursor: pointer;
+}
