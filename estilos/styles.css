@@ -1,35 +1,44 @@
-/* Configuración General */
-body {
+/* 1. RESET Y CONFIGURACIÓN MAESTRA */
+* {
+    box-sizing: border-box; /* Evita que el padding ensanche los elementos */
+}
+
+html, body {
     margin: 0;
     padding: 0;
+    width: 100%;
+    overflow-x: hidden; /* Elimina el scroll horizontal y la franja rosa */
     font-family: "Inter", sans-serif;
     background: linear-gradient(2000deg, #c45ac4, #e6457b, #ef8e70);
     color: #1f2937;
 }
 
-/* Encabezados */
+/* 2. ENCABEZADOS REFRESH */
 .titulo {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 10vh;
+    min-height: 10vh; /* min-height es mejor que height fijo */
     text-align: center;
+    padding: 10px;
 }
 
 .subtitulo {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 10px 20px;
+    padding: 20px;
     text-align: center;
 }
 
-/* Navegación */
+/* 3. NAVEGACIÓN FLEXIBLE */
 .contenedor-botones {
     display: flex;
     justify-content: center;
+    flex-wrap: wrap; /* Permite que los botones bajen si no caben */
     gap: 15px;
     margin: 20px 0;
+    padding: 0 15px;
 }
 
 .btn-menu {
@@ -41,6 +50,7 @@ body {
     border: #8400AF solid 3px;
     background: transparent;
     font-weight: bold;
+    white-space: nowrap; /* Evita que el texto interno se rompa */
 }
 
 .btn-menu:hover {
@@ -48,19 +58,33 @@ body {
     background-color: #8400AF;
 }
 
-/* CONTENEDOR DE LA GALERÍA */
+/* 4. SECCIÓN DE INICIO (BANNER) */
+.seccion-inicio {
+    width: 100%;
+    height: 600px; /* Reducido un poco para mejor visibilidad inicial */
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+.ampl-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center; 
+    display: block;
+}
+
+/* 5. GALERÍA */
 .contenedor-galeria {
     display: grid;
-    /* 2 columnas que ocupan el mismo espacio */
     grid-template-columns: 1fr 1fr; 
-    /* Espacio de separación entre las tarjetas */
     gap: 40px; 
     padding: 40px;
     max-width: 1000px;
-    margin: 0 auto; /* Centra toda la cuadrícula */
+    margin: 0 auto;
 }
 
-/* Cada tarjeta individual */
 .tarjeta-habitacion {
     display: flex;
     flex-direction: column;
@@ -69,14 +93,13 @@ body {
 }
 
 .imagen-habitacion {
-    width: 100%; /* La imagen se adapta al ancho de la columna */
+    width: 100%;
     max-width: 400px; 
     height: auto;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
-/* Botón Reservar */
 .btn-reservar {
     padding: 15px 40px;
     cursor: pointer;
@@ -94,28 +117,39 @@ body {
     background-color: #8400AF;
 }
 
-/*Si se ve en celular, que se ponga en 1 sola columna */
+/* 6. RESPONSIVE DESIGN (CELULARES) */
 @media (max-width: 768px) {
+    .titulo {
+        font-size: 1.2rem; /* Reduce un poco el tamaño de letra */
+    }
+
+    .contenedor-botones {
+        gap: 10px;
+    }
+
+    .btn-menu {
+        flex: 1 1 calc(45% - 10px); /* Los botones se ponen de 2 en 2 */
+        font-size: 13px;
+        padding: 5px 10px;
+        height: 45px;
+    }
+
+    .seccion-inicio {
+        height: 350px; /* Altura más cómoda para celular */
+    }
+
     .contenedor-galeria {
         grid-template-columns: 1fr;
         padding: 20px;
+        gap: 30px;
+    }
+
+    .imagen-habitacion {
+        max-width: 100%; /* La imagen usa todo el ancho del cel */
+    }
+
+    .btn-reservar {
+        width: 100%; /* Botón grande para el pulgar */
+        max-width: 280px;
     }
 }
-
-.seccion-inicio {
-    width: 100%;       /* Ocupa todo el ancho */
-    height: 800px;     /* Dale la altura que más te guste para el hotel */
-    overflow: hidden;  /* Corta lo que sobre de la imagen */
-    margin: 0;         /* Pegado a la barra de navegación */
-    padding: 0;
-}
-
-.ampl-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: top; 
-    display: block;
-}
-
-

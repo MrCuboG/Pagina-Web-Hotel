@@ -1,64 +1,57 @@
+/* GENERALES  */
+
 .topnav {
-    /* Un degradado rico que va de un morado profundo, pasando por el rosa mexicano hasta un naranja intenso */
     background: linear-gradient(135deg, #4a154a, #e91e63, #ff5722);
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 12px 40px;
-    /* Un poco más de espacio lateral se ve más elegante */
     box-shadow: 0 4px 20px rgba(233, 30, 99, 0.3);
-    /* Una sombra suave con el color principal */
     border-bottom: 2px solid rgba(255, 87, 34, 0.5);
-    /* Un borde sutil naranja abajo para definir */
+    width: 100%;
+    position: sticky; /* Opcional: para que se quede arriba al bajar */
+    top: 0;
+    z-index: 1000;
 }
 
 .logo {
     color: #ffffff;
-    /* Texto blanco para que resalte */
     font-size: 24px;
-    /* Ligeramente más grande */
     font-weight: 800;
-    /* Más grueso */
     text-transform: uppercase;
     letter-spacing: 1px;
-    /* Espaciado entre letras da elegancia */
+    text-decoration: none;
 }
 
 .nav-links {
     display: flex;
     gap: 10px;
+    align-items: center;
 }
 
 .topnav a {
     color: #ffffff;
-    /* Enlaces blancos */
     text-align: center;
     padding: 12px 18px;
     text-decoration: none;
     font-size: 17px;
     font-weight: 500;
     border-radius: 8px;
-    /* Bordes redondeados pero no completamente redondos */
     transition: all 0.3s ease;
 }
 
 /* Hover para enlaces normales */
 .topnav a:not(.logo):not(.btn-habitaciones):hover {
     background-color: rgba(255, 255, 255, 0.15);
-    /* Efecto de luz al pasar el mouse */
     transform: translateY(-2px);
-    /* Pequeño efecto de elevación */
 }
 
-/* Estilo especial para el botón de Habitaciones - EL ACENTO */
+/* Botón Habitaciones */
 .btn-habitaciones {
-    /* Usamos un color de contraste fuerte del folklore: Un azul Talavera profundo o un dorado */
     background: linear-gradient(to right, #ff9800, #f57c00);
-    /* Naranja dorado intenso */
     color: white !important;
     font-weight: bold;
     border-radius: 30px;
-    /* Botón tipo pastilla, muy moderno */
     box-shadow: 0 4px 10px rgba(255, 152, 0, 0.4);
 }
 
@@ -68,9 +61,32 @@
     box-shadow: 0 6px 15px rgba(255, 152, 0, 0.6);
 }
 
-/* Mantener el logo estable */
+/* Logo estable */
 .topnav a.logo:hover {
     background-color: transparent !important;
     color: #ffffff !important;
-    cursor: pointer;
+}
+
+/* CELULARES */
+
+@media (max-width: 768px) {
+    .topnav {
+        padding: 10px 20px; /* Reducimos padding lateral */
+    }
+
+    /* OCULTAR Misión, Visión y Valores */
+    /* Buscamos todos los links que NO tengan la clase del logo ni la del botón */
+    .nav-links a:not(.btn-habitaciones) {
+        display: none;
+    }
+
+    .logo {
+        font-size: 18px; /* Logo más discreto */
+    }
+
+    .btn-habitaciones {
+        font-size: 14px;
+        padding: 10px 15px;
+        border-radius: 20px; /* Ajustamos para que no se vea gigante */
+    }
 }
