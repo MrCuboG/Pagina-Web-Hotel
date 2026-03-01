@@ -1,6 +1,5 @@
-/* 1. RESET Y CONFIGURACIÓN MAESTRA */
 * {
-    box-sizing: border-box; /* Evita que el padding ensanche los elementos */
+    box-sizing: border-box; /* padding no amontona los elementos */
 }
 
 html, body {
@@ -13,12 +12,12 @@ html, body {
     color: #1f2937;
 }
 
-/* 2. ENCABEZADOS REFRESH */
+/* ENCABEZADOS */
 .titulo {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 10vh; /* min-height es mejor que height fijo */
+    min-height: 10vh; 
     text-align: center;
     padding: 10px;
 }
@@ -31,7 +30,7 @@ html, body {
     text-align: center;
 }
 
-/* 3. NAVEGACIÓN FLEXIBLE */
+/* NAVEGACIÓN FLEXIBLE */
 .contenedor-botones {
     display: flex;
     justify-content: center;
@@ -58,10 +57,10 @@ html, body {
     background-color: #8400AF;
 }
 
-/* 4. SECCIÓN DE INICIO (BANNER) */
+/* BANNER */
 .seccion-inicio {
     width: 100%;
-    height: 600px; /* Reducido un poco para mejor visibilidad inicial */
+    height: 500px; /* Reducido un poco para mejor visibilidad */
     overflow: hidden;
     margin: 0;
     padding: 0;
@@ -71,11 +70,11 @@ html, body {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center; 
+    object-position: top; 
     display: block;
 }
 
-/* 5. GALERÍA */
+/* GALERÍA */
 .contenedor-galeria {
     display: grid;
     grid-template-columns: 1fr 1fr; 
@@ -117,7 +116,7 @@ html, body {
     background-color: #8400AF;
 }
 
-/* 6. RESPONSIVE DESIGN (CELULARES) */
+/* CELULARES */
 @media (max-width: 768px) {
     .titulo {
         font-size: 1.2rem; /* Reduce un poco el tamaño de letra */

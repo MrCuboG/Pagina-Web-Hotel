@@ -61,7 +61,7 @@
     box-shadow: 0 6px 15px rgba(255, 152, 0, 0.6);
 }
 
-/* Logo estable */
+/* Logo estable (creo) */
 .topnav a.logo:hover {
     background-color: transparent !important;
     color: #ffffff !important;
@@ -75,18 +75,18 @@
     }
 
     /* OCULTAR Misión, Visión y Valores */
-    /* Buscamos todos los links que NO tengan la clase del logo ni la del botón */
+    /* Buscamos todos los links que NOOOO tengan la clase del logo ni la del botón */
     .nav-links a:not(.btn-habitaciones) {
         display: none;
     }
 
     .logo {
-        font-size: 18px; /* Logo más discreto */
+        font-size: 18px; /* Logo más pequeño */
     }
 
     .btn-habitaciones {
         font-size: 14px;
         padding: 10px 15px;
-        border-radius: 20px; /* Ajustamos para que no se vea gigante */
+        border-radius: 20px; /* Ajustamos */
     }
 }
