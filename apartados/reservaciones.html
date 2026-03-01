@@ -4,19 +4,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../estilos/stylereservaciones.css" type="text/css">
     <title>Reservaciones</title>
 </head>
-<link rel="stylesheet" href="../estilos/stylereservaciones.css" type="text/css">
+
 <body>
     <form action="/procesar" method="post">
         <h2>Datos de habitación</h2>
 
-        <label for="dateS">Habitacion:</label>
-        <input type="date" id="dates" name="fechaInicio" required>
+        <label for="nombreHabitaciones">Habitacion:</label>
+        <input type="text" id="nombreHabitaciones" name="nombreHabitaciones" required>
+        <br><br>
+
+        <label for="fechaInicio">Fecha de entrada:</label>
+        <input type="date" id="fechaInicio" name="fechaInicio" required>
         <br><br>
 
         <label for="fechaFinal">Fecha de salida:</label>
-        <input type="date" id="dates" name="fechaFinal" required>
+        <input type="date" id="fechaFinal" name="fechaFinal" required>
         <br><br>
 
         <label for="habitacion">Huespedes</label>

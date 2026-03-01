@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QUINTA DALAM - INICIO</title>
+    <link rel="stylesheet" href="../estilos/styles.css">
+    <link rel="stylesheet" href="../estilos/navbar.css">
+    <link rel="stylesheet" href="../estilos/footerbar.css">
+    <link rel="stylesheet" href="../estilos/contenedores.css">
+    <link rel="stylesheet" href="../estilos/styleservicios.css">
+</head>
+<body>
+
+    <nav class="topnav">
+        <a href="../index.html" class="logo">QUINTA DALAM</a>
+        <div class="nav-links">
+            <a href="servicios.html">Agregar Servicios</a>
+            <a href="objetivos/mision.html">Mision</a>
+            <a href="objetivos/vision.html">Vision</a>
+            <a href="objetivos/valores.html">Valores</a>
+            <a href="apartados/habitaciones.html" class="btn-habitaciones">Habitaciones</a>
+        </div>
+    </nav>
+
+    <div class="subtitulo">
+        <h3>Bienvenido al modo administrador para el agregado de servicios</h3>
+    </div>
+
+    <div class="contenedor-form">
+        <div class="formulario">
+            <form action="/procesar" method="post">
+                <h2>Agregar nuevo servicio</h2>
+
+                <label for="nombreServicio">Nombre del servicio:</label>
+                <input type="text" id="nombreServicio" name="nombreServicio" required>
+                <br><br>
+
+                <label for="descripcionServicio">Descripción:</label>
+                <textarea id="descripcionServicio" name="descripcionServicio" required></textarea>
+                <br><br>
+
+                <label for="costoServicio">Costo:</label>
+                <input type="number" id="costoServicio" name="costoServicio" required>
+                <br><br>
+
+                <button type="submit">Enviar</button>
+                <button type="reset">Limpiar</button>
+                <button type="button" id="cancelar" onclick="window.location.href='../index.html'">Volver al inicio</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="contenedor-tabla">
+        <table class="tabla-servicios">
+            <h2>Gestión de Servicios Registrados</h2>
+            <thead>
+                <tr>
+                    <th>Servicio</th>
+                    <th>Descripción</th>
+                    <th>Costo</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Limpieza Premium</td>
+                    <td>Servicio de limpieza profunda diaria.</td>
+                    <td>$500</td>
+                    <td>
+                        <button class="btn-editar">Editar</button>
+                        <button class="btn-eliminar">Eliminar</button>
+                    </td>
+                </tr>
+                </tbody>
+        </table>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>Quinta Dalam</h3>
+                <p>Derechos registrados &copy; 2026</p>
+            </div>
+
+            <div class="footer-section">
+                <h4>Contacto</h4>
+                <a href="mailto:quintadalam@example.com">quintadalam@example.com</a>
+                <p>Morelia, Michoacán</p>
+            </div>
+
+            <div class="footer-section">
+                <h4>Síguenos</h4>
+                <div class="social-links">
+                    <a href="https://www.instagram.com/quintadalam">Instagram</a>
+                    <a href="https://www.facebook.com/share/1HkG2VXzss/">Facebook</a>
+                    <a href="#">WhatsApp</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+</body>
+</html>
