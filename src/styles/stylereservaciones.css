@@ -1,13 +1,15 @@
-body {
+
+.reservaciones-page {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f4f7f6;
+    background-color: transparent; 
     display: flex;
     justify-content: center;
     padding: 40px;
     color: #333;
+    width: 100%;
 }
 
-form {
+.reservaciones-page form {
     background: #ffffff;
     padding: 30px;
     border-radius: 12px;
@@ -16,7 +18,7 @@ form {
     width: 100%;
 }
 
-h2 {
+.reservaciones-page h2 {
     color: #2c3e50;
     border-bottom: 2px solid #eee;
     padding-bottom: 10px;
@@ -24,31 +26,31 @@ h2 {
     font-size: 1.4rem;
 }
 
-label {
+.reservaciones-page label {
     display: block;
     margin-bottom: 8px;
     font-weight: 600;
     font-size: 0.9rem;
 }
 
-input {
+.reservaciones-page input {
     width: 100%;
     padding: 12px;
     margin-bottom: 20px;
     border: 1px solid #ddd;
     border-radius: 6px;
-    box-sizing: border-box; /* Asegura que el padding no desborde el ancho */
+    box-sizing: border-box; 
     font-size: 1rem;
     transition: border-color 0.3s ease;
 }
 
-input:focus {
+.reservaciones-page input:focus {
     outline: none;
     border-color: #3498db;
     background-color: #f9fbff;
 }
 
-button {
+.reservaciones-page button {
     width: 100%;
     background-color: #b02a6d;
     color: white;
@@ -62,36 +64,38 @@ button {
     margin-top: 10px;
 }   
 
-button:hover {
+.reservaciones-page button:hover {
+    background-color: #8a1f54;
+}
+
+.reservaciones-page .accordion {
     background-color: #b02a6d;
+    color: white;
+    cursor: pointer;
+    padding: 14px;
+    width: 100%;
+    text-align: center;
+    border: none;
+    border-radius: 6px;
+    outline: none;
+    transition: 0.4s;
 }
 
-/*TODA ESTA SECCION SE UTILIZA EN reservaciones.html*/
-
-.accordion {
-background-color: #b02a6d;
-color: white;
-cursor: pointer;
-padding: 14px;
-width: 50%;
-text-align: center;
-border: none;
-border-radius: 6px;
-outline: none;
-transition: 0.4s;
+.reservaciones-page .active, 
+.reservaciones-page .accordion:hover {
+    background-color: #8a1f54;
 }
 
-.active, .accordion:hover {
-background-color: #b02a6d;
+.reservaciones-page .panel {
+    padding: 0 18px;
+    background-color: rgb(231, 230, 230);
+    display: none;
+    overflow: hidden;
+    margin-bottom: 20px;
+    border-radius: 6px;
 }
 
-.panel {
-padding: 0 18px;
-background-color: rgb(231, 230, 230);
-display: none;
-overflow: hidden;
-}
-#cancelar {
+.reservaciones-page #cancelar {
     background-color: #ff1900;
     margin-top: 15px;
 }
