@@ -58,3 +58,17 @@
     transform: translateY(-2px);
     box-shadow: 0 6px 15px rgba(255, 152, 0, 0.6);
 }
+
+@media (max-width: 768px) {
+    .topnav a:not(.logo):not(.btn-habitaciones) {
+        display: none;
+    }
+    .topnav {
+        padding: 12px 20px;
+    }
+    
+    .btn-habitaciones {
+        padding: 8px 14px;
+        font-size: 15px;
+    }
+}

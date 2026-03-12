@@ -1,10 +1,12 @@
 import { Link } from 'react-router-dom';
+
 import '../styles/styles.css';
 import '../styles/styleservicio.css';
 
 export default function Servicios() {
   return (
-    <>
+  
+    <div className="servicios-page">
       <div className="subtitulo">
         <h3>Bienvenido al modo administrador para el agregado de servicios</h3>
       </div>
@@ -59,6 +61,6 @@ export default function Servicios() {
           </tbody>
         </table>
       </div>
-    </>
+    </div>
   );
 }

@@ -8,7 +8,7 @@ html, body {
     width: 100%;
     overflow-x: hidden; /* Elimina el scroll horizontal y la franja rosa */
     font-family: "Inter", sans-serif;
-    background: linear-gradient(2000deg, #c45ac4, #e6457b, #ef8e70);
+    background: #ffff;
     color: #1f2937;
 }
 
@@ -46,7 +46,8 @@ html, body {
     cursor: pointer;
     border-radius: 5px;
     transition: 0.4s;
-    border: #8400AF solid 3px;
+    border: #f57c00 solid 3px;
+    box-shadow: 0 4px 10px rgba(255, 152, 0, 0.4);
     background: transparent;
     font-weight: bold;
     white-space: nowrap; /* Evita que el texto interno se rompa */
@@ -54,7 +55,7 @@ html, body {
 
 .btn-menu:hover {
     color: white;
-    background-color: #8400AF;
+    background: linear-gradient(to right, #ff9800, #f57c00)
 }
 
 /* BANNER */
@@ -104,7 +105,8 @@ html, body {
     cursor: pointer;
     border-radius: 5px;
     transition: 0.4s;
-    border: #8400AF solid 3px;
+    border: #f57c00 solid 3px;
+    box-shadow: 0 4px 10px rgba(255, 152, 0, 0.4);
     background-color: white;
     font-weight: bold;
     font-size: 16px;
@@ -113,7 +115,7 @@ html, body {
 
 .btn-reservar:hover {
     color: white;
-    background-color: #8400AF;
+    background: linear-gradient(to right, #ff9800, #f57c00)
 }
 
 /* CELULARES */
