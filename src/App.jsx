@@ -9,11 +9,13 @@ import './styles/styles.css';
 
 // Importamos la imagen desde assets 
 import imgInicio from './assets/inicio.png';
-
+import imgLago from './assets/lago.jpeg';
+import imgExterior from './assets/hotelExterno.jpeg';
 
 import Habitaciones from './pages/habitaciones';
 import Servicios from './pages/servicios';
 import Reservaciones from './pages/reservaciones';
+
 
 function App() {
   return (
@@ -49,6 +51,57 @@ function App() {
               <Link to="/habitaciones">
                 <button className="btn-menu">Ver Habitaciones</button>
               </Link>
+            </div>
+
+            <div className="contenedor-actividades">
+              <div className="ficha" >
+                <h2>Actividades</h2>
+                <div className='contenedor-actividades'>
+                  <div className='actividades-card'>
+                    <img src={imgLago} alt="Tour" className="card-bg" />
+                    <div className="card-overlay">
+                      <h4>VISTA AL LAGO</h4>
+                    </div>
+                  </div>
+                  <div className='actividades-card'>
+                    <img src={imgExterior} alt="Tour" className="card-bg" />
+                    <div className="card-overlay">
+                      <h4>LOCALIZACION</h4>
+                    </div>
+                  </div>
+                  <div className='actividades-card'>
+                    <img src={imgLago} alt="Tour" className="card-bg" />
+                    <div className="card-overlay">
+                      <h4>VISTA AL LAGO</h4>
+                    </div>
+                  </div>
+                  <div className='actividades-card'>
+                    <img src={imgExterior} alt="Tour" className="card-bg" />
+                    <div className="card-overlay">
+                      <h4>LOCALIZACION</h4>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+
+            <div className="contenedor-nosotros">
+              <div className="ficha" id="informacion">
+                <h3>Sobre nosotros</h3>
+                <p>
+                  Lorem ipsum dolor sit amet consectetur
+                  adipisicing elit. Nam omnis laboriosam 
+                  rerum accusantium corporis, voluptates 
+                  sint est laborum, hic, dolorem dolore? 
+                  Quae provident debitis minima incidunt 
+                  ullam laborum porro voluptatem veritatis 
+                  deserunt pariatur similique, error vel, 
+                  excepturi suscipit. Aspernatur ea placeat 
+                  aliquid voluptatibus in consequuntur odio 
+                  optio obcaecati expedita dolorem!
+                </p>
+              </div>
             </div>
 
             <div className="contenedor-fichas">
