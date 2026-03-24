@@ -2,43 +2,58 @@
 
 :root {
   --font-size: 16px;
-  --background: #f0f4f8;
-  --foreground: #1a202c;
+  --background: #f8f7f9; /* Un blanco con un toque de lavanda muy sutil */
+  --foreground: #1D0B21;
   --card: #ffffff;
-  --card-foreground: #1a202c;
+  --card-foreground: #1D0B21;
   --popover: #ffffff;
-  --popover-foreground: #1a202c;
-  --primary: #2563eb;
+  --popover-foreground: #1D0B21;
+  
+  /* Color Principal */
+  --primary: #1D0B21;
   --primary-foreground: #ffffff;
-  --secondary: #0ea5e9;
+  
+  /* Secundarios y Acentos (Ajustados a tonos amatista y ciruela) */
+  --secondary: #4a3452; 
   --secondary-foreground: #ffffff;
-  --muted: #e0f2fe;
-  --muted-foreground: #475569;
-  --accent: #3b82f6;
+  --muted: #f1edf2;
+  --muted-foreground: #6b5c70;
+  --accent: #7b5c8c;
   --accent-foreground: #ffffff;
-  --destructive: #dc2626;
+  
+  --destructive: #9b2226; /* Rojo más oscuro para armonizar */
   --destructive-foreground: #ffffff;
-  --border: rgba(37, 99, 235, 0.15);
+  
+  --border: rgba(29, 11, 33, 0.1);
   --input: transparent;
-  --input-background: #f0f4f8;
-  --switch-background: #3b82f6;
+  --input-background: #f8f7f9;
+
+  --switch-background: #4a3452;
+  
   --font-weight-medium: 500;
   --font-weight-normal: 400;
-  --ring: #2563eb;
-  --chart-1: #2563eb;
-  --chart-2: #0ea5e9;
-  --chart-3: #3b82f6;
-  --chart-4: #60a5fa;
-  --chart-5: #1e40af;
+
+  --ring: #1D0B21;
+  
+  /* Gráficos en escala de púrpuras y malvas */
+  --chart-1: #1D0B21;
+  --chart-2: #4a3452;
+  --chart-3: #7b5c8c;
+  --chart-4: #a38db0;
+  --chart-5: #d1c4d9;
+
   --radius: 0.75rem;
+  
+  /* Sidebar */
   --sidebar: #ffffff;
-  --sidebar-foreground: #1a202c;
-  --sidebar-primary: #2563eb;
+  --sidebar-foreground: #1D0B21;
+  --sidebar-primary: #1D0B21;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #e0f2fe;
-  --sidebar-accent-foreground: #1a202c;
-  --sidebar-border: rgba(37, 99, 235, 0.15);
-  --sidebar-ring: #2563eb;
+  --sidebar-accent: #f1edf2;
+  --sidebar-accent-foreground: #1D0B21;
+  --sidebar-border: rgba(29, 11, 33, 0.08);
+
+  --sidebar-ring: #1D0B21;
   font-family: 'Montserrat', sans-serif;
 }
 

@@ -1,5 +1,7 @@
 import { Phone, Mail, MapPin, Clock } from 'lucide-react';
 
+
+
 export function Contact() {
   return (
     <section id="contacto" className="py-20 bg-gradient-to-b from-white via-blue-50/30 to-blue-100/20">
@@ -73,6 +75,7 @@ export function Contact() {
               <div>
                 <label className="block mb-2 text-foreground">Nombre Completo</label>
                 <input
+                  id='MenNombre'
                   type="text"
                   className="w-full px-4 py-3 rounded-lg border border-blue-200 bg-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                   placeholder="Tu nombre"
@@ -82,6 +85,7 @@ export function Contact() {
               <div>
                 <label className="block mb-2 text-foreground">Correo Electrónico</label>
                 <input
+                  id='MenEmail' 
                   type="email"
                   className="w-full px-4 py-3 rounded-lg border border-blue-200 bg-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                   placeholder="tu@email.com"
@@ -91,7 +95,8 @@ export function Contact() {
               <div>
                 <label className="block mb-2 text-foreground">Teléfono</label>
                 <input
-                  type="tel"
+                  id='MenTelefono' 
+                  type="number"
                   className="w-full px-4 py-3 rounded-lg border border-blue-200 bg-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                   placeholder="+52 (443) 123-4567"
                 />
@@ -100,6 +105,7 @@ export function Contact() {
               <div>
                 <label className="block mb-2 text-foreground">Mensaje</label>
                 <textarea
+                  id='MenMensaje'
                   rows={4}
                   className="w-full px-4 py-3 rounded-lg border border-blue-200 bg-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
                   placeholder="¿En qué podemos ayudarte?"
@@ -107,15 +113,67 @@ export function Contact() {
               </div>
 
               <button
-                type="submit"
+                type='button'              
                 className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white py-3 rounded-lg transition-all shadow-md"
+                onClick={(e) => {
+                  e.preventDefault
+                  if (VerificarFormulario()) {
+                    document.getElementById('message')?.classList.remove('hidden');
+                    document.getElementById('messageError')?.classList.add('hidden');
+                    document.getElementById('MenNombre')?.setAttribute('value', ' ');
+                    document.getElementById('MenEmail')?.setAttribute('value', ' ');
+                    document.getElementById('MenTelefono')?.setAttribute('value', ' ');
+                    document.getElementById('MenMensaje')?.setAttribute('value', ' ');
+                  }else{
+                    document.getElementById('messageError')?.classList.remove('hidden');
+                    document.getElementById('message')?.classList.add('hidden');
+                  }
+                }}
               >
                 Enviar Mensaje
               </button>
+              <div id="message" className="text-green-500 font-medium hidden">
+                El mensaje se ha enviado correctamente.
+              </div>
+              <div id="messageError" className="text-red-500 font-medium hidden">
+                Hubo un error al enviar el mensaje. Por favor, inténtalo de nuevo.
+              </div>
             </form>
           </div>
         </div>
       </div>
     </section>
   );
+}
+
+function VerificarFormulario() {
+  const nombre = (document.getElementById('MenNombre') as HTMLInputElement).value.trim();
+  const email = (document.getElementById('MenEmail') as HTMLInputElement).value.trim();
+  const telefono = (document.getElementById('MenTelefono') as HTMLInputElement).value.trim();
+  const mensaje = (document.getElementById('MenMensaje') as HTMLTextAreaElement).value.trim();
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const telefonoRegex = /^\+?\d{10,15}$/;
+
+  if (nombre.length === 0) {
+    alert('El nombre no puede estar vacío.');
+    return false;
+  }
+
+  if (!emailRegex.test(email)) {
+    alert('Por favor, ingresa un correo electrónico válido.');
+    return false;
+  }
+
+  if (!telefonoRegex.test(telefono)) {
+    alert('Por favor, ingresa un número de teléfono válido.');
+    return false;
+  }
+
+  if (mensaje.length === 0) {
+    alert('El mensaje no puede estar vacío.');
+    return false;
+  }
+
+  return true;
 }

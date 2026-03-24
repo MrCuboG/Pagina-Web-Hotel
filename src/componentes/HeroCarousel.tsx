@@ -41,7 +41,7 @@ export function HeroCarousel() {
 
   return (
     <section id="inicio" className="relative h-screen flex items-center justify-center overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-600/30 via-blue-400/20 to-cyan-500/30"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-[#1D0B21]/40 via-[#4a3452]/20 to-[#7b5c8c]/30"></div>
 
       <div className="absolute inset-0 z-0">
         <Slider {...settings} className="h-full">
@@ -58,8 +58,10 @@ export function HeroCarousel() {
       </div>
 
       <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
-        <div className="inline-block mb-4 px-6 py-2 bg-gradient-to-r from-blue-600/20 to-blue-400/20 backdrop-blur-sm rounded-full border border-blue-400/40">
-          <span className="text-blue-100">Bienvenido a Michoacán</span>
+        <div className="inline-block mb-4 px-6 py-2 bg-gradient-to-r from-[#1D0B21]/20 to-[#7b5c8c]/20 backdrop-blur-sm rounded-full border border-[#7b5c8c]/30 shadow-sm">
+          <span className="text-[#f1edf2] font-medium tracking-wide">
+            Bienvenido a Michoacán
+          </span>
         </div>
 
         <h1 className="text-5xl md:text-7xl mb-6 text-white">
@@ -67,14 +69,16 @@ export function HeroCarousel() {
         </h1>
 
         <p className="text-xl md:text-2xl mb-8 text-blue-50 max-w-3xl mx-auto">
-          Experimenta la elegancia y hospitalidad mexicana en el corazón de Michoacán
+          Experimenta la humildad y hospitalidad mexicana en el corazón de Michoacán
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-          <button className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white px-8 py-3 rounded-lg transition-all transform hover:scale-105 shadow-xl">
+          <button className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white px-8 py-3 rounded-lg transition-all transform hover:scale-105 shadow-xl"
+          onClick={() => document.getElementById('habitaciones')?.scrollIntoView({ behavior: 'smooth' })}>
             Reservar Habitación
           </button>
-          <button className="bg-white/95 hover:bg-white text-blue-600 px-8 py-3 rounded-lg transition-all transform hover:scale-105 shadow-xl border border-blue-200">
+          <button className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white px-8 py-3 rounded-lg transition-all transform hover:scale-105 shadow-xl"
+          onClick={() => document.getElementById('galeria')?.scrollIntoView({ behavior: 'smooth' })}>
             Ver Galería
           </button>
         </div>
