@@ -9,7 +9,7 @@ html, body {
     width: 100%;
     min-height: 100vh; 
     font-family: "Inter", sans-serif;
-    background: linear-gradient(200deg, #c45ac4, #e6457b, #ef8e70) no-grad;
+    background: linear-gradient(200deg, #c45ac4, #e6457b, #ef8e70) no-repeat; 
     background-attachment: fixed; 
     background-size: cover;
     color: #1f2937;
