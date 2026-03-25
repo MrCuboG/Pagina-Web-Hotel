@@ -7,7 +7,7 @@ const rooms = [
     description: "Espacio amplio con vistas panorámicas y acabados de lujo",
     price: "$2,500",
     capacity: "2-3 personas",
-    image: "https://scontent.fmlm4-1.fna.fbcdn.net/v/t39.30808-6/571367772_1399777252151879_6934786187178740549_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=7b2446&_nc_ohc=51rxU2L7b_cQ7kNvwFXD-Bo&_nc_oc=AdqjTcrfzSYSKgv7VXNwECLrWknKiihtigQDqCa69dnEe0LwNxswZKI17MT57i5JWrc&_nc_zt=23&_nc_ht=scontent.fmlm4-1.fna&_nc_gid=LvflvEzVkpRASgeqLhmmng&_nc_ss=7a30f&oh=00_Afwu2CqfNgn13h2z8xznkMItqtoKI_k_h12-T4OvVOR7Yg&oe=69C391CB",
+    image: "https://scontent.fmlm4-1.fna.fbcdn.net/v/t39.30808-6/572122226_1399777705485167_2846229451321603989_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=7b2446&_nc_ohc=xBOaNdGEwBMQ7kNvwGbuecp&_nc_oc=AdrpIp20FksJesUbprFgevrxFG53KKEFk0gXzWt9613CJ1jYLOHwJdbLEaWpho7U6II&_nc_zt=23&_nc_ht=scontent.fmlm4-1.fna&_nc_gid=wCBuY0Ex7kr4oOsbx_c2vA&_nc_ss=7a30f&oh=00_AfyMwnrjL8xJgn79q2TItdFOaTzX490GTfYrAhu072aEQg&oe=69C36138",
     amenities: ["Wi-Fi", "TV", "Aire Acondicionado", "Café"]
   },
   {
@@ -15,7 +15,7 @@ const rooms = [
     description: "Perfecta para viajes de negocios con escritorio y zona de trabajo",
     price: "$1,800",
     capacity: "2 personas",
-    image: "https://scontent.fmlm4-1.fna.fbcdn.net/v/t39.30808-6/572122226_1399777705485167_2846229451321603989_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=7b2446&_nc_ohc=xBOaNdGEwBMQ7kNvwGbuecp&_nc_oc=AdrpIp20FksJesUbprFgevrxFG53KKEFk0gXzWt9613CJ1jYLOHwJdbLEaWpho7U6II&_nc_zt=23&_nc_ht=scontent.fmlm4-1.fna&_nc_gid=wCBuY0Ex7kr4oOsbx_c2vA&_nc_ss=7a30f&oh=00_AfyMwnrjL8xJgn79q2TItdFOaTzX490GTfYrAhu072aEQg&oe=69C36138",
+    image: "https://scontent.fmlm4-1.fna.fbcdn.net/v/t39.30808-6/571275208_1399777288818542_3304645827336700935_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=7b2446&_nc_ohc=7NASR8KyxS4Q7kNvwElRFV0&_nc_oc=Ado0uQrnGim6PZWBUfYsUGhUWa-PKJvlvEd9pwlFR5kiHgCS6BWq3jnDeuQ3J7mU0gQ&_nc_zt=23&_nc_ht=scontent.fmlm4-1.fna&_nc_gid=hEXSsxbbXsPcBXRIm3F-nQ&_nc_ss=7a30f&oh=00_Afz--VUdEKBBJm2d2q_zEArdUxMvdx3Mt-Y8YOq67IwoqQ&oe=69C38219",
     amenities: ["Wi-Fi", "TV", "Escritorio", "Café"]
   },
   {
@@ -23,7 +23,7 @@ const rooms = [
     description: "Espacio confortable para toda la familia con camas adicionales",
     price: "$2,200",
     capacity: "4-5 personas",
-    image: "https://scontent.fmlm4-1.fna.fbcdn.net/v/t39.30808-6/571275208_1399777288818542_3304645827336700935_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=7b2446&_nc_ohc=7NASR8KyxS4Q7kNvwElRFV0&_nc_oc=Ado0uQrnGim6PZWBUfYsUGhUWa-PKJvlvEd9pwlFR5kiHgCS6BWq3jnDeuQ3J7mU0gQ&_nc_zt=23&_nc_ht=scontent.fmlm4-1.fna&_nc_gid=hEXSsxbbXsPcBXRIm3F-nQ&_nc_ss=7a30f&oh=00_Afz--VUdEKBBJm2d2q_zEArdUxMvdx3Mt-Y8YOq67IwoqQ&oe=69C38219",
+    image: "https://scontent.fmlm4-1.fna.fbcdn.net/v/t39.30808-6/571367772_1399777252151879_6934786187178740549_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=7b2446&_nc_ohc=51rxU2L7b_cQ7kNvwFXD-Bo&_nc_oc=AdqjTcrfzSYSKgv7VXNwECLrWknKiihtigQDqCa69dnEe0LwNxswZKI17MT57i5JWrc&_nc_zt=23&_nc_ht=scontent.fmlm4-1.fna&_nc_gid=LvflvEzVkpRASgeqLhmmng&_nc_ss=7a30f&oh=00_Afwu2CqfNgn13h2z8xznkMItqtoKI_k_h12-T4OvVOR7Yg&oe=69C391CB",
     amenities: ["Wi-Fi", "TV", "Aire Acondicionado", "Zona de estar"]
   }
 ];

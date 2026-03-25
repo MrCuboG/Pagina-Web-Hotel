@@ -118,11 +118,7 @@ export function Contact() {
                   if (VerificarFormulario()) {
                     document.getElementById('message')?.classList.remove('hidden');
                     document.getElementById('messageError')?.classList.add('hidden');
-                    (document.getElementById('MenNombre') as HTMLInputElement).value = '';
-                    (document.getElementById('MenEmail') as HTMLInputElement).value = '';
-                    (document.getElementById('MenTelefono') as HTMLInputElement).value = '';
-                    (document.getElementById('MenMensaje') as HTMLTextAreaElement).value = '';
-                  } else {
+                  }else{
                     document.getElementById('messageError')?.classList.remove('hidden');
                     document.getElementById('message')?.classList.add('hidden');
                   }

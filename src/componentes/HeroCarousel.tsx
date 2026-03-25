@@ -6,13 +6,14 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
 const heroImages = [
-  {
-    url: "https://images.unsplash.com/photo-1691819989627-3e568cd2119e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1920",
-    alt: "Hotel Quinta Dalam - Vista Principal"
-  },
+  
   {
     url: "https://scontent.fmlm4-1.fna.fbcdn.net/v/t39.30808-6/571275208_1399777288818542_3304645827336700935_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=7b2446&_nc_ohc=7NASR8KyxS4Q7kNvwElRFV0&_nc_oc=Ado0uQrnGim6PZWBUfYsUGhUWa-PKJvlvEd9pwlFR5kiHgCS6BWq3jnDeuQ3J7mU0gQ&_nc_zt=23&_nc_ht=scontent.fmlm4-1.fna&_nc_gid=hEXSsxbbXsPcBXRIm3F-nQ&_nc_ss=7a30f&oh=00_Afz--VUdEKBBJm2d2q_zEArdUxMvdx3Mt-Y8YOq67IwoqQ&oe=69C38219",
     alt: "Hotel Quinta Dalam - Habitaciones"
+  },
+  {
+    url: "https://images.unsplash.com/photo-1691819989627-3e568cd2119e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1920",
+    alt: "Hotel Quinta Dalam - Vista Principal"
   },
   {
     url: "https://scontent.fmlm4-1.fna.fbcdn.net/v/t39.30808-6/571105346_1399777245485213_6470789982953865444_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=7b2446&_nc_ohc=t7QgktaNOkcQ7kNvwFdaNy6&_nc_oc=AdpccUXU7vSQV31vEwkjG41bw7HlTImIz34Ft25OXTpQCeQ6qk1-E2aDDo4afjPGBhM&_nc_zt=23&_nc_ht=scontent.fmlm4-1.fna&_nc_gid=7mQMkpoCzkhIG1875xfinA&_nc_ss=7a30f&oh=00_AfwFAYGIOeYD9Ub_dt9--v60LIaBVDxLe_-8j--8UrJ02g&oe=69C371BF",
