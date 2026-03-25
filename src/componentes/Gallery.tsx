@@ -29,11 +29,11 @@ const galleryImages = [
 
 export function Gallery() {
   return (
-    <section id="galeria" className="py-20 bg-gradient-to-b from-blue-100/30 via-blue-50/20 to-white">
+    <section id="galeria" className="py-20 bg-gradient-to-b from-muted/40 via-muted/10 to-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <div className="inline-block mb-4 px-4 py-2 bg-gradient-to-r from-blue-600/10 to-blue-400/10 rounded-full border border-blue-400/30">
-            <span className="text-primary">Galería</span>
+          <div className="inline-block mb-4 px-4 py-2 bg-gradient-to-r from-primary/10 to-accent/10 rounded-full border border-primary/20">
+            <span className="text-primary font-medium">Galería</span>
           </div>
           <h2 className="text-4xl md:text-5xl mb-4 text-foreground">Conoce Nuestras Instalaciones</h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -45,15 +45,15 @@ export function Gallery() {
           {galleryImages.map((image, index) => (
             <div
               key={index}
-              className="relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all group cursor-pointer aspect-square border border-blue-100"
+              className="relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl hover:shadow-primary/20 transition-all group cursor-pointer aspect-square border border-border"
             >
               <ImageWithFallback
                 src={image.url}
                 alt={image.alt}
                 className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-blue-600/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
-                <p className="text-white text-lg">{image.alt}</p>
+              <div className="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
+                <p className="text-white text-lg font-medium">{image.alt}</p>
               </div>
             </div>
           ))}

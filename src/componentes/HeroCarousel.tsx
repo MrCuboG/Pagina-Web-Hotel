@@ -41,7 +41,7 @@ export function HeroCarousel() {
 
   return (
     <section id="inicio" className="relative h-screen flex items-center justify-center overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-[#1D0B21]/40 via-[#4a3452]/20 to-[#7b5c8c]/30"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/40 via-secondary/20 to-accent/30"></div>
 
       <div className="absolute inset-0 z-0">
         <Slider {...settings} className="h-full">
@@ -58,43 +58,47 @@ export function HeroCarousel() {
       </div>
 
       <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
-        <div className="inline-block mb-4 px-6 py-2 bg-gradient-to-r from-[#1D0B21]/20 to-[#7b5c8c]/20 backdrop-blur-sm rounded-full border border-[#7b5c8c]/30 shadow-sm">
-          <span className="text-[#f1edf2] font-medium tracking-wide">
+        <div className="inline-block mb-4 px-6 py-2 bg-gradient-to-r from-primary/20 to-accent/20 backdrop-blur-sm rounded-full border border-accent/30 shadow-sm">
+          <span className="text-muted font-medium tracking-wide">
             Bienvenido a Michoacán
           </span>
         </div>
 
-        <h1 className="text-5xl md:text-7xl mb-6 text-white">
+        <h1 className="text-5xl md:text-7xl mb-6 text-white font-bold drop-shadow-md">
           Quinta Dalam
         </h1>
 
-        <p className="text-xl md:text-2xl mb-8 text-blue-50 max-w-3xl mx-auto">
+        <p className="text-xl md:text-2xl mb-8 text-muted max-w-3xl mx-auto drop-shadow-sm">
           Experimenta la humildad y hospitalidad mexicana en el corazón de Michoacán
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-          <button className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white px-8 py-3 rounded-lg transition-all transform hover:scale-105 shadow-xl"
-          onClick={() => document.getElementById('habitaciones')?.scrollIntoView({ behavior: 'smooth' })}>
+          <button 
+            className="bg-gradient-to-r from-primary to-secondary hover:from-secondary hover:to-accent text-primary-foreground px-8 py-3 rounded-lg transition-all transform hover:scale-105 shadow-xl shadow-primary/20 font-medium"
+            onClick={() => document.getElementById('habitaciones')?.scrollIntoView({ behavior: 'smooth' })}
+          >
             Reservar Habitación
           </button>
-          <button className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white px-8 py-3 rounded-lg transition-all transform hover:scale-105 shadow-xl"
-          onClick={() => document.getElementById('galeria')?.scrollIntoView({ behavior: 'smooth' })}>
+          <button 
+            className="bg-gradient-to-r from-primary to-secondary hover:from-secondary hover:to-accent text-primary-foreground px-8 py-3 rounded-lg transition-all transform hover:scale-105 shadow-xl shadow-primary/20 font-medium"
+            onClick={() => document.getElementById('galeria')?.scrollIntoView({ behavior: 'smooth' })}
+          >
             Ver Galería
           </button>
         </div>
 
         <div className="flex flex-wrap gap-6 justify-center items-center text-white">
-          <div className="flex items-center gap-2 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-lg text-blue-900">
-            <Calendar className="text-blue-600" size={20} />
-            <span>Disponibilidad en tiempo real</span>
+          <div className="flex items-center gap-2 bg-background/95 backdrop-blur-sm px-4 py-2 rounded-lg text-foreground border border-border shadow-sm">
+            <Calendar className="text-primary" size={20} />
+            <span className="font-medium">Disponibilidad en tiempo real</span>
           </div>
-          <div className="flex items-center gap-2 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-lg text-blue-900">
-            <Users className="text-blue-600" size={20} />
-            <span>Atención personalizada</span>
+          <div className="flex items-center gap-2 bg-background/95 backdrop-blur-sm px-4 py-2 rounded-lg text-foreground border border-border shadow-sm">
+            <Users className="text-primary" size={20} />
+            <span className="font-medium">Atención personalizada</span>
           </div>
-          <div className="flex items-center gap-2 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-lg text-blue-900">
-            <Sparkles className="text-blue-600" size={20} />
-            <span>Experiencia única</span>
+          <div className="flex items-center gap-2 bg-background/95 backdrop-blur-sm px-4 py-2 rounded-lg text-foreground border border-border shadow-sm">
+            <Sparkles className="text-primary" size={20} />
+            <span className="font-medium">Experiencia única</span>
           </div>
         </div>
       </div>

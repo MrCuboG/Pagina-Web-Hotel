@@ -35,11 +35,11 @@ const services = [
 
 export function Services() {
   return (
-    <section id="servicios" className="py-20 bg-gradient-to-b from-white via-blue-50/30 to-white">
+    <section id="servicios" className="py-20 bg-gradient-to-b from-background via-muted/20 to-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <div className="inline-block mb-4 px-4 py-2 bg-gradient-to-r from-blue-600/10 to-blue-400/10 rounded-full border border-blue-400/30">
-            <span className="text-primary">Servicios</span>
+          <div className="inline-block mb-4 px-4 py-2 bg-gradient-to-r from-primary/10 to-accent/10 rounded-full border border-primary/20">
+            <span className="text-primary font-medium">Servicios</span>
           </div>
           <h2 className="text-4xl md:text-5xl mb-4 text-foreground">Todo lo que Necesitas</h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -53,12 +53,12 @@ export function Services() {
             return (
               <div
                 key={index}
-                className="group p-8 bg-gradient-to-br from-blue-50/50 to-white rounded-2xl border border-blue-100 hover:border-blue-300 transition-all hover:shadow-xl"
+                className="group p-8 bg-card rounded-2xl border border-border hover:border-accent/50 transition-all hover:shadow-xl hover:shadow-primary/5"
               >
-                <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-blue-500 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg">
-                  <Icon size={32} className="text-white" />
+                <div className="w-16 h-16 bg-gradient-to-br from-primary to-accent rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg shadow-primary/20">
+                  <Icon size={32} className="text-primary-foreground" />
                 </div>
-                <h3 className="text-xl mb-3 text-foreground">{service.title}</h3>
+                <h3 className="text-xl mb-3 text-foreground font-medium">{service.title}</h3>
                 <p className="text-muted-foreground">{service.description}</p>
               </div>
             );

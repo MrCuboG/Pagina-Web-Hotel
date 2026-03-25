@@ -39,11 +39,11 @@ const amenityIcons: Record<string, any> = {
 
 export function Rooms() {
   return (
-    <section id="habitaciones" className="py-20 bg-gradient-to-b from-background via-blue-50/20 to-blue-100/30">
+    <section id="habitaciones" className="py-20 bg-gradient-to-b from-background via-muted/20 to-muted/40">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <div className="inline-block mb-4 px-4 py-2 bg-gradient-to-r from-blue-600/10 to-blue-400/10 rounded-full border border-blue-400/30">
-            <span className="text-primary">Nuestras Habitaciones</span>
+          <div className="inline-block mb-4 px-4 py-2 bg-gradient-to-r from-primary/10 to-accent/10 rounded-full border border-primary/20">
+            <span className="text-primary font-medium">Nuestras Habitaciones</span>
           </div>
           <h2 className="text-4xl md:text-5xl mb-4 text-foreground">Comodidad y Elegancia</h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -55,7 +55,7 @@ export function Rooms() {
           {rooms.map((room, index) => (
             <div
               key={index}
-              className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all transform hover:-translate-y-2 border border-blue-100"
+              className="bg-card rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-primary/10 transition-all transform hover:-translate-y-2 border border-border"
             >
               <div className="relative h-64 overflow-hidden">
                 <ImageWithFallback
@@ -63,13 +63,13 @@ export function Rooms() {
                   alt={room.name}
                   className="w-full h-full object-cover transition-transform hover:scale-110 duration-300"
                 />
-                <div className="absolute top-4 right-4 bg-gradient-to-r from-blue-600 to-blue-500 text-white px-3 py-1 rounded-full text-sm shadow-lg">
+                <div className="absolute top-4 right-4 bg-gradient-to-r from-primary to-secondary text-primary-foreground px-4 py-1.5 rounded-full text-sm font-medium shadow-md shadow-primary/30">
                   {room.price}/noche
                 </div>
               </div>
 
               <div className="p-6">
-                <h3 className="text-2xl mb-2 text-card-foreground">{room.name}</h3>
+                <h3 className="text-2xl mb-2 text-card-foreground font-medium">{room.name}</h3>
                 <p className="text-muted-foreground mb-4">{room.description}</p>
 
                 <div className="flex items-center gap-2 mb-4 text-sm text-muted-foreground">
@@ -83,7 +83,7 @@ export function Rooms() {
                     return (
                       <div
                         key={idx}
-                        className="flex items-center gap-1 bg-blue-50 px-3 py-1 rounded-full text-sm text-muted-foreground border border-blue-100"
+                        className="flex items-center gap-1 bg-muted px-3 py-1.5 rounded-full text-sm text-muted-foreground border border-border"
                       >
                         <Icon size={14} className="text-primary" />
                         <span>{amenity}</span>
@@ -92,7 +92,7 @@ export function Rooms() {
                   })}
                 </div>
 
-                <button className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white py-3 rounded-lg transition-all shadow-md">
+                <button className="w-full bg-gradient-to-r from-primary to-secondary hover:from-secondary hover:to-accent text-primary-foreground py-3 rounded-lg transition-all shadow-md shadow-primary/20 font-medium">
                   Ver Disponibilidad
                 </button>
               </div>

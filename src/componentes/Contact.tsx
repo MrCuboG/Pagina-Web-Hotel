@@ -1,14 +1,12 @@
 import { Phone, Mail, MapPin, Clock } from 'lucide-react';
 
-
-
 export function Contact() {
   return (
-    <section id="contacto" className="py-20 bg-gradient-to-b from-white via-blue-50/30 to-blue-100/20">
+    <section id="contacto" className="py-20 bg-gradient-to-b from-background via-muted/30 to-muted/80">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <div className="inline-block mb-4 px-4 py-2 bg-gradient-to-r from-blue-600/10 to-blue-400/10 rounded-full border border-blue-400/30">
-            <span className="text-primary">Contacto</span>
+          <div className="inline-block mb-4 px-4 py-2 bg-gradient-to-r from-primary/10 to-accent/10 rounded-full border border-primary/20">
+            <span className="text-primary font-medium">Contacto</span>
           </div>
           <h2 className="text-4xl md:text-5xl mb-4 text-foreground">Estamos Aquí Para Ti</h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -19,7 +17,7 @@ export function Contact() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           <div className="space-y-8">
             <div className="flex items-start gap-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-500 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
+              <div className="w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg shadow-primary/20">
                 <Phone className="text-white" size={24} />
               </div>
               <div>
@@ -30,7 +28,7 @@ export function Contact() {
             </div>
 
             <div className="flex items-start gap-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-500 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
+              <div className="w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg shadow-primary/20">
                 <Mail className="text-white" size={24} />
               </div>
               <div>
@@ -41,21 +39,21 @@ export function Contact() {
             </div>
 
             <div className="flex items-start gap-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-500 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
+              <div className="w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg shadow-primary/20">
                 <MapPin className="text-white" size={24} />
               </div>
               <div>
                 <h3 className="text-xl mb-2 text-foreground">Dirección</h3>
                 <p className="text-muted-foreground">
-                  Av. Principal #123<br />
-                  Morelia, Michoacán<br />
-                  C.P. 58000, México
+                    Carretera Quinceo 123<br/>
+                    Colonia Centro, Quinceo<br/>
+                    Michoacán, México CP 58149
                 </p>
               </div>
             </div>
 
             <div className="flex items-start gap-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-500 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
+              <div className="w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg shadow-primary/20">
                 <Clock className="text-white" size={24} />
               </div>
               <div>
@@ -69,7 +67,7 @@ export function Contact() {
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-blue-50/50 to-white p-8 rounded-2xl border border-blue-100 shadow-xl">
+          <div className="bg-gradient-to-br from-muted/30 to-card p-8 rounded-2xl border border-border shadow-xl">
             <h3 className="text-2xl mb-6 text-foreground">Envíanos un Mensaje</h3>
             <form className="space-y-6">
               <div>
@@ -77,7 +75,7 @@ export function Contact() {
                 <input
                   id='MenNombre'
                   type="text"
-                  className="w-full px-4 py-3 rounded-lg border border-blue-200 bg-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                  className="w-full px-4 py-3 rounded-lg border border-border bg-input-background focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
                   placeholder="Tu nombre"
                 />
               </div>
@@ -87,7 +85,7 @@ export function Contact() {
                 <input
                   id='MenEmail' 
                   type="email"
-                  className="w-full px-4 py-3 rounded-lg border border-blue-200 bg-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                  className="w-full px-4 py-3 rounded-lg border border-border bg-input-background focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
                   placeholder="tu@email.com"
                 />
               </div>
@@ -97,7 +95,7 @@ export function Contact() {
                 <input
                   id='MenTelefono' 
                   type="number"
-                  className="w-full px-4 py-3 rounded-lg border border-blue-200 bg-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                  className="w-full px-4 py-3 rounded-lg border border-border bg-input-background focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
                   placeholder="+52 (443) 123-4567"
                 />
               </div>
@@ -107,24 +105,24 @@ export function Contact() {
                 <textarea
                   id='MenMensaje'
                   rows={4}
-                  className="w-full px-4 py-3 rounded-lg border border-blue-200 bg-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
+                  className="w-full px-4 py-3 rounded-lg border border-border bg-input-background focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent resize-none transition-colors"
                   placeholder="¿En qué podemos ayudarte?"
                 ></textarea>
               </div>
 
               <button
                 type='button'              
-                className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white py-3 rounded-lg transition-all shadow-md"
+                className="w-full bg-gradient-to-r from-primary to-secondary hover:from-secondary hover:to-accent text-white py-3 rounded-lg transition-all shadow-md shadow-primary/20"
                 onClick={(e) => {
-                  e.preventDefault
+                  e.preventDefault();
                   if (VerificarFormulario()) {
                     document.getElementById('message')?.classList.remove('hidden');
                     document.getElementById('messageError')?.classList.add('hidden');
-                    document.getElementById('MenNombre')?.setAttribute('value', ' ');
-                    document.getElementById('MenEmail')?.setAttribute('value', ' ');
-                    document.getElementById('MenTelefono')?.setAttribute('value', ' ');
-                    document.getElementById('MenMensaje')?.setAttribute('value', ' ');
-                  }else{
+                    (document.getElementById('MenNombre') as HTMLInputElement).value = '';
+                    (document.getElementById('MenEmail') as HTMLInputElement).value = '';
+                    (document.getElementById('MenTelefono') as HTMLInputElement).value = '';
+                    (document.getElementById('MenMensaje') as HTMLTextAreaElement).value = '';
+                  } else {
                     document.getElementById('messageError')?.classList.remove('hidden');
                     document.getElementById('message')?.classList.add('hidden');
                   }
@@ -132,10 +130,10 @@ export function Contact() {
               >
                 Enviar Mensaje
               </button>
-              <div id="message" className="text-green-500 font-medium hidden">
+              <div id="message" className="text-accent font-medium hidden">
                 El mensaje se ha enviado correctamente.
               </div>
-              <div id="messageError" className="text-red-500 font-medium hidden">
+              <div id="messageError" className="text-destructive font-medium hidden">
                 Hubo un error al enviar el mensaje. Por favor, inténtalo de nuevo.
               </div>
             </form>
