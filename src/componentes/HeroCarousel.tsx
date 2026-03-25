@@ -1,3 +1,5 @@
+import lago from '../assets/lago.jpeg';
+
 import { useEffect, useRef } from 'react';
 import Slider from 'react-slick';
 import { ImageWithFallback } from './figma/ImageWithFallback';
@@ -12,7 +14,7 @@ const heroImages = [
     alt: "Hotel Quinta Dalam - Habitaciones"
   },
   {
-    url: "https://images.unsplash.com/photo-1691819989627-3e568cd2119e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1920",
+    url: lago,
     alt: "Hotel Quinta Dalam - Vista Principal"
   },
   {
@@ -42,7 +44,7 @@ export function HeroCarousel() {
 
   return (
     <section id="inicio" className="relative h-screen flex items-center justify-center overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/40 via-secondary/20 to-accent/30"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-[#1D0B21]/40 via-[#4a3452]/20 to-[#7b5c8c]/30"></div>
 
       <div className="absolute inset-0 z-0">
         <Slider {...settings} className="h-full">
@@ -59,7 +61,7 @@ export function HeroCarousel() {
       </div>
 
       <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
-        <div className="inline-block mb-4 px-6 py-2 bg-gradient-to-r from-primary/20 to-accent/20 backdrop-blur-sm rounded-full border border-accent/30 shadow-sm">
+        <div className="inline-block mb-4 px-6 py-2 bg-gradient-to-r from-[#1D0B21]/20 to-[#7b5c8c]/20 backdrop-blur-sm rounded-full border border-[#7b5c8c]/30 shadow-sm">
           <span className="text-muted font-medium tracking-wide">
             Bienvenido a Michoacán
           </span>
