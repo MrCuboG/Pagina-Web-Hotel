@@ -1,4 +1,5 @@
-import { Facebook, Instagram, Twitter, Mail } from 'lucide-react';
+import { Facebook, Instagram, Mail } from 'lucide-react';
+import { FaTiktok } from "react-icons/fa";
 
 export function Footer() {
   return (
@@ -26,25 +27,25 @@ export function Footer() {
           <div>
             <h4 className="text-lg mb-4">Legal</h4>
             <ul className="space-y-2">
-              <li><a href="#" className="text-white/80 hover:text-white transition-colors">Términos y Condiciones</a></li>
-              <li><a href="#" className="text-white/80 hover:text-white transition-colors">Política de Privacidad</a></li>
-              <li><a href="#" className="text-white/80 hover:text-white transition-colors">Política de Cancelación</a></li>
+              <li><a href="/Terminos_Condiciones.pdf" target="_blank" rel="noopener noreferrer" className="text-white/80 hover:text-white transition-colors">Términos y Condiciones</a></li>
+              <li><a href="/Politica_Privacidad.pdf" target="_blank" rel="noopener noreferrer" className="text-white/80 hover:text-white transition-colors">Política de Privacidad</a></li>
+              <li><a href="/Politica_Cancelacion.pdf" target="_blank" rel="noopener noreferrer" className="text-white/80 hover:text-white transition-colors">Política de Cancelación</a></li>
             </ul>
           </div>
 
           <div>
             <h4 className="text-lg mb-4">Síguenos</h4>
             <div className="flex gap-4">
-              <a href="#" className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors">
+              <a href="https://www.facebook.com/profile.php?id=61584681841684 " className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors">
                 <Facebook size={20} />
               </a>
-              <a href="#" className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors">
+              <a href="https://www.instagram.com/quintadalam?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors">
                 <Instagram size={20} />
               </a>
-              <a href="#" className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors">
-                <Twitter size={20} />
+              <a href="https://www.tiktok.com/@quintadalam?lang=es" className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors">
+                <FaTiktok size={20} />
               </a>
-              <a href="#" className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors">
+              <a href="mailto:info@quintadalam.com" className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors">
                 <Mail size={20} />
               </a>
             </div>
