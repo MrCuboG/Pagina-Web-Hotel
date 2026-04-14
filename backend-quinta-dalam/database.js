@@ -1,18 +1,18 @@
-// database.js
 const { Pool } = require('pg');
 require('dotenv').config();
 
 const pool = new Pool({
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
-    database: process.env.DB_NAME
+    // Toma la URL completa de tu archivo .env
+    connectionString: process.env.DATABASE_URL,
+
+    // Configuración obligatoria para conectarse a Neon / Nube
+    ssl: {
+        rejectUnauthorized: false
+    }
 });
 
 pool.connect()
-    .then(() => console.log('✅ Conectado a la base de datos PostgreSQL de Quinta Dalam'))
-    .catch(err => console.error('❌ Error de conexión a la base de datos', err.stack));
+    .then(() => console.log('✅ Conectado a la BD de Neon en la Nube ☁️'))
+    .catch(err => console.error('❌ Error de conexión a la BD', err.stack));
 
-// Exportamos el pool para poder usarlo en los controladores
 module.exports = pool;

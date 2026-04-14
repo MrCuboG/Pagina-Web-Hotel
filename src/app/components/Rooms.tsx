@@ -171,6 +171,24 @@ export function Rooms() {
               </div>
             ))}
           </div>
+
+          {/* Botón para ver más habitaciones */}
+          <div className="mt-16 flex justify-center">
+            <button
+              onClick={() => navigate('/rooms')}
+              className="group relative inline-flex items-center justify-center gap-3 px-8 py-4 bg-white border border-purple-200/50 rounded-2xl overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] hover:border-purple-300/50 transition-all duration-300 transform hover:-translate-y-1"
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-50 to-pink-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <LayoutGrid className="w-5 h-5 text-purple-600 relative z-10" />
+              <span className="text-lg font-medium bg-gradient-to-r from-purple-800 to-purple-600 bg-clip-text text-transparent relative z-10">
+                Ver todas las habitaciones
+              </span>
+              <div className="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center ml-2 relative z-10 group-hover:bg-purple-600 transition-colors duration-300">
+                <ArrowRight className="w-4 h-4 text-purple-600 group-hover:text-white transition-colors duration-300 transform group-hover:translate-x-0.5" />
+              </div>
+            </button>
+          </div>
+
         </div>
       </section>
     </div>
