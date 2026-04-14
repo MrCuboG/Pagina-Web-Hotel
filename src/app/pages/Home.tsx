@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+import { useLocation } from 'react-router';
 import { Header } from '../components/Header';
 import { HeroCarousel } from '../components/HeroCarousel';
 import { Rooms } from '../components/Rooms';
@@ -10,6 +12,19 @@ import { Contact } from '../components/Contact';
 import { Footer } from '../components/Footer';
 
 export function Home() {
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.state && location.state.irAContacto) {
+      setTimeout(() => {
+        const element = document.getElementById('contacto');
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
+    }
+  }, [location]);
+
   return (
     <div className="min-h-screen">
       <Header />

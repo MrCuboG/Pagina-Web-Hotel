@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router';
-import { Bed, Users, Wifi, Coffee, Tv, Wind } from 'lucide-react';
+import { Bed, Users, Wifi, Coffee, Tv, Wind, ArrowRight, LayoutGrid } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import img5 from "../../imports/suite_quencio.jpg";
 import img6 from "../../imports/paracho.jpg";
@@ -7,23 +7,23 @@ import img7 from "../../imports/morelia.jpg";
 
 const rooms = [
   {
-    name: "Suite Quencio",
-    description: "Habitacion principal, con vista panorámica y un diseño elegante",
+    name: "Suite Deluxe",
+    description: "Espacio amplio con vistas panorámicas y acabados de lujo",
     price: "$2,500",
     capacity: "2-3 personas",
     image: img5,
     amenities: ["Wi-Fi", "TV", "Aire Acondicionado", "Café"]
   },
   {
-    name: "Paracho",
-    description: "Perfecta para parejas, con un ambiente acogedor y detalles lujosos",
+    name: "Habitación Ejecutiva",
+    description: "Perfecta para viajes de negocios con escritorio y zona de trabajo",
     price: "$1,800",
     capacity: "2 personas",
     image: img6,
     amenities: ["Wi-Fi", "TV", "Escritorio", "Café"]
   },
   {
-    name: "Morelia",
+    name: "Habitación Familiar",
     description: "Espacio confortable para toda la familia con camas adicionales",
     price: "$2,200",
     capacity: "4-5 personas",
@@ -116,6 +116,28 @@ export function Rooms() {
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Ver todas las habitaciones */}
+        <div className="mt-12 text-center">
+          <div className="inline-flex items-center gap-3 mb-4">
+            <div className="h-px w-16 bg-purple-200" />
+            <span className="text-sm text-muted-foreground">Y muchas más opciones</span>
+            <div className="h-px w-16 bg-purple-200" />
+          </div>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <button
+              onClick={() => navigate('/rooms')}
+              className="inline-flex items-center gap-3 bg-gradient-to-r from-purple-900 to-purple-700 hover:from-purple-950 hover:to-purple-800 text-white px-8 py-4 rounded-2xl transition-all shadow-lg hover:shadow-purple-300/40 hover:shadow-xl active:scale-95 group"
+            >
+              <LayoutGrid size={20} />
+              <span className="font-medium">Ver las 13 Habitaciones</span>
+              <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+            </button>
+            <p className="text-sm text-muted-foreground">
+              Desde <span className="text-purple-700 font-semibold">$1,500</span>/noche · Todas con baño privado
+            </p>
+          </div>
         </div>
       </div>
     </section>

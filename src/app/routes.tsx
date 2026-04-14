@@ -5,6 +5,7 @@ import { Register } from './pages/Register';
 import { Reservations } from './pages/Reservations';
 import { AdminDashboard } from './pages/AdminDashboard';
 import { UserReservations } from './pages/UserReservations';
+import { RoomsPage } from './pages/RoomsPage';
 import { ProtectedRoute } from './components/ProtectedRoute';
 
 // Componente para proteger la ruta de reservaciones (solo usuarios autenticados)
@@ -28,6 +29,10 @@ export const router = createBrowserRouter([
   {
     path: '/register',
     element: <Register />,
+  },
+  {
+    path: '/rooms',
+    element: <RoomsPage />,
   },
   {
     path: '/reservations',
