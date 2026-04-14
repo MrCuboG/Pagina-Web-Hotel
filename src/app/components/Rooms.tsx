@@ -1,29 +1,29 @@
 import { useNavigate } from 'react-router';
 import { Bed, Users, Wifi, Coffee, Tv, Wind } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import img5 from "../../imports/571304221_1399777198818551_3694953230577036116_n.jpg";
-import img6 from "../../imports/572069892_1399777502151854_126287559995985077_n.jpg";
-import img7 from "../../imports/571304843_1399777515485186_7484039666050574605_n.jpg";
+import img5 from "../../imports/suite_quencio.jpg";
+import img6 from "../../imports/paracho.jpg";
+import img7 from "../../imports/morelia.jpg";
 
 const rooms = [
   {
-    name: "Suite Deluxe",
-    description: "Espacio amplio con vistas panorámicas y acabados de lujo",
+    name: "Suite Quencio",
+    description: "Habitacion principal, con vista panorámica y un diseño elegante",
     price: "$2,500",
     capacity: "2-3 personas",
     image: img5,
     amenities: ["Wi-Fi", "TV", "Aire Acondicionado", "Café"]
   },
   {
-    name: "Habitación Ejecutiva",
-    description: "Perfecta para viajes de negocios con escritorio y zona de trabajo",
+    name: "Paracho",
+    description: "Perfecta para parejas, con un ambiente acogedor y detalles lujosos",
     price: "$1,800",
     capacity: "2 personas",
     image: img6,
     amenities: ["Wi-Fi", "TV", "Escritorio", "Café"]
   },
   {
-    name: "Habitación Familiar",
+    name: "Morelia",
     description: "Espacio confortable para toda la familia con camas adicionales",
     price: "$2,200",
     capacity: "4-5 personas",

@@ -1,4 +1,4 @@
-import { Wifi, Coffee, Utensils, Car, Dumbbell, Waves } from 'lucide-react';
+import { Wifi, Coffee, Utensils, Car, Droplets, Waves } from 'lucide-react';
 
 const services = [
   {
@@ -22,9 +22,9 @@ const services = [
     description: "Estacionamiento privado y vigilado 24/7"
   },
   {
-    icon: Dumbbell,
-    title: "Gimnasio",
-    description: "Equipamiento moderno para tu entrenamiento"
+    icon: Droplets,
+    title: "Agua Caliente",
+    description: "Todos los baños cuentan con agua caliente y amenities de lujo"
   },
   {
     icon: Waves,

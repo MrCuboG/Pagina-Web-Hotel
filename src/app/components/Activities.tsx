@@ -1,5 +1,8 @@
 import { Heart, Sparkles, Wine, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router';
+import bodaImg from "../../imports/Boda.jpeg";
+import albercaImg from "../../imports/alberca.jpeg";
+import restauranteImg from "../../imports/restaurante.jpeg";
 
 export function Activities() {
   const navigate = useNavigate();
@@ -22,11 +25,10 @@ export function Activities() {
         <div className="relative rounded-3xl overflow-hidden mb-16 shadow-2xl group">
           <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent z-10" />
           <img 
-            src="https://images.unsplash.com/photo-1738669469338-801b4e9dbccf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjBlbGVnYW50JTIwd2VkZGluZyUyMGRpbm5lcnxlbnwxfHx8fDE3NzYxMDY1Nzd8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" 
+            src={bodaImg}
             alt="Bodas en Quinta Dalam" 
             className="w-full h-[500px] object-cover transition-transform duration-700 group-hover:scale-105"
           />
-          
           <div className="absolute inset-0 z-20 flex flex-col justify-center p-8 md:p-16 max-w-2xl">
             <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center mb-6 border border-white/30">
               <Heart className="text-white" size={32} />
@@ -48,12 +50,12 @@ export function Activities() {
 
         {/* Other Activities Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Gastronomía */}
+          {/* Alberca */}
           <div className="card-primary rounded-2xl overflow-hidden group">
             <div className="h-64 overflow-hidden">
               <img 
-                src="https://images.unsplash.com/photo-1775498017681-b95215dd704f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxnb3VybWV0JTIwZGluaW5nJTIwZm9vZCUyMHBsYXRpbmd8ZW58MXx8fHwxNzc2MTA2NTgzfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" 
-                alt="Gastronomía Gourmet" 
+                src={albercaImg}
+                alt="Disfruta de nuestra alberca" 
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
               />
             </div>
@@ -61,25 +63,25 @@ export function Activities() {
               <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-6 text-primary">
                 <Wine size={24} />
               </div>
-              <h3 className="text-2xl font-serif text-foreground mb-3">Alta Gastronomía</h3>
+              <h3 className="text-2xl font-serif text-foreground mb-3">Alberca Climatizada</h3>
               <p className="text-muted-foreground mb-6">
-                Deleita tu paladar con nuestra propuesta culinaria que fusiona la tradición michoacana con técnicas de vanguardia internacional.
+                Disfruta de nuestra alberca climatizada, un oasis de relajación donde podrás nadar bajo el cielo abierto o simplemente descansar junto al agua en un ambiente de tranquilidad absoluta.
               </p>
               <button 
                 onClick={() => navigate('/reservations')}
                 className="text-primary font-medium flex items-center gap-2 hover:gap-3 transition-all"
               >
-                Reservar Mesa <ChevronRight size={18} />
+                Reservar <ChevronRight size={18} />
               </button>
             </div>
           </div>
 
-          {/* Spa & Bienestar */}
+          {/* Restaurante */}
           <div className="card-primary rounded-2xl overflow-hidden group">
             <div className="h-64 overflow-hidden">
               <img 
-                src="https://images.unsplash.com/photo-1745327883508-b6cd32e5dde5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzcGElMjBtYXNzYWdlJTIwcmVsYXh8ZW58MXx8fHwxNzc2MDU1Mjk4fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" 
-                alt="Spa y Bienestar" 
+                src={restauranteImg}
+                alt="Alta Gastronomía en Quinta Dalam" 
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
               />
             </div>
@@ -87,15 +89,15 @@ export function Activities() {
               <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-6 text-primary">
                 <Sparkles size={24} />
               </div>
-              <h3 className="text-2xl font-serif text-foreground mb-3">Spa & Bienestar Absoluto</h3>
+              <h3 className="text-2xl font-serif text-foreground mb-3">Alta Gastronomía</h3>
               <p className="text-muted-foreground mb-6">
-                Renuévate en nuestro santuario de relajación. Tratamientos exclusivos diseñados para equilibrar cuerpo, mente y espíritu.
+                Disfruta de nuestra alta gastronomía, donde cada platillo es una obra maestra que combina ingredientes frescos y técnicas culinarias innovadoras para ofrecerte una experiencia gastronómica inigualable.
               </p>
               <button 
                 onClick={() => navigate('/reservations')}
                 className="text-primary font-medium flex items-center gap-2 hover:gap-3 transition-all"
               >
-                Ver Tratamientos <ChevronRight size={18} />
+                Reservar mesa <ChevronRight size={18} />
               </button>
             </div>
           </div>

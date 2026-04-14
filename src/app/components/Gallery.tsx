@@ -1,9 +1,10 @@
-import img1 from "../../imports/571997817_1399777575485180_7706787213578729759_n.jpg";
-import img2 from "../../imports/572439242_1399777188818552_7834743428000867196_n.jpg";
-import img8 from "../../imports/570140291_1399777528818518_5459908890570438707_n.jpg";
-import img9 from "../../imports/571275208_1399777288818542_3304645827336700935_n.jpg";
-import img10 from "../../imports/571159358_1399777542151850_6280946703097640440_n.jpg";
-import img3 from "../../imports/571159358_1399777542151850_6280946703097640440_n.jpg";
+import img1 from "../../imports/alberca.jpeg";
+import img2 from "../../imports/paracho.jpg";
+import img3 from "../../imports/salalobby2.jpg";
+import img8 from "../../imports/paisaje.jpg";
+import img9 from "../../imports/patio.jpg";
+import img10 from "../../imports/entrada.jpg";
+
 
 const galleryImages = [
   {
@@ -16,7 +17,7 @@ const galleryImages = [
   },
   {
     url: img8,
-    alt: "Hotel Quinta Dalam - Zona común"
+    alt: "Hotel Quinta Dalam - Paisaje"
   },
   {
     url: img9,
