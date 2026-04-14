@@ -2,58 +2,88 @@
 
 :root {
   --font-size: 16px;
-  --background: #f8f7f9; /* Un blanco con un toque de lavanda muy sutil */
-  --foreground: #1D0B21;
+  --background: #faf9fc;
+  --foreground: #1a202c;
   --card: #ffffff;
-  --card-foreground: #1D0B21;
+  --card-foreground: #1a202c;
   --popover: #ffffff;
-  --popover-foreground: #1D0B21;
+  --popover-foreground: #1a202c;
   
-  /* Color Principal */
-  --primary: #1D0B21;
+  /* Colores principales - MORADO OSCURO Y ELEGANTE */
+  --primary: #6b21a8;
+  --primary-dark: #5b21b6;
+  --primary-darker: #4c1d95;
   --primary-foreground: #ffffff;
   
-  /* Secundarios y Acentos (Ajustados a tonos amatista y ciruela) */
-  --secondary: #4a3452; 
+  --secondary: #7c3aed;
   --secondary-foreground: #ffffff;
-  --muted: #f1edf2;
-  --muted-foreground: #6b5c70;
-  --accent: #7b5c8c;
+  
+  --muted: #f3f0f7;
+  --muted-foreground: #475569;
+  
+  --accent: #5b21b6;
   --accent-foreground: #ffffff;
   
-  --destructive: #9b2226; /* Rojo más oscuro para armonizar */
+  --destructive: #dc2626;
   --destructive-foreground: #ffffff;
   
-  --border: rgba(29, 11, 33, 0.1);
-  --input: transparent;
-  --input-background: #f8f7f9;
-
-  --switch-background: #4a3452;
+  /* Colores de gradiente */
+  --gradient-from: #6b21a8;
+  --gradient-to: #7c3aed;
+  --gradient-hover-from: #5b21b6;
+  --gradient-hover-to: #6b21a8;
   
+  /* Colores de fondo para secciones */
+  --section-bg-start: rgba(249, 245, 255, 0.2);
+  --section-bg-end: rgba(243, 232, 255, 0.1);
+  
+  /* Colores de overlay */
+  --overlay-from: rgba(107, 33, 168, 0.4);
+  --overlay-mid: rgba(124, 58, 237, 0.3);
+  --overlay-to: rgba(75, 29, 117, 0.4);
+  
+  /* Colores de badges y tags */
+  --badge-bg: rgba(107, 33, 168, 0.1);
+  --badge-border: rgba(107, 33, 168, 0.2);
+  
+  /* Colores de bordes */
+  --border: rgba(107, 33, 168, 0.12);
+  --border-light: rgba(107, 33, 168, 0.4);
+  --border-medium: rgba(107, 33, 168, 0.5);
+  --border-strong: rgba(107, 33, 168, 0.6);
+  
+  /* Colores de inputs */
+  --input: transparent;
+  --input-background: #faf9fc;
+  --input-border: rgba(107, 33, 168, 0.5);
+  
+  /* Colores de iconos y detalles */
+  --icon-bg-from: #6b21a8;
+  --icon-bg-to: #7c3aed;
+  
+  /* Colores para footer */
+  --footer-bg-from: #6b21a8;
+  --footer-bg-mid: #5b21b6;
+  --footer-bg-to: #312e81;
+  
+  --switch-background: #6b21a8;
   --font-weight-medium: 500;
   --font-weight-normal: 400;
-
-  --ring: #1D0B21;
-  
-  /* Gráficos en escala de púrpuras y malvas */
-  --chart-1: #1D0B21;
-  --chart-2: #4a3452;
-  --chart-3: #7b5c8c;
-  --chart-4: #a38db0;
-  --chart-5: #d1c4d9;
-
+  --ring: #6b21a8;
+  --chart-1: #6b21a8;
+  --chart-2: #7c3aed;
+  --chart-3: #5b21b6;
+  --chart-4: #8b5cf6;
+  --chart-5: #4c1d95;
   --radius: 0.75rem;
-  
-  /* Sidebar */
   --sidebar: #ffffff;
-  --sidebar-foreground: #1D0B21;
-  --sidebar-primary: #1D0B21;
+  --sidebar-foreground: #1a202c;
+  --sidebar-primary: #6b21a8;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #f1edf2;
-  --sidebar-accent-foreground: #1D0B21;
-  --sidebar-border: rgba(29, 11, 33, 0.08);
-
-  --sidebar-ring: #1D0B21;
+  --sidebar-accent: #f3f0f7;
+  --sidebar-accent-foreground: #1a202c;
+  --sidebar-border: rgba(107, 33, 168, 0.12);
+  --sidebar-ring: #6b21a8;
   font-family: 'Montserrat', sans-serif;
 }
 
@@ -83,14 +113,14 @@ h1, h2, h3, h4, h5, h6 {
   --ring: oklch(0.439 0 0);
   --font-weight-medium: 500;
   --font-weight-normal: 400;
-  --chart-1: oklch(0.269 0 0);
+  --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.08);
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
   --sidebar: oklch(0.205 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.269 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
   --sidebar-primary-foreground: oklch(0.985 0 0);
   --sidebar-accent: oklch(0.269 0 0);
   --sidebar-accent-foreground: oklch(0.985 0 0);
@@ -197,5 +227,143 @@ h1, h2, h3, h4, h5, h6 {
     font-size: var(--text-base);
     font-weight: var(--font-weight-normal);
     line-height: 1.5;
+  }
+}
+
+/* ============================================
+   CLASES PERSONALIZADAS QUINTA DALAM
+   ============================================ */
+
+@layer components {
+  /* Botones */
+  .btn-primary {
+    background: linear-gradient(to right, var(--gradient-from), var(--gradient-to));
+    color: var(--primary-foreground);
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  }
+  
+  .btn-primary:hover {
+    background: linear-gradient(to right, var(--gradient-hover-from), var(--gradient-hover-to));
+  }
+  
+  .btn-secondary {
+    background: white;
+    color: var(--primary);
+    border: 1px solid var(--border-light);
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  }
+  
+  .btn-secondary:hover {
+    background: var(--muted);
+  }
+  
+  /* Gradientes de fondo */
+  .gradient-primary {
+    background: linear-gradient(to right, var(--gradient-from), var(--gradient-to));
+  }
+  
+  .gradient-hero-overlay {
+    background: linear-gradient(to bottom right, var(--overlay-from), var(--overlay-mid), var(--overlay-to));
+  }
+  
+  .gradient-footer {
+    background: linear-gradient(to bottom right, var(--footer-bg-from), var(--footer-bg-mid), var(--footer-bg-to));
+  }
+  
+  /* Fondos de secciones */
+  .section-bg-light {
+    background: linear-gradient(to bottom, white, var(--section-bg-start), var(--section-bg-end));
+  }
+  
+  .section-bg-alternate {
+    background: linear-gradient(to bottom, var(--section-bg-end), var(--section-bg-start), white);
+  }
+  
+  /* Cards y contenedores */
+  .card-primary {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+  }
+  
+  .card-primary:hover {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    transform: translateY(-0.5rem);
+  }
+  
+  .card-gradient {
+    background: linear-gradient(to bottom right, rgba(243, 240, 247, 0.3), white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Iconos */
+  .icon-container {
+    background: linear-gradient(to bottom right, var(--icon-bg-from), var(--icon-bg-to));
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Badges */
+  .badge-primary {
+    background: var(--badge-bg);
+    border: 1px solid var(--badge-border);
+    color: var(--primary);
+  }
+  
+  /* Inputs */
+  .input-primary {
+    background: white;
+    border: 1px solid var(--input-border);
+    border-radius: calc(var(--radius) - 2px);
+    transition: all 0.3s ease;
+  }
+  
+  .input-primary:focus {
+    outline: none;
+    ring: 2px;
+    ring-color: var(--ring);
+    border-color: transparent;
+  }
+  
+  /* Overlays de imagen */
+  .image-overlay {
+    background: linear-gradient(to top, rgba(107, 33, 168, 0.8), transparent);
+  }
+  
+  /* Header */
+  .header-primary {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Tablas Admin */
+  .table-header {
+    background: linear-gradient(to right, rgba(243, 240, 247, 1), white);
+    border-bottom: 1px solid var(--border);
+  }
+  
+  .table-row:hover {
+    background: rgba(243, 240, 247, 0.3);
+  }
+  
+  /* Sidebar Admin */
+  .sidebar-item-active {
+    background: linear-gradient(to right, var(--gradient-from), var(--gradient-to));
+    color: white;
+  }
+  
+  .sidebar-item {
+    transition: all 0.3s ease;
+  }
+  
+  .sidebar-item:hover {
+    background: var(--muted);
   }
 }
