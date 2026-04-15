@@ -181,7 +181,7 @@ export function RoomsPage() {
 
                     return {
                         id: room.id,
-                        name: `${room.tipo} #${room.numero}`,
+                        name: `${room.nombre || room.tipo} #${room.numero}`,
                         category: groupCategory, // Grouping to avoid 12 buttons
                         badge: tipoLow.includes('suite') ? 'suite' : (groupCategory === 'Premium' ? 'premium' : 'standard'),
                         description: room.descripcion.substring(0, 100) + (room.descripcion.length > 100 ? "..." : ""),
