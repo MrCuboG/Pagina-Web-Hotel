@@ -20,39 +20,41 @@ export function UserReservations() {
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  // Mock data for client's reservations
-  const [reservations, setReservations] = useState<Reservation[]>([
-    {
-      id: 'R-7829',
-      room: 'Habitación Deluxe',
-      checkIn: '2026-05-12',
-      checkOut: '2026-05-15',
-      guests: 2,
-      status: 'confirmed',
-      total: '$4,500 MXN',
-      bookingDate: '2026-04-01'
-    },
-    {
-      id: 'R-3491',
-      room: 'Suite Junior',
-      checkIn: '2026-06-20',
-      checkOut: '2026-06-25',
-      guests: 3,
-      status: 'pending',
-      total: '$7,500 MXN',
-      bookingDate: '2026-04-10'
-    },
-    {
-      id: 'R-1102',
-      room: 'Habitación Estándar',
-      checkIn: '2026-02-14',
-      checkOut: '2026-02-16',
-      guests: 2,
-      status: 'cancelled',
-      total: '$2,800 MXN',
-      bookingDate: '2026-01-05'
+  const [reservations, setReservations] = useState<Reservation[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!user?.id) {
+       setLoading(false);
+       return;
     }
-  ]);
+
+    const fetchReservations = async () => {
+       try {
+         const response = await fetch(`http://localhost:5000/api/reservaciones/usuario/${user.id}`);
+         const data = await response.json();
+         
+         const mapped: Reservation[] = data.map((r: any) => ({
+             id: `R-${r.reservacion_id}`,
+             room: r.room_name + (r.room_number ? ` #${r.room_number}` : ''),
+             checkIn: r.check_in.substring(0, 10),
+             checkOut: r.check_out.substring(0, 10),
+             guests: 2, // Dummy since we didn't save guests count precisely in detail, keeping it for visual consistency
+             status: r.status === 'Confirmada' ? 'confirmed' : (r.status === 'Cancelada' ? 'cancelled' : 'pending'),
+             total: `$${Number(r.total).toLocaleString('es-MX')} MXN`,
+             bookingDate: r.booking_date ? r.booking_date.substring(0, 10) : 'Fecha desconocida'
+         }));
+
+         setReservations(mapped);
+       } catch (err) {
+         console.error("Error cargando reservas de DB:", err);
+       } finally {
+         setLoading(false);
+       }
+    };
+    
+    fetchReservations();
+  }, [user]);
 
   const [activeFilter, setActiveFilter] = useState<'all' | 'upcoming' | 'past'>('all');
 
@@ -153,7 +155,11 @@ export function UserReservations() {
             </button>
           </div>
 
-          {/* Reservations List */}
+          {loading ? (
+             <div className="flex justify-center p-12">
+               <p className="text-primary font-semibold animate-pulse">Cargando tus reservaciones reales de la Base de Datos...</p>
+             </div>
+          ) : (
           <div className="space-y-6">
             {filteredReservations.length > 0 ? (
               filteredReservations.map((reservation) => {
@@ -245,6 +251,7 @@ export function UserReservations() {
               </div>
             )}
           </div>
+          )}
         </div>
       </main>
 

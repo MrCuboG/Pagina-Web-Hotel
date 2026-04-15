@@ -89,28 +89,47 @@ export function Reservations() {
   const taxesISH = subtotal * 0.03;
   const total = subtotal + taxesIVA + taxesISH;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const reservations = JSON.parse(localStorage.getItem('reservations') || '[]');
-    const newId = 'QD-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+    if (!user?.id) {
+       alert("Inicia sesión para poder realizar una prueba de reserva (Prueba DB)");
+       return;
+    }
 
-    const newReservation = {
-      id: newId,
-      userId: user?.id,
-      ...formData,
-      nights,
-      total,
-      status: 'confirmada',
-      createdAt: new Date().toISOString()
-    };
+    try {
+      const response = await fetch('http://localhost:5000/api/reservaciones', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: user.id,
+          checkIn: formData.checkIn,
+          checkOut: formData.checkOut,
+          roomType: formData.roomType,
+          guests: parseInt(formData.guests),
+          fullName: formData.fullName,
+          email: formData.email,
+          phone: formData.phone,
+          specialRequests: formData.specialRequests,
+          total
+        })
+      });
 
-    reservations.push(newReservation);
-    localStorage.setItem('reservations', JSON.stringify(reservations));
+      const data = await response.json();
 
-    setReservationId(newId);
-    setShowConfirmation(true);
-    window.scrollTo(0, 0);
+      if (!response.ok) {
+         alert("Error DB: " + data.message);
+         return;
+      }
+
+      setReservationId(data.reservationId);
+      setShowConfirmation(true);
+      window.scrollTo(0, 0);
+
+    } catch (err) {
+       console.error("Fetch DB error:", err);
+       alert("Error de conexión al servidor DB");
+    }
   };
 
   if (showConfirmation) {
@@ -366,7 +385,6 @@ export function Reservations() {
                         value={formData.cardNumber}
                         onChange={handleCardNumberFormat}
                         placeholder="0000 0000 0000 0000"
-                        required
                         className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-purple-600 focus:border-transparent outline-none transition-all font-mono"
                       />
                     </div>
@@ -381,7 +399,6 @@ export function Reservations() {
                         value={formData.cardExpiry}
                         onChange={handleExpiryFormat}
                         placeholder="MM/AA"
-                        required
                         className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-purple-600 focus:border-transparent outline-none transition-all font-mono"
                       />
                     </div>
@@ -396,7 +413,6 @@ export function Reservations() {
                           setFormData({ ...formData, cardCvc: val });
                         }}
                         placeholder="123"
-                        required
                         className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-purple-600 focus:border-transparent outline-none transition-all font-mono"
                       />
                     </div>
@@ -410,7 +426,6 @@ export function Reservations() {
                       value={formData.cardName}
                       onChange={handleChange}
                       placeholder="Como aparece en la tarjeta"
-                      required
                       className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-purple-600 focus:border-transparent outline-none transition-all"
                     />
                   </div>
@@ -503,7 +518,7 @@ export function Reservations() {
                   className={`w-full py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all ${nights === 0 ? 'bg-gray-200 text-gray-400 cursor-not-allowed' : 'bg-purple-900 hover:bg-purple-800 text-white shadow-xl hover:shadow-purple-900/30 active:scale-[0.98]'}`}
                 >
                   <ShieldCheck size={18} />
-                  Confirmar y Pagar
+                  Confirmar y Guardar en DB (Modo Prueba)
                 </button>
               </div>
             </div>

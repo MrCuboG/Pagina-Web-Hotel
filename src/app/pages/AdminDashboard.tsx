@@ -1,11 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { useAuth } from '../context/AuthContext';
 import {
   LogOut, Calendar, Users, FileEdit, Menu, X, Plus, Search, Edit, Trash2, Save,
-  Home as HomeIcon, MapPin, Phone, Mail, BedDouble, CheckCircle2, AlertCircle, PieChart, CreditCard,
+  Home as HomeIcon, MapPin, Phone, Mail, BedDouble, CheckCircle2, AlertCircle, PieChart as PieChartIcon, CreditCard,
   Settings
 } from 'lucide-react';
+import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 interface Reservation {
   id: string;
@@ -32,18 +33,33 @@ export function AdminDashboard() {
   const [activeCmsTab, setActiveCmsTab] = useState<'info' | 'contact' | 'rooms'>('info');
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
-  // Data mocks
-  const [reservations, setReservations] = useState<Reservation[]>([
-    {
-      id: 'R-7829', guestName: 'María González', room: 'Habitación Deluxe', checkIn: '2026-05-12', checkOut: '2026-05-15', guests: 2, status: 'confirmed', total: '$4,500 MXN', paymentStatus: 'paid'
-    },
-    {
-      id: 'R-3491', guestName: 'Carlos Ramírez', room: 'Suite Junior', checkIn: '2026-06-20', checkOut: '2026-06-25', guests: 3, status: 'pending', total: '$7,500 MXN', paymentStatus: 'pending'
-    },
-    {
-      id: 'R-1102', guestName: 'Ana Martínez', room: 'Habitación Estándar', checkIn: '2026-02-14', checkOut: '2026-02-16', guests: 1, status: 'confirmed', total: '$1,800 MXN', paymentStatus: 'paid'
-    }
-  ]);
+  // Data mocks replaced by real states
+  const [reservations, setReservations] = useState<Reservation[]>([]);
+  const [dashboardStats, setDashboardStats] = useState({
+      roomsInfo: { totalRooms: 0, occupiedRooms: 0 },
+      revenue: 0,
+      activeReservations: 0,
+      pendingPayments: 0,
+      cleanliness: [] as { estado_limpieza: string, cantidad: number }[]
+  });
+  
+  useEffect(() => {
+    // Solo si estamos en el cliente y cargando info de admin
+    const fetchAdminData = async () => {
+        try {
+            const [dashRes, rsvRes] = await Promise.all([
+                 fetch('http://localhost:5000/api/admin/dashboard'),
+                 fetch('http://localhost:5000/api/admin/reservaciones')
+            ]);
+            
+            if (dashRes.ok) setDashboardStats(await dashRes.json());
+            if (rsvRes.ok) setReservations(await rsvRes.json());
+        } catch(err) {
+            console.error("Error al obtener datos admin:", err);
+        }
+    };
+    fetchAdminData();
+  }, []);
 
   const [users, setUsers] = useState([{ id: '1', username: 'admin', role: 'admin' as const }]);
   const [newUser, setNewUser] = useState<NewUser>({ username: '', password: '', role: 'user' });
@@ -139,7 +155,7 @@ export function AdminDashboard() {
                 activeMenu === 'overview' ? 'bg-primary text-white' : 'text-foreground hover:bg-muted hover:text-primary'
               }`}
             >
-              <PieChart size={18} />
+              <PieChartIcon size={18} />
               Resumen Operativo
             </button>
             <button
@@ -194,83 +210,119 @@ export function AdminDashboard() {
                   <div className="flex justify-between items-start mb-4">
                     <div>
                       <p className="text-sm font-medium text-muted-foreground">Ocupación Hoy</p>
-                      <h3 className="text-3xl font-bold text-foreground mt-1">75%</h3>
+                      <h3 className="text-3xl font-bold text-foreground mt-1">
+                        {dashboardStats.roomsInfo.totalRooms > 0 ? Math.round((dashboardStats.roomsInfo.occupiedRooms / dashboardStats.roomsInfo.totalRooms) * 100) : 0}%
+                      </h3>
                     </div>
                     <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
                       <BedDouble size={20} />
                     </div>
                   </div>
                   <div className="w-full bg-muted rounded-full h-2">
-                    <div className="bg-primary h-2 rounded-full w-3/4"></div>
+                    <div className="bg-primary h-2 rounded-full" style={{ width: `${dashboardStats.roomsInfo.totalRooms > 0 ? Math.round((dashboardStats.roomsInfo.occupiedRooms / dashboardStats.roomsInfo.totalRooms) * 100) : 0}%` }}></div>
                   </div>
-                  <p className="text-xs text-muted-foreground mt-2">7 de 10 habitaciones ocupadas</p>
+                  <p className="text-xs text-muted-foreground mt-2">{dashboardStats.roomsInfo.occupiedRooms} de {dashboardStats.roomsInfo.totalRooms} habitaciones ocupadas</p>
                 </div>
 
                 <div className="bg-white p-6 rounded-2xl border border-border shadow-sm">
                   <div className="flex justify-between items-start mb-4">
                     <div>
                       <p className="text-sm font-medium text-muted-foreground">Reservas Activas</p>
-                      <h3 className="text-3xl font-bold text-foreground mt-1">{reservations.length}</h3>
+                      <h3 className="text-3xl font-bold text-foreground mt-1">{dashboardStats.activeReservations}</h3>
                     </div>
                     <div className="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-500">
                       <Calendar size={20} />
                     </div>
                   </div>
-                  <p className="text-xs text-green-600 font-medium">+2 nuevas esta semana</p>
+                  <p className="text-xs text-blue-600 font-medium">Actualmente pendientes o en curso</p>
                 </div>
 
                 <div className="bg-white p-6 rounded-2xl border border-border shadow-sm">
                   <div className="flex justify-between items-start mb-4">
                     <div>
-                      <p className="text-sm font-medium text-muted-foreground">Ingresos (Mes)</p>
-                      <h3 className="text-3xl font-bold text-foreground mt-1">$45.2K</h3>
+                      <p className="text-sm font-medium text-muted-foreground">Ingresos Acumulados</p>
+                      <h3 className="text-3xl font-bold text-foreground mt-1">${dashboardStats.revenue.toLocaleString('es-MX')}</h3>
                     </div>
                     <div className="w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-500">
                       <CreditCard size={20} />
                     </div>
                   </div>
-                  <p className="text-xs text-green-600 font-medium">+15% vs mes anterior</p>
+                  <p className="text-xs text-emerald-600 font-medium">De reservas no canceladas</p>
                 </div>
 
                 <div className="bg-white p-6 rounded-2xl border border-border shadow-sm">
                   <div className="flex justify-between items-start mb-4">
                     <div>
                       <p className="text-sm font-medium text-muted-foreground">Pagos Pendientes</p>
-                      <h3 className="text-3xl font-bold text-amber-600 mt-1">2</h3>
+                      <h3 className="text-3xl font-bold text-amber-600 mt-1">{dashboardStats.pendingPayments}</h3>
                     </div>
                     <div className="w-10 h-10 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-500">
                       <AlertCircle size={20} />
                     </div>
                   </div>
-                  <p className="text-xs text-muted-foreground mt-2">Requieren seguimiento hoy</p>
+                  <p className="text-xs text-muted-foreground mt-2">Reservas esperando depósito</p>
                 </div>
               </div>
 
-              <div className="bg-white rounded-2xl border border-border shadow-sm overflow-hidden">
-                <div className="p-6 border-b border-border flex justify-between items-center">
-                  <h3 className="text-lg font-bold text-foreground">Disponibilidad en Tiempo Real</h3>
-                  <button className="text-sm text-primary font-medium">Ver Calendario Completo</button>
-                </div>
-                <div className="p-6">
-                  <div className="space-y-4">
-                    {roomsConfig.map(room => (
-                      <div key={room.id} className="flex items-center justify-between p-4 bg-muted/30 rounded-xl border border-border">
-                        <div className="flex items-center gap-4">
-                          <div className="w-12 h-12 rounded-lg bg-white border border-border flex items-center justify-center">
-                            <BedDouble size={20} className="text-primary" />
-                          </div>
-                          <div>
-                            <h4 className="font-semibold text-foreground">{room.name}</h4>
-                            <p className="text-xs text-muted-foreground">Capacidad: {room.capacity} personas</p>
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-2xl font-bold text-primary">{room.available} <span className="text-sm text-muted-foreground font-normal">disponibles</span></p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                 {/* Gráfica de Limpieza */}
+                 <div className="bg-white rounded-2xl border border-border shadow-sm overflow-hidden p-6 flex flex-col justify-center">
+                    <h3 className="text-lg font-bold text-foreground mb-4">Estado de Limpieza de Habitaciones</h3>
+                    <div className="h-64 w-full">
+                      {dashboardStats.cleanliness.length > 0 ? (
+                        <ResponsiveContainer width="100%" height="100%">
+                           <PieChart>
+                             <Pie
+                               data={dashboardStats.cleanliness}
+                               cx="50%"
+                               cy="50%"
+                               innerRadius={60}
+                               outerRadius={80}
+                               paddingAngle={5}
+                               dataKey="cantidad"
+                               nameKey="estado_limpieza"
+                             >
+                               {dashboardStats.cleanliness.map((entry, index) => {
+                                  let color = '#a855f7'; // Purple default
+                                  if (entry.estado_limpieza === 'Limpia') color = '#22c55e'; // Green
+                                  if (entry.estado_limpieza === 'Sucia') color = '#f97316'; // Orange
+                                  if (entry.estado_limpieza === 'Mantenimiento') color = '#ef4444'; // Red
+                                  return <Cell key={`cell-${index}`} fill={color} />;
+                               })}
+                             </Pie>
+                             <Tooltip formatter={(value, name) => [value, name]} />
+                             <Legend />
+                           </PieChart>
+                        </ResponsiveContainer>
+                      ) : (
+                        <p className="text-muted-foreground text-center flex items-center justify-center h-full">No hay datos suficientes</p>
+                      )}
+                    </div>
+                 </div>
+
+                 {/* Lista reducida de Habitaciones */}
+                 <div className="bg-white rounded-2xl border border-border shadow-sm overflow-hidden">
+                   <div className="p-6 border-b border-border flex justify-between items-center">
+                     <h3 className="text-lg font-bold text-foreground">Inventario</h3>
+                   </div>
+                   <div className="p-6">
+                     <div className="space-y-4">
+                       {roomsConfig.map(room => (
+                         <div key={room.id} className="flex items-center justify-between p-4 bg-muted/30 rounded-xl border border-border">
+                           <div className="flex items-center gap-4">
+                             <div className="w-12 h-12 rounded-lg bg-white border border-border flex items-center justify-center">
+                               <BedDouble size={20} className="text-primary" />
+                             </div>
+                             <div>
+                               <h4 className="font-semibold text-foreground">{room.name}</h4>
+                               <p className="text-xs text-muted-foreground">Capacidad: {room.capacity} personas</p>
+                             </div>
+                           </div>
+                         </div>
+                       ))}
+                     </div>
+                   </div>
+                 </div>
               </div>
             </div>
           )}

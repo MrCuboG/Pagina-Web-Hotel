@@ -13,11 +13,15 @@ app.use(express.json());
 const rutasContenidos = require('./routes/contenidos.routes');
 const rutasHabitaciones = require('./routes/habitaciones.routes');
 const rutasAuth = require('./routes/auth.routes');
+const rutasReservaciones = require('./routes/reservaciones.routes');
+const rutasAdmin = require('./routes/admin.routes');
 
 // 3. Usar Rutas (Definimos el prefijo de la URL)
 app.use('/api/contenidos', rutasContenidos);
 app.use('/api/habitaciones', rutasHabitaciones);
 app.use('/api/auth', rutasAuth);
+app.use('/api/reservaciones', rutasReservaciones);
+app.use('/api/admin', rutasAdmin);
 
 // Ruta de prueba base
 app.get('/', (req, res) => {
