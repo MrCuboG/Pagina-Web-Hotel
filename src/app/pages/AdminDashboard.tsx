@@ -118,9 +118,9 @@ export function AdminDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-[#faf9fc] flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col">
       {/* Header */}
-      <header className="bg-white border-b border-border sticky top-0 z-40 h-16 flex items-center justify-between px-4 lg:px-8">
+      <header className="bg-card border-b border-border sticky top-0 z-40 h-16 flex items-center justify-between px-4 lg:px-8">
         <div className="flex items-center gap-4">
           <button onClick={() => setSidebarOpen(!sidebarOpen)} className="lg:hidden p-2 hover:bg-muted rounded-lg text-foreground">
             {sidebarOpen ? <X size={24} /> : <Menu size={24} />}
@@ -146,7 +146,7 @@ export function AdminDashboard() {
 
       <div className="flex flex-1 overflow-hidden h-[calc(100vh-4rem)]">
         {/* Sidebar */}
-        <aside className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 fixed lg:static inset-y-0 left-0 z-30 w-64 bg-white border-r border-border transition-transform duration-300 mt-16 lg:mt-0 flex flex-col`}>
+        <aside className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 fixed lg:static inset-y-0 left-0 z-30 w-64 bg-card border-r border-border transition-transform duration-300 mt-16 lg:mt-0 flex flex-col`}>
           <nav className="p-4 space-y-1 flex-1 overflow-y-auto">
             <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 px-4 mt-2">Principal</div>
             <button
@@ -198,7 +198,7 @@ export function AdminDashboard() {
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 overflow-y-auto bg-muted/20 p-4 lg:p-8">
+        <main className="flex-1 overflow-y-auto bg-muted/30 p-4 lg:p-8">
           
           {/* OVERVIEW / RESUMEN OPERATIVO */}
           {activeMenu === 'overview' && (
@@ -206,7 +206,7 @@ export function AdminDashboard() {
               <h2 className="text-2xl font-bold text-foreground mb-6">Resumen Operativo</h2>
               
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <div className="bg-white p-6 rounded-2xl border border-border shadow-sm">
+                <div className="bg-card p-6 rounded-2xl border border-border shadow-sm">
                   <div className="flex justify-between items-start mb-4">
                     <div>
                       <p className="text-sm font-medium text-muted-foreground">Ocupación Hoy</p>
@@ -224,7 +224,7 @@ export function AdminDashboard() {
                   <p className="text-xs text-muted-foreground mt-2">{dashboardStats.roomsInfo.occupiedRooms} de {dashboardStats.roomsInfo.totalRooms} habitaciones ocupadas</p>
                 </div>
 
-                <div className="bg-white p-6 rounded-2xl border border-border shadow-sm">
+                <div className="bg-card p-6 rounded-2xl border border-border shadow-sm">
                   <div className="flex justify-between items-start mb-4">
                     <div>
                       <p className="text-sm font-medium text-muted-foreground">Reservas Activas</p>
@@ -237,7 +237,7 @@ export function AdminDashboard() {
                   <p className="text-xs text-blue-600 font-medium">Actualmente pendientes o en curso</p>
                 </div>
 
-                <div className="bg-white p-6 rounded-2xl border border-border shadow-sm">
+                <div className="bg-card p-6 rounded-2xl border border-border shadow-sm">
                   <div className="flex justify-between items-start mb-4">
                     <div>
                       <p className="text-sm font-medium text-muted-foreground">Ingresos Acumulados</p>
@@ -250,7 +250,7 @@ export function AdminDashboard() {
                   <p className="text-xs text-emerald-600 font-medium">De reservas no canceladas</p>
                 </div>
 
-                <div className="bg-white p-6 rounded-2xl border border-border shadow-sm">
+                <div className="bg-card p-6 rounded-2xl border border-border shadow-sm">
                   <div className="flex justify-between items-start mb-4">
                     <div>
                       <p className="text-sm font-medium text-muted-foreground">Pagos Pendientes</p>
@@ -266,7 +266,7 @@ export function AdminDashboard() {
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                  {/* Gráfica de Limpieza */}
-                 <div className="bg-white rounded-2xl border border-border shadow-sm overflow-hidden p-6 flex flex-col justify-center">
+                 <div className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden p-6 flex flex-col justify-center">
                     <h3 className="text-lg font-bold text-foreground mb-4">Estado de Limpieza de Habitaciones</h3>
                     <div className="h-64 w-full">
                       {dashboardStats.cleanliness.length > 0 ? (
@@ -301,7 +301,7 @@ export function AdminDashboard() {
                  </div>
 
                  {/* Lista reducida de Habitaciones */}
-                 <div className="bg-white rounded-2xl border border-border shadow-sm overflow-hidden">
+                 <div className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden">
                    <div className="p-6 border-b border-border flex justify-between items-center">
                      <h3 className="text-lg font-bold text-foreground">Inventario</h3>
                    </div>
@@ -310,7 +310,7 @@ export function AdminDashboard() {
                        {roomsConfig.map(room => (
                          <div key={room.id} className="flex items-center justify-between p-4 bg-muted/30 rounded-xl border border-border">
                            <div className="flex items-center gap-4">
-                             <div className="w-12 h-12 rounded-lg bg-white border border-border flex items-center justify-center">
+                             <div className="w-12 h-12 rounded-lg bg-card border border-border flex items-center justify-center">
                                <BedDouble size={20} className="text-primary" />
                              </div>
                              <div>
@@ -342,17 +342,17 @@ export function AdminDashboard() {
                 </div>
               </div>
 
-              <div className="bg-white rounded-2xl border border-border shadow-sm flex-1 flex flex-col overflow-hidden">
+              <div className="bg-card rounded-2xl border border-border shadow-sm flex-1 flex flex-col overflow-hidden">
                 <div className="overflow-x-auto flex-1">
                   <table className="w-full text-sm text-left">
                     <thead className="bg-muted/50 border-b border-border text-muted-foreground sticky top-0">
                       <tr>
-                        <th className="px-6 py-4 font-semibold">ID / Huésped</th>
-                        <th className="px-6 py-4 font-semibold">Habitación</th>
-                        <th className="px-6 py-4 font-semibold">Fechas</th>
-                        <th className="px-6 py-4 font-semibold">Total</th>
-                        <th className="px-6 py-4 font-semibold">Estado Reserva</th>
-                        <th className="px-6 py-4 font-semibold">Estado Pago</th>
+                     <th className="px-6 py-4 font-semibold bg-muted/50 text-muted-foreground">ID / Huésped</th>
+                     <th className="px-6 py-4 font-semibold bg-muted/50 text-muted-foreground">Habitación</th>
+                     <th className="px-6 py-4 font-semibold bg-muted/50 text-muted-foreground">Fechas</th>
+                     <th className="px-6 py-4 font-semibold bg-muted/50 text-muted-foreground">Total</th>
+                     <th className="px-6 py-4 font-semibold bg-muted/50 text-muted-foreground">Estado Reserva</th>
+                     <th className="px-6 py-4 font-semibold bg-muted/50 text-muted-foreground">Estado Pago</th>
                         <th className="px-6 py-4 font-semibold text-right">Acciones</th>
                       </tr>
                     </thead>
@@ -542,7 +542,7 @@ export function AdminDashboard() {
              <div className="animate-in fade-in duration-300 max-w-5xl">
               <h2 className="text-2xl font-bold text-foreground mb-6">Gestión de Usuarios Administrativos</h2>
               
-              <div className="bg-white rounded-2xl border border-border shadow-sm p-6 mb-6">
+              <div className="bg-card rounded-2xl border border-border shadow-sm p-6 mb-6">
                 <h3 className="text-lg font-bold text-foreground mb-4 flex items-center gap-2">
                   <Plus size={20} className="text-primary" /> Agregar Nuevo Administrador
                 </h3>

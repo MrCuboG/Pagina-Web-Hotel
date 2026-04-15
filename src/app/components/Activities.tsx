@@ -8,7 +8,7 @@ export function Activities() {
   const navigate = useNavigate();
 
   return (
-    <section id="actividades" className="py-24 bg-gradient-to-b from-white to-purple-50/50">
+    <section id="actividades" className="py-24 bg-gradient-to-b from-background to-purple-900/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16 max-w-3xl mx-auto">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">

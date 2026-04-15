@@ -92,40 +92,91 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.145 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.145 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.985 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.396 0.141 25.723);
-  --destructive-foreground: oklch(0.637 0.237 25.331);
-  --border: oklch(0.269 0 0);
-  --input: oklch(0.269 0 0);
-  --ring: oklch(0.439 0 0);
+  /* Fondos oscuros con tinte morado */
+  --background: #0f0a1a;
+  --foreground: #f0eaf8;
+  --card: #1a1028;
+  --card-foreground: #f0eaf8;
+  --popover: #1a1028;
+  --popover-foreground: #f0eaf8;
+
+  /* Colores principales - mantener el morado vibrante */
+  --primary: #a855f7;
+  --primary-dark: #9333ea;
+  --primary-darker: #7e22ce;
+  --primary-foreground: #ffffff;
+
+  --secondary: #7c3aed;
+  --secondary-foreground: #ffffff;
+
+  --muted: #1e1530;
+  --muted-foreground: #a78bca;
+
+  --accent: #9333ea;
+  --accent-foreground: #ffffff;
+
+  --destructive: #f87171;
+  --destructive-foreground: #ffffff;
+
+  /* Gradientes oscuros */
+  --gradient-from: #7e22ce;
+  --gradient-to: #9333ea;
+  --gradient-hover-from: #6b21a8;
+  --gradient-hover-to: #7e22ce;
+
+  /* Fondos de secciones oscuras */
+  --section-bg-start: rgba(88, 28, 135, 0.15);
+  --section-bg-end: rgba(109, 40, 217, 0.08);
+
+  /* Overlays */
+  --overlay-from: rgba(88, 28, 135, 0.6);
+  --overlay-mid: rgba(109, 40, 217, 0.5);
+  --overlay-to: rgba(55, 20, 100, 0.6);
+
+  /* Badges */
+  --badge-bg: rgba(168, 85, 247, 0.15);
+  --badge-border: rgba(168, 85, 247, 0.3);
+
+  /* Bordes */
+  --border: rgba(168, 85, 247, 0.15);
+  --border-light: rgba(168, 85, 247, 0.35);
+  --border-medium: rgba(168, 85, 247, 0.5);
+  --border-strong: rgba(168, 85, 247, 0.7);
+
+  /* Inputs */
+  --input: #1e1530;
+  --input-background: #1e1530;
+  --input-border: rgba(168, 85, 247, 0.4);
+
+  /* Iconos */
+  --icon-bg-from: #7e22ce;
+  --icon-bg-to: #9333ea;
+
+  /* Footer */
+  --footer-bg-from: #1a0a2e;
+  --footer-bg-mid: #150825;
+  --footer-bg-to: #0d0518;
+
+  --switch-background: #9333ea;
+  --ring: #a855f7;
   --font-weight-medium: 500;
   --font-weight-normal: 400;
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(0.269 0 0);
-  --sidebar-ring: oklch(0.439 0 0);
+
+  /* Charts */
+  --chart-1: #a855f7;
+  --chart-2: #7c3aed;
+  --chart-3: #c084fc;
+  --chart-4: #8b5cf6;
+  --chart-5: #6d28d9;
+
+  --sidebar: #130d20;
+  --sidebar-foreground: #f0eaf8;
+  --sidebar-primary: #a855f7;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #1e1530;
+  --sidebar-accent-foreground: #f0eaf8;
+  --sidebar-border: rgba(168, 85, 247, 0.15);
+  --sidebar-ring: #a855f7;
 }
 
 @theme inline {
@@ -248,7 +299,7 @@ h1, h2, h3, h4, h5, h6 {
   }
   
   .btn-secondary {
-    background: white;
+    background: var(--card);
     color: var(--primary);
     border: 1px solid var(--border-light);
     transition: all 0.3s ease;
@@ -274,19 +325,19 @@ h1, h2, h3, h4, h5, h6 {
   
   /* Fondos de secciones */
   .section-bg-light {
-    background: linear-gradient(to bottom, white, var(--section-bg-start), var(--section-bg-end));
+    background: linear-gradient(to bottom, var(--background), var(--section-bg-start), var(--section-bg-end));
   }
   
   .section-bg-alternate {
-    background: linear-gradient(to bottom, var(--section-bg-end), var(--section-bg-start), white);
+    background: linear-gradient(to bottom, var(--section-bg-end), var(--section-bg-start), var(--background));
   }
   
   /* Cards y contenedores */
   .card-primary {
-    background: white;
+    background: var(--card);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
     transition: all 0.3s ease;
   }
   
@@ -296,10 +347,10 @@ h1, h2, h3, h4, h5, h6 {
   }
   
   .card-gradient {
-    background: linear-gradient(to bottom right, rgba(243, 240, 247, 0.3), white);
+    background: linear-gradient(to bottom right, var(--muted), var(--card));
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
   }
   
   /* Iconos */
@@ -317,10 +368,11 @@ h1, h2, h3, h4, h5, h6 {
   
   /* Inputs */
   .input-primary {
-    background: white;
+    background: var(--input-background);
     border: 1px solid var(--input-border);
     border-radius: calc(var(--radius) - 2px);
     transition: all 0.3s ease;
+    color: var(--foreground);
   }
   
   .input-primary:focus {
@@ -337,20 +389,25 @@ h1, h2, h3, h4, h5, h6 {
   
   /* Header */
   .header-primary {
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(15, 10, 26, 0.92);
     backdrop-filter: blur(8px);
     border-bottom: 1px solid var(--border);
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3);
+  }
+
+  :root .header-primary {
+    background: rgba(255, 255, 255, 0.95);
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
   }
   
   /* Tablas Admin */
   .table-header {
-    background: linear-gradient(to right, rgba(243, 240, 247, 1), white);
+    background: linear-gradient(to right, var(--muted), var(--card));
     border-bottom: 1px solid var(--border);
   }
   
   .table-row:hover {
-    background: rgba(243, 240, 247, 0.3);
+    background: var(--muted);
   }
   
   /* Sidebar Admin */

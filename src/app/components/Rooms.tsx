@@ -47,39 +47,38 @@ const SobreNosotros = () => {
   return (
     <section className="max-w-5xl mx-auto px-4 py-12">
       <div className="text-center mb-12">
-        <h2 className="text-4xl font-bold text-slate-800 mb-4">Sobre Quinta Dalam</h2>
-        <div className="h-1 w-24 bg-blue-600 mx-auto rounded"></div>
+        <h2 className="text-4xl font-bold text-foreground mb-4">Sobre Quinta Dalam</h2>
+        <div className="h-1 w-24 bg-primary mx-auto rounded"></div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Tarjeta de Misión */}
-        <div className="bg-white p-8 rounded-2xl shadow-lg border border-slate-100 hover:shadow-xl transition-shadow duration-300">
+        <div className="card-primary p-8 rounded-2xl hover:shadow-xl transition-shadow duration-300">
           <div className="flex items-center mb-4">
-            <div className="bg-blue-100 p-3 rounded-full mr-4">
-              {/* Ícono de ejemplo (puedes usar lucide-react o heroicons) */}
-              <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="bg-primary/10 p-3 rounded-full mr-4">
+              <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
             </div>
-            <h3 className="text-2xl font-bold text-slate-800">Nuestra Misión</h3>
+            <h3 className="text-2xl font-bold text-foreground">Nuestra Misión</h3>
           </div>
-          <p className="text-slate-600 leading-relaxed text-lg">
+          <p className="text-muted-foreground leading-relaxed text-lg">
             {contenidos.mision || "Misión no definida aún en la base de datos."}
           </p>
         </div>
 
         {/* Tarjeta de Visión */}
-        <div className="bg-white p-8 rounded-2xl shadow-lg border border-slate-100 hover:shadow-xl transition-shadow duration-300">
+        <div className="card-primary p-8 rounded-2xl hover:shadow-xl transition-shadow duration-300">
           <div className="flex items-center mb-4">
-            <div className="bg-blue-100 p-3 rounded-full mr-4">
-              <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="bg-primary/10 p-3 rounded-full mr-4">
+              <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
               </svg>
             </div>
-            <h3 className="text-2xl font-bold text-slate-800">Nuestra Visión</h3>
+            <h3 className="text-2xl font-bold text-foreground">Nuestra Visión</h3>
           </div>
-          <p className="text-slate-600 leading-relaxed text-lg">
+          <p className="text-muted-foreground leading-relaxed text-lg">
             {contenidos.vision || "Visión no definida aún en la base de datos."}
           </p>
         </div>
@@ -121,7 +120,7 @@ export function Rooms() {
   if (cargando) return <p className="text-center py-20">Cargando habitaciones...</p>;
 
   return (
-    <div className="bg-gradient-to-b from-background via-purple-50/15 to-purple-100/20">
+    <div className="bg-gradient-to-b from-background via-purple-900/5 to-purple-900/10">
       <SobreNosotros />
 
       <section id="habitaciones" className="py-20">
@@ -138,7 +137,7 @@ export function Rooms() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {habitacionesDb.map((room, index) => (
-              <div key={room.id} className="bg-white rounded-2xl overflow-hidden shadow-lg border border-purple-200/40">
+              <div key={room.id} className="card-primary rounded-2xl overflow-hidden shadow-lg">
                 <div className="relative h-64 overflow-hidden">
                   <img
                     src={imagenesDefault[index] || img5}

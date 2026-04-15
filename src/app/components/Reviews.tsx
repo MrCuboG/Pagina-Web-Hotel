@@ -58,7 +58,7 @@ export function Reviews() {
   };
 
   return (
-    <section id="resenas" className="py-24 bg-gradient-to-b from-purple-50/30 to-white">
+    <section id="resenas" className="py-24 bg-gradient-to-b from-purple-900/10 to-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16 max-w-3xl mx-auto">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
@@ -135,7 +135,7 @@ export function Reviews() {
                   onChange={(e) => setNewReview({ ...newReview, content: e.target.value })}
                   placeholder="Cuéntanos cómo fue tu estadía..."
                   rows={4}
-                  className="w-full px-4 py-3 rounded-xl border border-border bg-white/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all resize-none"
+                  className="w-full px-4 py-3 rounded-xl border border-border bg-card text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all resize-none"
                 />
               </div>
               

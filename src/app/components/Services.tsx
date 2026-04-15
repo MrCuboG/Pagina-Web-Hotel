@@ -35,7 +35,7 @@ const services = [
 
 export function Services() {
   return (
-    <section id="servicios" className="py-20 bg-gradient-to-b from-white via-purple-50/20 to-white">
+    <section id="servicios" className="py-20 bg-gradient-to-b from-background via-purple-900/5 to-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <div className="inline-block mb-4 px-4 py-2 bg-gradient-to-r from-purple-900/10 to-purple-700/10 rounded-full border border-purple-800/20">
@@ -53,7 +53,7 @@ export function Services() {
             return (
               <div
                 key={index}
-                className="group p-8 bg-gradient-to-br from-purple-50/30 to-white rounded-2xl border border-purple-200/40 hover:border-purple-300/60 transition-all hover:shadow-xl"
+                className="group p-8 card-primary rounded-2xl hover:border-purple-500/40 transition-all hover:shadow-xl"
               >
                 <div className="w-16 h-16 bg-gradient-to-br from-purple-900 to-purple-800 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg">
                   <Icon size={32} className="text-white" />

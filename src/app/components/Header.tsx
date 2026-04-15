@@ -1,4 +1,4 @@
-import { Menu, X, LogIn, ChevronDown, User, LogOut, FileText, LayoutDashboard } from 'lucide-react';
+import { Menu, X, LogIn, ChevronDown, User, LogOut, FileText, LayoutDashboard, Moon, Sun } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { useAuth } from '../context/AuthContext';
@@ -6,9 +6,26 @@ import { useAuth } from '../context/AuthContext';
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [darkMode, setDarkMode] = useState(() => {
+    const saved = localStorage.getItem('darkMode');
+    if (saved !== null) return saved === 'true';
+    return document.documentElement.classList.contains('dark');
+  });
   const dropdownRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const { isAuthenticated, user, logout } = useAuth();
+
+  const toggleDarkMode = () => {
+    const newVal = !darkMode;
+    setDarkMode(newVal);
+    localStorage.setItem('darkMode', String(newVal));
+    document.documentElement.classList.toggle('dark', newVal);
+  };
+
+  // Apply dark mode on mount
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', darkMode);
+  }, []);
 
   const handleReservationClick = () => {
     if (isAuthenticated) {
@@ -38,7 +55,7 @@ export function Header() {
   }, []);
 
   return (
-    <header className="bg-white/95 backdrop-blur-sm shadow-md fixed w-full top-0 z-50 border-b border-purple-200/40 transition-all duration-300">
+    <header className="bg-background/95 backdrop-blur-sm shadow-md fixed w-full top-0 z-50 border-b border-purple-200/20 dark:border-purple-800/30 transition-all duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4">
           <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
@@ -115,6 +132,14 @@ export function Header() {
               </button>
             )}
             
+            <button
+              onClick={toggleDarkMode}
+              className="p-2 rounded-lg text-foreground hover:bg-muted transition-colors"
+              title={darkMode ? 'Activar modo claro' : 'Activar modo oscuro'}
+            >
+              {darkMode ? <Sun size={20} className="text-amber-400" /> : <Moon size={20} />}
+            </button>
+
             <button
               onClick={handleReservationClick}
               className="btn-primary text-white px-6 py-2 rounded-lg transition-all text-sm font-medium"
@@ -193,6 +218,14 @@ export function Header() {
                   </button>
                 )}
                 
+                <button
+                  onClick={() => { toggleDarkMode(); }}
+                  className="flex items-center gap-2 w-full px-4 py-3 text-foreground font-medium hover:bg-muted rounded-lg transition-colors"
+                >
+                  {darkMode ? <Sun size={18} className="text-amber-400" /> : <Moon size={18} />}
+                  {darkMode ? 'Modo Claro' : 'Modo Oscuro'}
+                </button>
+
                 <button
                   onClick={() => { handleReservationClick(); setIsMenuOpen(false); }}
                   className="btn-primary text-white px-6 py-3 rounded-xl w-full font-medium shadow-md mt-2"

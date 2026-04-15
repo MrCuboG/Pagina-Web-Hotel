@@ -35,7 +35,7 @@ const galleryImages = [
 
 export function Gallery() {
   return (
-    <section id="galeria" className="py-20 bg-gradient-to-b from-purple-100/20 via-purple-50/10 to-white">
+    <section id="galeria" className="py-20 bg-gradient-to-b from-purple-900/10 via-purple-900/5 to-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <div className="inline-block mb-4 px-4 py-2 bg-gradient-to-r from-purple-900/10 to-purple-700/10 rounded-full border border-purple-800/20">
@@ -51,7 +51,7 @@ export function Gallery() {
           {galleryImages.map((image, index) => (
             <div
               key={index}
-              className="relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all group cursor-pointer aspect-square border border-purple-200/40"
+              className="relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all group cursor-pointer aspect-square border border-purple-500/20"
             >
               <img
                 src={image.url}
