@@ -45,9 +45,9 @@ export function Contact() {
               <div>
                 <h3 className="text-xl mb-2 text-foreground">Dirección</h3>
                 <p className="text-muted-foreground">
-                  Av. Principal #123<br />
-                  Morelia, Michoacán<br />
-                  C.P. 58000, México
+                  Carretera Coeneo<br />
+                  Colonia Centro, Quencio<br />
+                  Michoacán, México CP 61800
                 </p>
               </div>
             </div>
@@ -67,7 +67,7 @@ export function Contact() {
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-purple-50/30 to-white p-8 rounded-2xl border border-purple-200/40 shadow-xl">
+          <div id="formulario-contacto" className="bg-gradient-to-br from-purple-50/30 to-white p-8 rounded-2xl border border-purple-200/40 shadow-xl">
             <h3 className="text-2xl mb-6 text-foreground">Envíanos un Mensaje</h3>
             <form className="space-y-6">
               <div>
