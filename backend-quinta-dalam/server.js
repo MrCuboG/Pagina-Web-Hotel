@@ -12,10 +12,12 @@ app.use(express.json());
 // 2. Importar Rutas
 const rutasContenidos = require('./routes/contenidos.routes');
 const rutasHabitaciones = require('./routes/habitaciones.routes');
+const rutasAuth = require('./routes/auth.routes');
 
 // 3. Usar Rutas (Definimos el prefijo de la URL)
 app.use('/api/contenidos', rutasContenidos);
 app.use('/api/habitaciones', rutasHabitaciones);
+app.use('/api/auth', rutasAuth);
 
 // Ruta de prueba base
 app.get('/', (req, res) => {

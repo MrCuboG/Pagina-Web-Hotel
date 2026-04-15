@@ -13,8 +13,8 @@ interface StoredUser extends User {
 
 interface AuthContextType {
   user: User | null;
-  login: (username: string, password: string) => boolean;
-  register: (username: string, email: string, password: string) => { success: boolean; message: string };
+  login: (username: string, password: string) => Promise<boolean>;
+  register: (username: string, email: string, password: string) => Promise<{ success: boolean; message: string }>;
   logout: () => void;
   isAuthenticated: boolean;
   isAdmin: boolean;
@@ -22,24 +22,7 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Usuario base de administrador
-const ADMIN_USER: StoredUser = {
-  id: '1',
-  username: 'admin',
-  password: 'admin123',
-  role: 'admin'
-};
 
-// Obtener usuarios registrados del localStorage
-const getStoredUsers = (): StoredUser[] => {
-  const stored = localStorage.getItem('registeredUsers');
-  return stored ? JSON.parse(stored) : [];
-};
-
-// Guardar usuarios en localStorage
-const saveStoredUsers = (users: StoredUser[]) => {
-  localStorage.setItem('registeredUsers', JSON.stringify(users));
-};
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(() => {
@@ -47,66 +30,46 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return savedUser ? JSON.parse(savedUser) : null;
   });
 
-  const login = (username: string, password: string): boolean => {
-    // Verificar si es el admin
-    if (username === ADMIN_USER.username && password === ADMIN_USER.password) {
-      const userData = {
-        id: ADMIN_USER.id,
-        username: ADMIN_USER.username,
-        role: ADMIN_USER.role
-      };
-      setUser(userData);
-      localStorage.setItem('user', JSON.stringify(userData));
-      return true;
+  const login = async (username: string, password: string): Promise<boolean> => {
+    try {
+      const res = await fetch('http://localhost:5000/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        setUser(data.user);
+        localStorage.setItem('user', JSON.stringify(data.user));
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      console.error("Login failed", error);
+      return false;
     }
-
-    // Verificar usuarios registrados
-    const registeredUsers = getStoredUsers();
-    const foundUser = registeredUsers.find(
-      u => u.username === username && u.password === password
-    );
-
-    if (foundUser) {
-      const userData = {
-        id: foundUser.id,
-        username: foundUser.username,
-        email: foundUser.email,
-        role: foundUser.role
-      };
-      setUser(userData);
-      localStorage.setItem('user', JSON.stringify(userData));
-      return true;
-    }
-
-    return false;
   };
 
-  const register = (username: string, email: string, password: string): { success: boolean; message: string } => {
-    const registeredUsers = getStoredUsers();
+  const register = async (username: string, email: string, password: string): Promise<{ success: boolean; message: string }> => {
+    try {
+      const res = await fetch('http://localhost:5000/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, email, password })
+      });
 
-    // Verificar si el usuario ya existe
-    if (username === ADMIN_USER.username || registeredUsers.some(u => u.username === username)) {
-      return { success: false, message: 'El nombre de usuario ya está en uso' };
+      const data = await res.json();
+      if (res.ok) {
+        return { success: true, message: data.message };
+      } else {
+        return { success: false, message: data.message || 'Error al registrarse' };
+      }
+    } catch (error) {
+      console.error("Register failed", error);
+      return { success: false, message: 'Fallo al conectarse al servidor' };
     }
-
-    // Verificar si el email ya existe
-    if (registeredUsers.some(u => u.email === email)) {
-      return { success: false, message: 'El correo electrónico ya está registrado' };
-    }
-
-    // Crear nuevo usuario como cliente
-    const newUser: StoredUser = {
-      id: Date.now().toString(),
-      username,
-      email,
-      password,
-      role: 'cliente'
-    };
-
-    registeredUsers.push(newUser);
-    saveStoredUsers(registeredUsers);
-
-    return { success: true, message: 'Registro exitoso' };
   };
 
   const logout = () => {

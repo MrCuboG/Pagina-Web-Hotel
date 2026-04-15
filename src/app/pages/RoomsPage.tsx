@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { Bed, Users, Wifi, Coffee, Tv, Wind, Star, ArrowLeft, Sparkles, Bath, UtensilsCrossed, Car, Dumbbell } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
@@ -42,176 +43,10 @@ const badgeStyles: Record<BadgeVariant, string> = {
     presidential: 'bg-gradient-to-r from-amber-600 to-amber-500 text-white',
 };
 
-const rooms: Room[] = [
-    {
-        id: 1,
-        name: "Suite Quencio",
-        category: "Suite Principal",
-        badge: "suite",
-        description: "Habitación principal con vista panorámica y diseño elegante",
-        longDescription: "Nuestra suite insignia ofrece vistas panorámicas al jardín y acabados de lujo en cada rincón. Perfecta para una estancia memorable.",
-        price: 2500,
-        capacity: "2–3 personas",
-        size: "45 m²",
-        image: imgQuencio,
-        amenities: ["Wi-Fi", "TV", "Aire Acondicionado", "Café", "Baño Privado"],
-    },
-    {
-        id: 2,
-        name: "Suite Paracho",
-        category: "Suite Romántica",
-        badge: "suite",
-        description: "Ambiente acogedor con detalles lujosos para parejas",
-        longDescription: "Diseñada para parejas que buscan intimidad y confort. Cuenta con iluminación cálida y amenidades premium para una noche perfecta.",
-        price: 1800,
-        capacity: "2 personas",
-        size: "35 m²",
-        image: imgParacho,
-        amenities: ["Wi-Fi", "TV", "Café", "Baño Privado"],
-    },
-    {
-        id: 3,
-        name: "Habitación Morelia",
-        category: "Familiar",
-        badge: "premium",
-        description: "Espacio confortable para toda la familia con camas adicionales",
-        longDescription: "La opción perfecta para familias. Amplio espacio con distribución inteligente que garantiza comodidad para todos los integrantes.",
-        price: 2200,
-        capacity: "4–5 personas",
-        size: "55 m²",
-        image: imgMorelia,
-        amenities: ["Wi-Fi", "TV", "Aire Acondicionado", "Zona de Estar", "Baño Privado"],
-    },
-    {
-        id: 4,
-        name: "Suite Presidencial",
-        category: "Presidential Suite",
-        badge: "presidential",
-        description: "La experiencia de lujo más exclusiva del hotel",
-        longDescription: "La cúspide del lujo en Hotel Quinta Dalam. Sala privada, comedor, terraza y servicio personalizado las 24 horas para los huéspedes más exigentes.",
-        price: 4500,
-        capacity: "2–4 personas",
-        size: "85 m²",
-        image: imgSalaLobby2, // Usando sala lobby 2 para la presidencial
-        amenities: ["Wi-Fi", "TV", "Aire Acondicionado", "Café", "Baño Privado", "Estacionamiento", "Gimnasio"],
-    },
-    {
-        id: 5,
-        name: "Suite Pátzcuaro",
-        category: "Suite Vista",
-        badge: "suite",
-        description: "Vistas espectaculares con decoración inspirada en la región",
-        longDescription: "Inspirada en la magia del Lago de Pátzcuaro, esta suite ofrece una decoración artesanal michoacana y vistas que quitan el aliento.",
-        price: 3200,
-        capacity: "2 personas",
-        size: "42 m²",
-        image: imgPaisaje, // Usando paisaje para la vista
-        amenities: ["Wi-Fi", "TV", "Aire Acondicionado", "Café", "Baño Privado"],
-    },
-    {
-        id: 6,
-        name: "Habitación Janitzio",
-        category: "Estándar",
-        badge: "standard",
-        description: "Confort esencial con acabados cuidados y ambiente tranquilo",
-        longDescription: "Una habitación acogedora que combina funcionalidad y estética. Ideal para viajeros que buscan calidad a un precio accesible.",
-        price: 1600,
-        capacity: "2 personas",
-        size: "28 m²",
-        image: imgJanitzio,
-        amenities: ["Wi-Fi", "TV", "Café", "Baño Privado"],
-    },
-    {
-        id: 7,
-        name: "Habitación Uruapan",
-        category: "Estándar",
-        badge: "standard",
-        description: "Descanso reparador en un ambiente fresco y natural",
-        longDescription: "Rodeada de jardines, esta habitación transmite la frescura de Uruapan. Un refugio ideal para desconectarse y relajarse plenamente.",
-        price: 1500,
-        capacity: "2 personas",
-        size: "26 m²",
-        image: imgPatio, // Usando el patio para Uruapan
-        amenities: ["Wi-Fi", "TV", "Baño Privado"],
-    },
-    {
-        id: 8,
-        name: "Suite Tzintzuntzan",
-        category: "Suite Superior",
-        badge: "suite",
-        description: "Elegancia purépecha con comodidades modernas de primer nivel",
-        longDescription: "Evoca la grandeza del antiguo imperio purépecha con textiles artesanales y mobiliario de madera tallada a mano. Una suite de carácter único.",
-        price: 2800,
-        capacity: "2–3 personas",
-        size: "48 m²",
-        image: imgSalaLobby, // Usando la sala lobby para Tzintzuntzan
-        amenities: ["Wi-Fi", "TV", "Aire Acondicionado", "Café", "Baño Privado"],
-    },
-    {
-        id: 9,
-        name: "Suite Zamora",
-        category: "Junior Suite",
-        badge: "suite",
-        description: "Amplitud y modernidad en una zona tranquila del hotel",
-        longDescription: "Una junior suite que equilibra espacio y comodidad. Perfecta para estancias prolongadas con sala de estar separada y escritorio ejecutivo.",
-        price: 2000,
-        capacity: "3 personas",
-        size: "40 m²",
-        image: imgRestaurante,
-        amenities: ["Wi-Fi", "TV", "Aire Acondicionado", "Café", "Baño Privado"],
-    },
-    {
-        id: 10,
-        name: "Habitación Zitácuaro",
-        category: "Estándar Plus",
-        badge: "standard",
-        description: "Habitación superior con detalles boutique y vistas al jardín",
-        longDescription: "Una estancia que combina el encanto boutique con todas las comodidades necesarias. La vista al jardín interior la hace especialmente serena.",
-        price: 1700,
-        capacity: "2–3 personas",
-        size: "32 m²",
-        image: imgEntrada,
-        amenities: ["Wi-Fi", "TV", "Aire Acondicionado", "Baño Privado"],
-    },
-    {
-        id: 11,
-        name: "Suite Jiquilpan",
-        category: "Suite Ejecutiva",
-        badge: "premium",
-        description: "Diseño sofisticado para el viajero de negocios exigente",
-        longDescription: "Equipada con escritorio ejecutivo, iluminación regulable y acceso a sala de reuniones. La suite ideal para quienes combinan trabajo y descanso.",
-        price: 2300,
-        capacity: "2 personas",
-        size: "38 m²",
-        image: imgAlberca,
-        amenities: ["Wi-Fi", "TV", "Aire Acondicionado", "Café", "Baño Privado"],
-    },
-    {
-        id: 12,
-        name: "Habitación Sahuayo",
-        category: "Colonial",
-        badge: "premium",
-        description: "Estilo colonial michoacano con vigas de madera y patio interior",
-        longDescription: "Inspirada en la arquitectura colonial del estado, esta habitación cuenta con altos techos, vigas de madera y acceso a patio interior exclusivo.",
-        price: 1600,
-        capacity: "2–3 personas",
-        size: "36 m²",
-        image: imgLobby,
-        amenities: ["Wi-Fi", "TV", "Café", "Baño Privado"],
-    },
-    {
-        id: 13,
-        name: "Suite Lázaro Cárdenas",
-        category: "Suite Romántica Plus",
-        badge: "suite",
-        description: "Máximo romanticismo con bañera de hidromasaje y terraza privada",
-        longDescription: "La suite más romántica del hotel. Incluye bañera de hidromasaje, terraza privada con vista al jardín y servicio de cena romántica a solicitud.",
-        price: 2100,
-        capacity: "2 personas",
-        size: "44 m²",
-        image: imgBoda,
-        amenities: ["Wi-Fi", "TV", "Aire Acondicionado", "Café", "Baño Privado"],
-    },
+const defaultImages = [
+    imgQuencio, imgParacho, imgMorelia, imgJanitzio, 
+    imgAlberca, imgEntrada, imgLobby, imgPaisaje, 
+    imgPatio, imgRestaurante, imgSalaLobby, imgSalaLobby2, imgBoda
 ];
 
 const amenityIcons: Record<string, React.ElementType> = {
@@ -336,6 +171,50 @@ function RoomCard({ room }: { room: Room }) {
 export function RoomsPage() {
     const navigate = useNavigate();
 
+    const [dbRooms, setDbRooms] = useState<Room[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchRooms = async () => {
+            try {
+                const res = await fetch('http://localhost:5000/api/habitaciones');
+                const data = await res.json();
+                
+                const formattedRooms: Room[] = data.map((room: any, idx: number) => ({
+                    id: room.id,
+                    name: `${room.tipo} #${room.numero}`,
+                    category: room.tipo,
+                    badge: room.tipo.toLowerCase().includes('suite') ? 'suite' : 'standard',
+                    description: room.descripcion.substring(0, 100) + (room.descripcion.length > 100 ? "..." : ""),
+                    longDescription: room.descripcion,
+                    price: room.precio,
+                    capacity: `${room.capacidad} personas`,
+                    size: "35 m²",
+                    image: defaultImages[idx % defaultImages.length],
+                    amenities: ["Wi-Fi", "TV", "Baño Privado"]
+                }));
+
+                setDbRooms(formattedRooms);
+                setLoading(false);
+            } catch (error) {
+                console.error("Error al obtener habitaciones:", error);
+                setLoading(false);
+            }
+        };
+        fetchRooms();
+    }, []);
+
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-gray-50 flex justify-center items-center">
+                <p className="text-xl text-purple-800 animate-pulse font-semibold">Cargando nuestras habitaciones...</p>
+            </div>
+        );
+    }
+
+    const featuredRoom = dbRooms.find(r => r.category.toLowerCase().includes('suite')) || dbRooms[0];
+    const otherRooms = dbRooms.filter(r => r.id !== featuredRoom?.id);
+
     return (
         <div className="min-h-screen bg-gradient-to-b from-background via-purple-50/10 to-background">
             <Header />
@@ -420,7 +299,7 @@ export function RoomsPage() {
                         <div className="h-px w-8 bg-purple-300" />
                     </div>
 
-                    <FeaturedRoomCard room={rooms[3]} />
+                    {featuredRoom && <FeaturedRoomCard room={featuredRoom} />}
                 </div>
 
                 {/* Divider */}
@@ -432,7 +311,7 @@ export function RoomsPage() {
 
                 {/* Grid: all 12 remaining rooms */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7">
-                    {rooms.filter((r) => r.id !== 4).map((room) => (
+                    {otherRooms.map((room) => (
                         <RoomCard key={room.id} room={room} />
                     ))}
                 </div>

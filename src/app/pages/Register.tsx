@@ -13,7 +13,7 @@ export function Register() {
   const { register } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setSuccess('');
@@ -33,7 +33,7 @@ export function Register() {
       return;
     }
 
-    const result = register(username, email, password);
+    const result = await register(username, email, password);
     if (result.success) {
       setSuccess(result.message);
       setTimeout(() => {
