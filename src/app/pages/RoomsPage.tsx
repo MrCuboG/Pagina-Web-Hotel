@@ -439,35 +439,31 @@ export function RoomsPage() {
 
                 {/* Bottom CTA */}
                 <div className="mt-20 text-center bg-gradient-to-br from-purple-900 to-purple-800 rounded-3xl p-12 text-white relative overflow-hidden">
-                    <div className="absolute inset-0 opacity-5"
+                    <div className="absolute inset-0 opacity-5 pointer-events-none"
                         style={{ backgroundImage: `radial-gradient(circle at 30% 50%, white 1px, transparent 1px), radial-gradient(circle at 70% 80%, white 1px, transparent 1px)`, backgroundSize: '40px 40px' }}
                     />
-                    <Sparkles size={32} className="text-amber-400 mx-auto mb-4" />
-                    <h2 className="text-3xl md:text-4xl mb-3 font-serif">¿No encuentras lo que buscas?</h2>
-                    <p className="text-purple-200 mb-8 max-w-lg mx-auto">
-                        Contáctanos directamente y diseñaremos una estancia personalizada perfecta para ti
-                    </p>
-                    <div className="flex flex-wrap justify-center gap-4">
-                        <button
-                            onClick={() => navigate('/reservations')}
-                            className="bg-white text-purple-900 px-8 py-3 rounded-xl hover:bg-purple-50 transition-all shadow-lg"
-                        >
-                            Ver disponibilidad
-                        </button>
-                        <button
-                            onClick={() => {
-                                navigate('/');
-                                setTimeout(() => {
-                                    const element = document.getElementById('contacto');
-                                    if (element) {
-                                        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                                    }
-                                }, 500);
-                            }}
-                            className="border border-white/40 text-white px-8 py-3 rounded-xl hover:bg-white/10 transition-all"
-                        >
-                            Contactar al hotel
-                        </button>
+                    <div className="relative z-10">
+                        <Sparkles size={32} className="text-amber-400 mx-auto mb-4" />
+                        <h2 className="text-3xl md:text-4xl mb-3 font-serif">¿No encuentras lo que buscas?</h2>
+                        <p className="text-purple-200 mb-8 max-w-lg mx-auto">
+                            Contáctanos directamente y diseñaremos una estancia personalizada perfecta para ti
+                        </p>
+                        <div className="flex flex-wrap justify-center gap-4">
+                            <button
+                                onClick={() => navigate('/reservations')}
+                                className="bg-white text-purple-900 px-8 py-3 rounded-xl hover:bg-purple-50 transition-all shadow-lg"
+                            >
+                                Ver disponibilidad
+                            </button>
+                            <button
+                                onClick={() => {
+                                    navigate('/', { state: { irAContacto: true } });
+                                }}
+                                className="border border-white/40 text-white px-8 py-3 rounded-xl hover:bg-white/10 transition-all"
+                            >
+                                Contactar al hotel
+                            </button>
+                        </div>
                     </div>
                 </div>
             </main>

@@ -16,12 +16,24 @@ export function Home() {
 
   useEffect(() => {
     if (location.state && location.state.irAContacto) {
-      setTimeout(() => {
-        const element = document.getElementById('contacto');
+      const scrollAlFormulario = () => {
+        const element = document.getElementById('formulario-contacto');
         if (element) {
-          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          const headerOffset = 100;
+          const elementPosition = element.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.scrollY - headerOffset;
+          
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+          });
         }
-      }, 100);
+      };
+
+      // Primer intento de scroll
+      setTimeout(scrollAlFormulario, 150);
+      // Segundo intento en caso de que las imágenes del Home desplazaran el contenido
+      setTimeout(scrollAlFormulario, 800);
     }
   }, [location]);
 

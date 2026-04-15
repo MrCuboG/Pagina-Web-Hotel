@@ -1,37 +1,76 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router';
 import { useAuth } from '../context/AuthContext';
-import { Calendar, Users, Bed, CreditCard, User, Mail, Phone, MapPin } from 'lucide-react';
+import { Calendar, Users, Bed, CreditCard, User, Mail, Phone, MapPin, ShieldCheck, CheckCircle2, ChevronRight, ArrowLeft, Info, Receipt } from 'lucide-react';
+import { Header } from '../components/Header';
+import { Footer } from '../components/Footer';
 
-const roomTypes = [
-  { value: 'deluxe', label: 'Suite Deluxe', price: 2500 },
-  { value: 'ejecutiva', label: 'Habitación Ejecutiva', price: 1800 },
-  { value: 'familiar', label: 'Habitación Familiar', price: 2200 }
+const fallbackRooms = [
+  { label: 'Suite Principal', price: 2500 },
+  { label: 'Suite Romántica', price: 1800 },
+  { label: 'Familiar', price: 2200 },
+  { label: 'Presidential Suite', price: 4500 }
 ];
 
 export function Reservations() {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [formData, setFormData] = useState({
     checkIn: '',
     checkOut: '',
-    roomType: 'deluxe',
+    roomType: location.state?.roomName || fallbackRooms[0].label,
+    roomPrice: location.state?.price || fallbackRooms[0].price,
     guests: '2',
     fullName: user?.username || '',
     email: user?.email || '',
     phone: '',
     address: '',
-    specialRequests: ''
+    specialRequests: '',
+    paymentMethod: 'card' as 'card' | 'paypal',
+    cardNumber: '',
+    cardExpiry: '',
+    cardCvc: '',
+    cardName: ''
   });
 
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [reservationId, setReservationId] = useState('');
+
+  // Handle fallback select changes if they didn't come with pre-selected state
+  const handleRoomChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedRoom = fallbackRooms.find(r => r.label === e.target.value);
+    if (selectedRoom) {
+      setFormData({
+        ...formData,
+        roomType: selectedRoom.label,
+        roomPrice: selectedRoom.price
+      });
+    }
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
+  };
+
+  const handleCardNumberFormat = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value.replace(/\D/g, '');
+    if (value.length > 16) value = value.slice(0, 16);
+    value = value.replace(/(\d{4})/g, '$1 ').trim();
+    setFormData({ ...formData, cardNumber: value });
+  };
+
+  const handleExpiryFormat = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value.replace(/\D/g, '');
+    if (value.length > 4) value = value.slice(0, 4);
+    if (value.length >= 2) {
+      value = value.slice(0, 2) + '/' + value.slice(2);
+    }
+    setFormData({ ...formData, cardExpiry: value });
   };
 
   const calculateNights = () => {
@@ -44,300 +83,435 @@ export function Reservations() {
     return 0;
   };
 
-  const calculateTotal = () => {
-    const room = roomTypes.find(r => r.value === formData.roomType);
-    return calculateNights() * (room?.price || 0);
-  };
+  const nights = calculateNights();
+  const subtotal = nights * formData.roomPrice;
+  const taxesIVA = subtotal * 0.16;
+  const taxesISH = subtotal * 0.03;
+  const total = subtotal + taxesIVA + taxesISH;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Guardar la reservación en localStorage
     const reservations = JSON.parse(localStorage.getItem('reservations') || '[]');
+    const newId = 'QD-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+
     const newReservation = {
-      id: Date.now().toString(),
+      id: newId,
       userId: user?.id,
       ...formData,
-      nights: calculateNights(),
-      total: calculateTotal(),
-      status: 'pendiente',
+      nights,
+      total,
+      status: 'confirmada',
       createdAt: new Date().toISOString()
     };
 
     reservations.push(newReservation);
     localStorage.setItem('reservations', JSON.stringify(reservations));
 
+    setReservationId(newId);
     setShowConfirmation(true);
+    window.scrollTo(0, 0);
   };
 
   if (showConfirmation) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-950 to-indigo-950 flex items-center justify-center px-4">
-        <div className="max-w-md w-full bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 border border-purple-200/40 text-center">
-          <div className="inline-block p-4 bg-gradient-to-br from-green-600 to-green-500 rounded-full mb-4">
-            <Calendar size={40} className="text-white" />
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+        {/* Confetti effect placeholder */}
+        <div className="max-w-md w-full bg-white rounded-3xl shadow-2xl overflow-hidden relative">
+          <div className="h-32 bg-gradient-to-br from-purple-800 to-indigo-900 absolute top-0 w-full" />
+
+          <div className="relative pt-16 px-8 pb-8 text-center">
+            <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl relative z-10 border-4 border-gray-50">
+              <CheckCircle2 size={40} className="text-green-500" />
+            </div>
+
+            <h2 className="text-3xl font-serif text-gray-900 mb-2">¡Reserva Confirmada!</h2>
+            <p className="text-gray-500 mb-8">Tu estancia de lujo te está esperando.</p>
+
+            <div className="border border-dashed border-gray-300 rounded-2xl p-6 bg-gray-50 text-left mb-8 relative">
+              {/* Ticket cutouts */}
+              <div className="absolute -left-3 top-1/2 w-6 h-6 bg-white rounded-full border-r border-gray-200" />
+              <div className="absolute -right-3 top-1/2 w-6 h-6 bg-white rounded-full border-l border-gray-200" />
+
+              <div className="text-sm text-gray-500 mb-1">CÓDIGO DE RESERVA</div>
+              <div className="text-2xl font-mono font-bold text-purple-900 mb-6">{reservationId}</div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <div className="text-xs text-gray-500 uppercase tracking-wider">Llegada</div>
+                  <div className="font-medium text-gray-900 mt-1">{new Date(formData.checkIn).toLocaleDateString('es-MX', { timeZone: 'UTC', day: 'numeric', month: 'short' })}</div>
+                </div>
+                <div>
+                  <div className="text-xs text-gray-500 uppercase tracking-wider">Salida</div>
+                  <div className="font-medium text-gray-900 mt-1">{new Date(formData.checkOut).toLocaleDateString('es-MX', { timeZone: 'UTC', day: 'numeric', month: 'short' })}</div>
+                </div>
+              </div>
+            </div>
+
+            <button
+              onClick={() => navigate('/')}
+              className="w-full bg-gray-900 hover:bg-gray-800 text-white py-4 rounded-xl transition-all font-medium flex items-center justify-center gap-2"
+            >
+              <ArrowLeft size={18} />
+              Volver al Inicio
+            </button>
           </div>
-          <h2 className="text-3xl mb-4 text-foreground">¡Reservación Exitosa!</h2>
-          <p className="text-muted-foreground mb-6">
-            Tu reservación ha sido confirmada. Recibirás un correo electrónico con los detalles.
-          </p>
-          <div className="bg-purple-50/50 rounded-lg p-4 mb-6 text-left">
-            <p className="text-sm text-muted-foreground mb-2">Resumen de la reservación:</p>
-            <p className="text-foreground"><strong>Habitación:</strong> {roomTypes.find(r => r.value === formData.roomType)?.label}</p>
-            <p className="text-foreground"><strong>Check-in:</strong> {new Date(formData.checkIn).toLocaleDateString('es-MX')}</p>
-            <p className="text-foreground"><strong>Check-out:</strong> {new Date(formData.checkOut).toLocaleDateString('es-MX')}</p>
-            <p className="text-foreground"><strong>Noches:</strong> {calculateNights()}</p>
-            <p className="text-foreground"><strong>Huéspedes:</strong> {formData.guests}</p>
-            <p className="text-lg font-bold text-primary mt-2"><strong>Total:</strong> ${calculateTotal().toLocaleString('es-MX')}</p>
-          </div>
-          <button
-            onClick={() => navigate('/')}
-            className="w-full bg-gradient-to-r from-purple-900 to-purple-800 hover:from-purple-950 hover:to-purple-900 text-white py-3 rounded-lg transition-all shadow-md font-medium"
-          >
-            Volver al Inicio
-          </button>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-950 to-indigo-950 py-12 px-4">
-      <div className="max-w-4xl mx-auto">
-        <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 border border-purple-200/40">
-          <div className="text-center mb-8">
-            <div className="inline-block p-4 bg-gradient-to-br from-purple-900 to-purple-800 rounded-2xl mb-4">
-              <Calendar size={40} className="text-white" />
-            </div>
-            <h1 className="text-3xl mb-2 text-foreground">Quinta Dalam</h1>
-            <p className="text-muted-foreground">Completa tu Reservación</p>
-          </div>
+    <div className="min-h-screen bg-gray-50 flex flex-col">
+      <Header />
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Fechas */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block mb-2 text-foreground font-medium">
-                  Fecha de Llegada
-                </label>
-                <div className="relative">
-                  <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={20} />
-                  <input
-                    type="date"
-                    name="checkIn"
-                    value={formData.checkIn}
-                    onChange={handleChange}
-                    min={new Date().toISOString().split('T')[0]}
-                    required
-                    className="w-full pl-10 pr-4 py-3 rounded-lg border border-purple-200/50 bg-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                  />
-                </div>
-              </div>
+      <main className="flex-1 pt-24 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+        <button
+          onClick={() => navigate(-1)}
+          className="inline-flex items-center gap-2 text-gray-500 hover:text-purple-700 mb-8 transition-colors group"
+        >
+          <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
+          <span className="text-sm font-medium">Volver</span>
+        </button>
 
-              <div>
-                <label className="block mb-2 text-foreground font-medium">
-                  Fecha de Salida
-                </label>
-                <div className="relative">
-                  <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={20} />
-                  <input
-                    type="date"
-                    name="checkOut"
-                    value={formData.checkOut}
-                    onChange={handleChange}
-                    min={formData.checkIn || new Date().toISOString().split('T')[0]}
-                    required
-                    className="w-full pl-10 pr-4 py-3 rounded-lg border border-purple-200/50 bg-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                  />
-                </div>
-              </div>
-            </div>
+        <div className="mb-10">
+          <h1 className="text-3xl lg:text-4xl font-serif text-gray-900 mb-2">Completar Reservación</h1>
+          <p className="text-gray-500">Estás a un paso de asegurar tu estancia en Quinta Dalam.</p>
+        </div>
 
-            {/* Tipo de habitación y huéspedes */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block mb-2 text-foreground font-medium">
-                  Tipo de Habitación
-                </label>
-                <div className="relative">
-                  <Bed className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={20} />
-                  <select
-                    name="roomType"
-                    value={formData.roomType}
-                    onChange={handleChange}
-                    required
-                    className="w-full pl-10 pr-4 py-3 rounded-lg border border-purple-200/50 bg-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent appearance-none"
-                  >
-                    {roomTypes.map(room => (
-                      <option key={room.value} value={room.value}>
-                        {room.label} - ${room.price}/noche
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
+        <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-12 gap-10">
 
-              <div>
-                <label className="block mb-2 text-foreground font-medium">
-                  Número de Huéspedes
-                </label>
-                <div className="relative">
-                  <Users className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={20} />
-                  <select
-                    name="guests"
-                    value={formData.guests}
-                    onChange={handleChange}
-                    required
-                    className="w-full pl-10 pr-4 py-3 rounded-lg border border-purple-200/50 bg-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent appearance-none"
-                  >
-                    {[1, 2, 3, 4, 5].map(num => (
-                      <option key={num} value={num}>{num} {num === 1 ? 'persona' : 'personas'}</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-            </div>
+          {/* Left Column - Form */}
+          <div className="lg:col-span-8 space-y-10">
 
-            {/* Información del huésped */}
-            <div className="border-t border-purple-200/50 pt-6">
-              <h3 className="text-xl text-foreground mb-4">Información del Huésped</h3>
+            {/* Section 1: Tu Viaje */}
+            <section className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
+              <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+                <span className="flex items-center justify-center w-6 h-6 rounded-full bg-purple-100 text-purple-700 text-sm">1</span>
+                Tu Viaje
+              </h2>
 
-              <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block mb-2 text-foreground font-medium">
-                    Nombre Completo
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Llegada</label>
                   <div className="relative">
-                    <User className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={20} />
+                    <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                    <input
+                      type="date"
+                      name="checkIn"
+                      value={formData.checkIn}
+                      onChange={handleChange}
+                      min={new Date().toISOString().split('T')[0]}
+                      required
+                      className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-purple-600 focus:border-transparent outline-none transition-all"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Salida</label>
+                  <div className="relative">
+                    <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                    <input
+                      type="date"
+                      name="checkOut"
+                      value={formData.checkOut}
+                      onChange={handleChange}
+                      min={formData.checkIn || new Date().toISOString().split('T')[0]}
+                      required
+                      className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-purple-600 focus:border-transparent outline-none transition-all"
+                    />
+                  </div>
+                </div>
+
+                {/* Si no vino con state (alguien entro por url), mostrar selector */}
+                {!location.state?.roomName && (
+                  <div className="col-span-1 md:col-span-2 mt-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Selecciona la habitación</label>
+                    <div className="relative">
+                      <Bed className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                      <select
+                        value={formData.roomType}
+                        onChange={handleRoomChange}
+                        className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-purple-600 focus:border-transparent outline-none transition-all appearance-none"
+                      >
+                        {fallbackRooms.map(r => (
+                          <option key={r.label} value={r.label}>{r.label} - ${r.price}/noche</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                )}
+
+                <div className="col-span-1 md:col-span-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Huéspedes</label>
+                  <div className="relative">
+                    <Users className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                    <select
+                      name="guests"
+                      value={formData.guests}
+                      onChange={handleChange}
+                      className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-purple-600 focus:border-transparent outline-none transition-all appearance-none"
+                    >
+                      {[1, 2, 3, 4, 5].map(num => (
+                        <option key={num} value={num}>{num} {num === 1 ? 'huésped' : 'huéspedes'}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* Section 2: Datos del Huesped */}
+            <section className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
+              <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+                <span className="flex items-center justify-center w-6 h-6 rounded-full bg-purple-100 text-purple-700 text-sm">2</span>
+                Tus Datos
+              </h2>
+
+              <div className="space-y-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Nombre Completo</label>
+                  <div className="relative">
+                    <User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
                     <input
                       type="text"
                       name="fullName"
                       value={formData.fullName}
                       onChange={handleChange}
                       required
-                      className="w-full pl-10 pr-4 py-3 rounded-lg border border-purple-200/50 bg-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                      placeholder="Juan Pérez García"
+                      placeholder="Como aparece en tu identificación"
+                      className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-purple-600 focus:border-transparent outline-none transition-all"
                     />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block mb-2 text-foreground font-medium">
-                      Correo Electrónico
-                    </label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Correo Electrónico</label>
                     <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={20} />
+                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
                       <input
                         type="email"
                         name="email"
                         value={formData.email}
                         onChange={handleChange}
                         required
-                        className="w-full pl-10 pr-4 py-3 rounded-lg border border-purple-200/50 bg-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                         placeholder="tu@email.com"
+                        className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-purple-600 focus:border-transparent outline-none transition-all"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block mb-2 text-foreground font-medium">
-                      Teléfono
-                    </label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Teléfono</label>
                     <div className="relative">
-                      <Phone className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={20} />
+                      <Phone className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
                       <input
                         type="tel"
                         name="phone"
                         value={formData.phone}
                         onChange={handleChange}
                         required
-                        className="w-full pl-10 pr-4 py-3 rounded-lg border border-purple-200/50 bg-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                        placeholder="(123) 456-7890"
+                        placeholder="+52 (443) 123-4567"
+                        className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-purple-600 focus:border-transparent outline-none transition-all"
                       />
                     </div>
                   </div>
                 </div>
 
                 <div>
-                  <label className="block mb-2 text-foreground font-medium">
-                    Dirección
-                  </label>
-                  <div className="relative">
-                    <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={20} />
-                    <input
-                      type="text"
-                      name="address"
-                      value={formData.address}
-                      onChange={handleChange}
-                      required
-                      className="w-full pl-10 pr-4 py-3 rounded-lg border border-purple-200/50 bg-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                      placeholder="Calle, Número, Ciudad, Estado"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block mb-2 text-foreground font-medium">
-                    Solicitudes Especiales (Opcional)
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Solicitudes Especiales (Opcional)</label>
                   <textarea
                     name="specialRequests"
                     value={formData.specialRequests}
                     onChange={handleChange}
                     rows={3}
-                    className="w-full px-4 py-3 rounded-lg border border-purple-200/50 bg-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
-                    placeholder="Ej: Cama extra, preferencias alimentarias, hora de llegada tardía..."
+                    placeholder="Celebraciones especiales, requerimientos dietéticos u horarios de llegada..."
+                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-purple-600 focus:border-transparent outline-none transition-all resize-none"
                   />
                 </div>
               </div>
-            </div>
+            </section>
 
-            {/* Resumen */}
-            {formData.checkIn && formData.checkOut && calculateNights() > 0 && (
-              <div className="bg-purple-50/50 rounded-lg p-6 border border-purple-200/40">
-                <div className="flex items-center gap-2 mb-4">
-                  <CreditCard className="text-primary" size={24} />
-                  <h3 className="text-xl text-foreground">Resumen de la Reservación</h3>
-                </div>
-                <div className="space-y-2 text-muted-foreground">
-                  <div className="flex justify-between">
-                    <span>{roomTypes.find(r => r.value === formData.roomType)?.label}</span>
-                    <span>${roomTypes.find(r => r.value === formData.roomType)?.price.toLocaleString('es-MX')}/noche</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Número de noches</span>
-                    <span>{calculateNights()}</span>
-                  </div>
-                  <div className="border-t border-purple-200/50 pt-2 mt-2">
-                    <div className="flex justify-between text-lg font-bold text-primary">
-                      <span>Total</span>
-                      <span>${calculateTotal().toLocaleString('es-MX')}</span>
+            {/* Section 3: Pago */}
+            <section className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
+              <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+                <span className="flex items-center justify-center w-6 h-6 rounded-full bg-purple-100 text-purple-700 text-sm">3</span>
+                Método de Pago
+              </h2>
+
+              <div className="flex gap-4 mb-8">
+                <label className={`cursor-pointer flex-1 flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all ${formData.paymentMethod === 'card' ? 'border-purple-600 bg-purple-50' : 'border-gray-200 hover:border-gray-300'}`}>
+                  <input type="radio" name="paymentMethod" value="card" checked={formData.paymentMethod === 'card'} onChange={handleChange} className="hidden" />
+                  <CreditCard size={24} className={formData.paymentMethod === 'card' ? 'text-purple-700' : 'text-gray-400'} />
+                  <span className={`mt-2 text-sm font-medium ${formData.paymentMethod === 'card' ? 'text-purple-900' : 'text-gray-500'}`}>Tarjeta</span>
+                </label>
+                <label className={`cursor-pointer flex-1 flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all ${formData.paymentMethod === 'paypal' ? 'border-purple-600 bg-purple-50' : 'border-gray-200 hover:border-gray-300'}`}>
+                  <input type="radio" name="paymentMethod" value="paypal" checked={formData.paymentMethod === 'paypal'} onChange={handleChange} className="hidden" />
+                  <svg className={`w-6 h-6 ${formData.paymentMethod === 'paypal' ? 'fill-purple-700' : 'fill-gray-400'}`} viewBox="0 0 24 24"><path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106z" /></svg>
+                  <span className={`mt-2 text-sm font-medium ${formData.paymentMethod === 'paypal' ? 'text-purple-900' : 'text-gray-500'}`}>PayPal</span>
+                </label>
+              </div>
+
+              {formData.paymentMethod === 'card' && (
+                <div className="space-y-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Número de Tarjeta</label>
+                    <div className="relative">
+                      <CreditCard className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                      <input
+                        type="text"
+                        name="cardNumber"
+                        value={formData.cardNumber}
+                        onChange={handleCardNumberFormat}
+                        placeholder="0000 0000 0000 0000"
+                        required
+                        className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-purple-600 focus:border-transparent outline-none transition-all font-mono"
+                      />
                     </div>
                   </div>
+
+                  <div className="grid grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Expiración</label>
+                      <input
+                        type="text"
+                        name="cardExpiry"
+                        value={formData.cardExpiry}
+                        onChange={handleExpiryFormat}
+                        placeholder="MM/AA"
+                        required
+                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-purple-600 focus:border-transparent outline-none transition-all font-mono"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">CVC</label>
+                      <input
+                        type="text"
+                        name="cardCvc"
+                        value={formData.cardCvc}
+                        onChange={(e) => {
+                          const val = e.target.value.replace(/\D/g, '').slice(0, 4);
+                          setFormData({ ...formData, cardCvc: val });
+                        }}
+                        placeholder="123"
+                        required
+                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-purple-600 focus:border-transparent outline-none transition-all font-mono"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Nombre del Titular</label>
+                    <input
+                      type="text"
+                      name="cardName"
+                      value={formData.cardName}
+                      onChange={handleChange}
+                      placeholder="Como aparece en la tarjeta"
+                      required
+                      className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-purple-600 focus:border-transparent outline-none transition-all"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {formData.paymentMethod === 'paypal' && (
+                <div className="text-center p-8 border border-gray-200 rounded-xl bg-gray-50">
+                  <p className="text-gray-600">Serás redirigido a PayPal para completar tu pago de forma segura después de confirmar tu reservación.</p>
+                </div>
+              )}
+            </section>
+          </div>
+
+          {/* Right Column - Order Summary */}
+          <div className="lg:col-span-4">
+            <div className="sticky top-24 bg-white rounded-3xl overflow-hidden shadow-xl border border-gray-100">
+              {/* Room Image Placeholder / Title */}
+              <div className="h-48 bg-gradient-to-br from-purple-800 to-indigo-900 relative">
+                <div className="absolute inset-0 bg-black/20" />
+                <div className="absolute bottom-4 left-4 right-4">
+                  <span className="bg-white/20 backdrop-blur-md text-white text-xs px-3 py-1 rounded-full mb-2 inline-block">Hotel Quinta Dalam</span>
+                  <h3 className="text-2xl font-serif text-white">{formData.roomType}</h3>
                 </div>
               </div>
-            )}
 
-            {/* Botones */}
-            <div className="flex gap-4">
-              <button
-                type="button"
-                onClick={() => navigate('/')}
-                className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 py-3 rounded-lg transition-all font-medium"
-              >
-                Cancelar
-              </button>
-              <button
-                type="submit"
-                className="flex-1 bg-gradient-to-r from-purple-900 to-purple-800 hover:from-purple-950 hover:to-purple-900 text-white py-3 rounded-lg transition-all shadow-md font-medium"
-              >
-                Confirmar Reservación
-              </button>
+              <div className="p-6">
+                <div className="flex flex-col gap-4 mb-6 pb-6 border-b border-gray-100">
+                  <div className="flex gap-4">
+                    <div className="w-1/2">
+                      <p className="text-xs text-gray-500 uppercase tracking-wider font-semibold">Llegada</p>
+                      <p className="font-medium text-gray-900">
+                        {formData.checkIn ? new Date(formData.checkIn).toLocaleDateString('es-MX', { timeZone: 'UTC', day: 'numeric', month: 'short' }) : '---'}
+                      </p>
+                    </div>
+                    <div className="w-1/2">
+                      <p className="text-xs text-gray-500 uppercase tracking-wider font-semibold">Salida</p>
+                      <p className="font-medium text-gray-900">
+                        {formData.checkOut ? new Date(formData.checkOut).toLocaleDateString('es-MX', { timeZone: 'UTC', day: 'numeric', month: 'short' }) : '---'}
+                      </p>
+                    </div>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500 uppercase tracking-wider font-semibold">Huéspedes</p>
+                    <p className="font-medium text-gray-900">{formData.guests} {parseInt(formData.guests) === 1 ? 'huésped' : 'huéspedes'}</p>
+                  </div>
+                </div>
+
+                <div className="space-y-4 mb-6 pb-6 border-b border-gray-100">
+                  <h4 className="font-bold text-gray-900 flex items-center gap-2">
+                    <Receipt size={18} />
+                    Detalles del Precio
+                  </h4>
+
+                  {nights > 0 ? (
+                    <>
+                      <div className="flex justify-between text-gray-600">
+                        <span>${formData.roomPrice.toLocaleString()} x {nights} {nights === 1 ? 'noche' : 'noches'}</span>
+                        <span>${subtotal.toLocaleString('es-MX')}</span>
+                      </div>
+                      <div className="flex justify-between text-gray-600">
+                        <span className="flex items-center gap-1">IVA (16%) <Info size={12} className="text-gray-400" /></span>
+                        <span>${taxesIVA.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</span>
+                      </div>
+                      <div className="flex justify-between text-gray-600">
+                        <span className="flex items-center gap-1">Impuesto Estatal (3%)</span>
+                        <span>${taxesISH.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</span>
+                      </div>
+
+                      <div className="flex justify-between font-bold text-lg text-gray-900 pt-2 border-t border-gray-100">
+                        <span>Total (MXN)</span>
+                        <span>${total.toLocaleString('es-MX', { minimumFractionDigits: 2 })}</span>
+                      </div>
+                    </>
+                  ) : (
+                    <p className="text-sm text-gray-500 text-center py-4 bg-gray-50 rounded-lg">Selecciona tus fechas para calcular el total.</p>
+                  )}
+                </div>
+
+                <div className="mb-6 flex items-start gap-3 bg-green-50 p-4 rounded-xl">
+                  <ShieldCheck size={20} className="text-green-600 shrink-0 mt-0.5" />
+                  <p className="text-xs text-green-800 leading-relaxed">
+                    Pagos cifrados y seguros. Usamos tecnología de punta para proteger tu información.
+                  </p>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={nights === 0}
+                  className={`w-full py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all ${nights === 0 ? 'bg-gray-200 text-gray-400 cursor-not-allowed' : 'bg-purple-900 hover:bg-purple-800 text-white shadow-xl hover:shadow-purple-900/30 active:scale-[0.98]'}`}
+                >
+                  <ShieldCheck size={18} />
+                  Confirmar y Pagar
+                </button>
+              </div>
             </div>
-          </form>
-        </div>
-      </div>
+          </div>
+        </form>
+      </main>
+
+      <Footer />
     </div>
   );
 }

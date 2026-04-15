@@ -16,15 +16,7 @@ export function Location() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-purple-200/40 overflow-hidden h-[400px]">
-            <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d241317.1160992127!2d-101.8714459!3d19.7035783!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x842d0e7adde2c0b%3A0x5c56badb1e55b573!2sMorelia%2C%20Michoac%C3%A1n!5e0!3m2!1ses!2smx!4v1647890123456!5m2!1ses!2smx"
-              width="100%"
-              height="100%"
-              style={{ border: 0 }}
-              allowFullScreen
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-            ></iframe>
+            <iframe src="https://www.google.com/maps/embed?pb=!4v1776210774143!6m8!1m7!1sO8lTOA5ZlgZYOboFL7BPfw!2m2!1d19.84700190326442!2d-101.5889461713184!3f296.34249618321957!4f7.390766869488999!5f0.7820865974627469" width="100%" height="100%" style={{ border: 0 }} allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe>
           </div>
 
           <div className="space-y-6">
@@ -36,9 +28,9 @@ export function Location() {
                 <div>
                   <h3 className="text-xl mb-2 text-foreground">Dirección</h3>
                   <p className="text-muted-foreground">
-                    Avenida Principal 123<br />
-                    Colonia Centro, Morelia<br />
-                    Michoacán, México CP 58000
+                    Carretera Coeneo<br />
+                    Colonia Centro, Quencio<br />
+                    Michoacán, México CP 61800
                   </p>
                 </div>
               </div>
