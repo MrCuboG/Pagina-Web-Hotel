@@ -131,15 +131,6 @@ export function Login() {
               </button>
             </p>
           </div>
-
-          <div className="mt-8 p-4 bg-muted/50 rounded-xl border border-border/50 text-center">
-            <p className="text-xs text-muted-foreground mb-1">
-              Credenciales de demostración:
-            </p>
-            <p className="text-xs text-foreground font-medium">
-              Admin: admin / admin123
-            </p>
-          </div>
         </div>
       </div>
     </div>

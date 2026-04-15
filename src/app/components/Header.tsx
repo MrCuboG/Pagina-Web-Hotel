@@ -87,7 +87,7 @@ export function Header() {
                 </button>
 
                 {isDropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-border overflow-hidden py-1 z-50 animate-in fade-in slide-in-from-top-2">
+                  <div className="absolute right-0 mt-2 w-56 bg-card rounded-xl shadow-xl border border-border overflow-hidden py-1 z-50 animate-in fade-in slide-in-from-top-2">
                     <div className="px-4 py-3 border-b border-border/50 bg-muted/30">
                       <p className="text-sm font-medium text-foreground">{user.username}</p>
                       <p className="text-xs text-muted-foreground">{user.role === 'admin' ? 'Administrador' : 'Huésped'}</p>
