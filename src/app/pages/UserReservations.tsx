@@ -56,6 +56,62 @@ export function UserReservations() {
     fetchReservations();
   }, [user]);
 
+  const handleCancelReservation = async (id: string, checkIn: string) => {
+    try {
+      const realId = id.replace('R-', ''); // Remove display prefix
+      const checkInDate = new Date(checkIn);
+      const today = new Date();
+      const diffTime = checkInDate.getTime() - today.getTime();
+      const diffDays = diffTime / (1000 * 3600 * 24);
+
+      let confirmMessage = '¿Estás seguro de que deseas cancelar esta reservación?';
+      if (diffDays > 0 && diffDays < 2) {
+        confirmMessage = '¡ALERTA!\nEstás a menos de 48 horas de tu reservación.\nLa cancelación en este plazo incurrirá en un cobro por cancelación tardía.\n\n¿Deseas continuar y cancelar con cobro?';
+      }
+
+      if (!window.confirm(confirmMessage)) return;
+
+      setLoading(true);
+      const res = await fetch(`http://localhost:5000/api/reservaciones/${realId}/cancelar`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ userId: user?.id })
+      });
+      
+      const data = await res.json();
+      if (res.ok) {
+        alert(data.message);
+        // Refetch or update state locally (simplest is to force a re-trigger of useEffect by just copying the fetch block or reloading)
+        const fetchReservations = async () => {
+          const response = await fetch(`http://localhost:5000/api/reservaciones/usuario/${user?.id}`);
+          const resData = await response.json();
+          const mapped: Reservation[] = resData.map((r: any) => ({
+              id: `R-${r.reservacion_id}`,
+              room: r.room_name + (r.room_number ? ` #${r.room_number}` : ''),
+              checkIn: r.check_in.substring(0, 10),
+              checkOut: r.check_out.substring(0, 10),
+              guests: 2,
+              status: r.status === 'Confirmada' ? 'confirmed' : (r.status === 'Cancelada' || r.status === 'Cancelada con Cobro' ? 'cancelled' : 'pending'),
+              total: `$${Number(r.total).toLocaleString('es-MX')} MXN`,
+              bookingDate: r.booking_date ? r.booking_date.substring(0, 10) : 'Fecha desconocida'
+          }));
+          setReservations(mapped);
+          setLoading(false);
+        };
+        fetchReservations();
+      } else {
+        alert(data.message || 'Error al cancelar');
+        setLoading(false);
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Error de red al intentar cancelar');
+      setLoading(false);
+    }
+  };
+
   const [activeFilter, setActiveFilter] = useState<'all' | 'upcoming' | 'past'>('all');
 
   const getStatusConfig = (status: string) => {
@@ -221,7 +277,10 @@ export function UserReservations() {
                           </button>
                         )}
                         {reservation.status !== 'cancelled' && (
-                          <button className="text-destructive text-sm font-medium hover:text-destructive/80 transition-colors py-2">
+                          <button 
+                            onClick={() => handleCancelReservation(reservation.id, reservation.checkIn)}
+                            className="text-destructive text-sm font-medium hover:text-destructive/80 transition-colors py-2"
+                          >
                             Cancelar Reservación
                           </button>
                         )}

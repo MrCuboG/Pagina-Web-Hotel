@@ -15,16 +15,26 @@ interface Reservation {
   checkIn: string;
   checkOut: string;
   guests: number;
-  status: 'pending' | 'confirmed' | 'cancelled';
+  status: string;
   total: string;
-  paymentStatus: 'paid' | 'pending' | 'refunded';
+  paymentStatus: string;
+}
+
+interface AdminUser {
+  id: string;
+  username: string;
+  email: string;
+  role: string;
+  estado: string;
 }
 
 interface NewUser {
   username: string;
   password: string;
-  role: 'admin' | 'user';
+  role: string;
+  email: string;
 }
+
 
 export function AdminDashboard() {
   const { user, logout } = useAuth();
@@ -36,53 +46,156 @@ export function AdminDashboard() {
   // Data mocks replaced by real states
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [dashboardStats, setDashboardStats] = useState({
-      roomsInfo: { totalRooms: 0, occupiedRooms: 0 },
-      revenue: 0,
-      activeReservations: 0,
-      pendingPayments: 0,
-      cleanliness: [] as { estado_limpieza: string, cantidad: number }[]
+    roomsInfo: { totalRooms: 0, occupiedRooms: 0 },
+    revenue: 0,
+    activeReservations: 0,
+    pendingPayments: 0,
+    cleanliness: [] as { estado_limpieza: string, cantidad: number }[],
+    roomsList: [] as { id: number, name: string, capacity: number, estado_limpieza: string }[]
   });
-  
+
   useEffect(() => {
     // Solo si estamos en el cliente y cargando info de admin
     const fetchAdminData = async () => {
-        try {
-            const [dashRes, rsvRes, contRes] = await Promise.all([
-                 fetch('http://localhost:5000/api/admin/dashboard'),
-                 fetch('http://localhost:5000/api/admin/reservaciones'),
-                 fetch('http://localhost:5000/api/contenidos')
-            ]);
-            
-            if (dashRes.ok) setDashboardStats(await dashRes.json());
-            if (rsvRes.ok) setReservations(await rsvRes.json());
-            if (contRes.ok) {
-                const contenidos = await contRes.json();
-                const datosFormateados = contenidos.reduce((acumulador: { [x: string]: any; }, item: { clave: string | number; valor: any; }) => {
-                   acumulador[item.clave] = item.valor;
-                   return acumulador;
-                }, {});
-                setHotelInfo(prev => ({
-                    ...prev,
-                    mision: datosFormateados.mision || prev.mision,
-                    vision: datosFormateados.vision || prev.vision,
-                    about: datosFormateados.about || prev.about
-                }));
-                setContactInfo(prev => ({
-                    ...prev,
-                    phone: datosFormateados.phone || prev.phone,
-                    email: datosFormateados.email || prev.email,
-                    address: datosFormateados.address || prev.address
-                }));
-            }
-        } catch(err) {
-            console.error("Error al obtener datos admin:", err);
+      try {
+        const [dashRes, rsvRes, contRes] = await Promise.all([
+          fetch('http://localhost:5000/api/admin/dashboard'),
+          fetch('http://localhost:5000/api/admin/reservaciones'),
+          fetch('http://localhost:5000/api/contenidos')
+        ]);
+
+        if (dashRes.ok) setDashboardStats(await dashRes.json());
+        if (rsvRes.ok) setReservations(await rsvRes.json());
+        if (contRes.ok) {
+          const contenidos = await contRes.json();
+          const datosFormateados = contenidos.reduce((acumulador: { [x: string]: any; }, item: { clave: string | number; valor: any; }) => {
+            acumulador[item.clave] = item.valor;
+            return acumulador;
+          }, {});
+          setHotelInfo(prev => ({
+            ...prev,
+            mision: datosFormateados.mision || prev.mision,
+            vision: datosFormateados.vision || prev.vision,
+            about: datosFormateados.about || prev.about
+          }));
+          setContactInfo(prev => ({
+            ...prev,
+            phone: datosFormateados.phone || prev.phone,
+            email: datosFormateados.email || prev.email,
+            address: datosFormateados.address || prev.address
+          }));
         }
+      } catch (err) {
+        console.error("Error al obtener datos admin:", err);
+      }
     };
     fetchAdminData();
   }, []);
 
-  const [users, setUsers] = useState([{ id: '1', username: 'admin', role: 'admin' as const }]);
-  const [newUser, setNewUser] = useState<NewUser>({ username: '', password: '', role: 'user' });
+  const [users, setUsers] = useState<AdminUser[]>([]);
+  const [newUser, setNewUser] = useState<NewUser>({ username: '', password: '', role: 'Admin', email: '' });
+  const [editingUserId, setEditingUserId] = useState<string | null>(null);
+
+  const fetchUsers = async () => {
+    if (user?.role !== 'admin') return;
+    try {
+      const res = await fetch('http://localhost:5000/api/admin/usuarios', {
+        headers: { 'x-admin-id': user.id }
+      });
+      if (res.ok) {
+        setUsers(await res.json());
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    if (activeMenu === 'users') {
+      fetchUsers();
+    }
+  }, [activeMenu, user]);
+
+  const handleSaveUser = async () => {
+    if (!newUser.username || (!newUser.password && !editingUserId)) return alert('Completa los campos obligatorios');
+    try {
+      const url = editingUserId
+        ? `http://localhost:5000/api/admin/usuarios/${editingUserId}`
+        : 'http://localhost:5000/api/admin/usuarios';
+      const method = editingUserId ? 'PUT' : 'POST';
+
+      const res = await fetch(url, {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+          'x-admin-id': user?.id || ''
+        },
+        body: JSON.stringify(newUser)
+      });
+      if (res.ok) {
+        alert(`Usuario ${editingUserId ? 'actualizado' : 'creado'} exitosamente`);
+        setNewUser({ username: '', password: '', role: 'Admin', email: '' });
+        setEditingUserId(null);
+        fetchUsers();
+      } else {
+        const errorData = await res.json();
+        alert(errorData.message || `Error al ${editingUserId ? 'actualizar' : 'crear'} usuario`);
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Error de conexión');
+    }
+  };
+
+  const handleEditClick = (u: AdminUser) => {
+    setEditingUserId(u.id.toString());
+    setNewUser({ username: u.username, password: '', email: u.email || '', role: u.role });
+  };
+
+  const handleCancelEdit = () => {
+    setEditingUserId(null);
+    setNewUser({ username: '', password: '', role: 'Admin', email: '' });
+  };
+
+  const handleReactivateUser = async (id: string, username: string) => {
+    if (!confirm(`¿Estás seguro de que deseas reactivar a ${username}?`)) return;
+    try {
+      const res = await fetch(`http://localhost:5000/api/admin/usuarios/${id}/reactivate`, {
+        method: 'PUT',
+        headers: { 'x-admin-id': user?.id || '' }
+      });
+      if (res.ok) {
+        alert('Usuario reactivado exitosamente');
+        fetchUsers();
+      } else {
+        const errorData = await res.json();
+        alert(errorData.message || 'Error al reactivar usuario');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Error de conexión');
+    }
+  };
+
+  const handleDeleteUser = async (id: string, username: string) => {
+    if (!confirm(`¿Estás seguro de que deseas dar de baja a ${username}?`)) return;
+    try {
+      const res = await fetch(`http://localhost:5000/api/admin/usuarios/${id}`, {
+        method: 'DELETE',
+        headers: { 'x-admin-id': user?.id || '' }
+      });
+      if (res.ok) {
+        alert('Usuario dado de baja exitosamente');
+        fetchUsers();
+      } else {
+        const errorData = await res.json();
+        alert(errorData.message || 'Error al eliminar usuario');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Error de conexión');
+    }
+  };
 
   // CMS State
   const [hotelInfo, setHotelInfo] = useState({
@@ -104,22 +217,60 @@ export function AdminDashboard() {
   ]);
 
   const handleSaveCMS = async () => {
-      try {
-          const bodyData = { ...hotelInfo, ...contactInfo };
-          const res = await fetch('http://localhost:5000/api/contenidos', {
-              method: 'PUT',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(bodyData)
-          });
-          if (res.ok) {
-              alert("Contenidos guardados y reflejados en Inicio exitosamente.");
-          } else {
-              alert("Error al guardar contenido.");
-          }
-      } catch (err) {
-           console.error(err);
-           alert("Error de red al intentar guardar.");
+    try {
+      const bodyData = { ...hotelInfo, ...contactInfo };
+      const res = await fetch('http://localhost:5000/api/contenidos', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(bodyData)
+      });
+      if (res.ok) {
+        alert("Contenidos guardados y reflejados en Inicio exitosamente.");
+      } else {
+        alert("Error al guardar contenido.");
       }
+    } catch (err) {
+      console.error(err);
+      alert("Error de red al intentar guardar.");
+    }
+  };
+
+  const handleUpdateRoomCleanliness = async (roomId: number, status: string) => {
+    try {
+      const res = await fetch(`http://localhost:5000/api/admin/habitaciones/${roomId}/limpieza`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'x-admin-id': user?.id || '' },
+        body: JSON.stringify({ estado_limpieza: status })
+      });
+      if (res.ok) {
+        const dashRes = await fetch('http://localhost:5000/api/admin/dashboard', { headers: { 'x-admin-id': user?.id || '' } });
+        if (dashRes.ok) setDashboardStats(await dashRes.json());
+      } else {
+        alert("Error al actualizar la limpieza");
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleAdminCancelReservation = async (resId: string) => {
+    if (!confirm("¿Deseas dar de baja (cancelar) esta reservación manualmente?")) return;
+    try {
+      const res = await fetch(`http://localhost:5000/api/admin/reservaciones/${resId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'x-admin-id': user?.id || '' },
+        body: JSON.stringify({ status: 'Cancelada' })
+      });
+      if (res.ok) {
+        alert("Reservación cancelada.");
+        const rsvRes = await fetch('http://localhost:5000/api/admin/reservaciones', { headers: { 'x-admin-id': user?.id || '' } });
+        if (rsvRes.ok) setReservations(await rsvRes.json());
+      } else {
+        alert("Error al cancelar la reserva.");
+      }
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const handleLogout = () => {
@@ -171,7 +322,7 @@ export function AdminDashboard() {
             <h1 className="text-xl font-bold text-foreground hidden sm:block">Panel de Control</h1>
           </div>
         </div>
-        
+
         <div className="flex items-center gap-4">
           <div className="text-right hidden sm:block">
             <p className="text-xs text-muted-foreground">Admin</p>
@@ -190,18 +341,16 @@ export function AdminDashboard() {
             <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 px-4 mt-2">Principal</div>
             <button
               onClick={() => setActiveMenu('overview')}
-              className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${
-                activeMenu === 'overview' ? 'bg-primary text-white' : 'text-foreground hover:bg-muted hover:text-primary'
-              }`}
+              className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${activeMenu === 'overview' ? 'bg-primary text-white' : 'text-foreground hover:bg-muted hover:text-primary'
+                }`}
             >
               <PieChartIcon size={18} />
               Resumen Operativo
             </button>
             <button
               onClick={() => setActiveMenu('reservations')}
-              className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${
-                activeMenu === 'reservations' ? 'bg-primary text-white' : 'text-foreground hover:bg-muted hover:text-primary'
-              }`}
+              className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${activeMenu === 'reservations' ? 'bg-primary text-white' : 'text-foreground hover:bg-muted hover:text-primary'
+                }`}
             >
               <Calendar size={18} />
               Reservaciones & Pagos
@@ -210,24 +359,24 @@ export function AdminDashboard() {
             <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 px-4 mt-6">Administración</div>
             <button
               onClick={() => setActiveMenu('cms')}
-              className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${
-                activeMenu === 'cms' ? 'bg-primary text-white' : 'text-foreground hover:bg-muted hover:text-primary'
-              }`}
+              className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${activeMenu === 'cms' ? 'bg-primary text-white' : 'text-foreground hover:bg-muted hover:text-primary'
+                }`}
             >
               <FileEdit size={18} />
               Gestor de Contenido
             </button>
-            <button
-              onClick={() => setActiveMenu('users')}
-              className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${
-                activeMenu === 'users' ? 'bg-primary text-white' : 'text-foreground hover:bg-muted hover:text-primary'
-              }`}
-            >
-              <Users size={18} />
-              Usuarios
-            </button>
+            {user?.role === 'admin' && (
+              <button
+                onClick={() => setActiveMenu('users')}
+                className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${activeMenu === 'users' ? 'bg-primary text-white' : 'text-foreground hover:bg-muted hover:text-primary'
+                  }`}
+              >
+                <Users size={18} />
+                Usuarios
+              </button>
+            )}
           </nav>
-          
+
           <div className="p-4 border-t border-border">
             <button onClick={() => navigate('/')} className="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm text-muted-foreground hover:text-primary hover:bg-muted rounded-lg transition-all">
               <HomeIcon size={16} />
@@ -238,12 +387,12 @@ export function AdminDashboard() {
 
         {/* Main Content */}
         <main className="flex-1 overflow-y-auto bg-muted/30 p-4 lg:p-8">
-          
+
           {/* OVERVIEW / RESUMEN OPERATIVO */}
           {activeMenu === 'overview' && (
             <div className="animate-in fade-in duration-300">
               <h2 className="text-2xl font-bold text-foreground mb-6">Resumen Operativo</h2>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                 <div className="bg-card p-6 rounded-2xl border border-border shadow-sm">
                   <div className="flex justify-between items-start mb-4">
@@ -304,64 +453,78 @@ export function AdminDashboard() {
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                 {/* Gráfica de Limpieza */}
-                 <div className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden p-6 flex flex-col justify-center">
-                    <h3 className="text-lg font-bold text-foreground mb-4">Estado de Limpieza de Habitaciones</h3>
-                    <div className="h-64 w-full">
-                      {dashboardStats.cleanliness.length > 0 ? (
-                        <ResponsiveContainer width="100%" height="100%">
-                           <PieChart>
-                             <Pie
-                               data={dashboardStats.cleanliness}
-                               cx="50%"
-                               cy="50%"
-                               innerRadius={60}
-                               outerRadius={80}
-                               paddingAngle={5}
-                               dataKey="cantidad"
-                               nameKey="estado_limpieza"
-                             >
-                               {dashboardStats.cleanliness.map((entry, index) => {
-                                  let color = '#a855f7'; // Purple default
-                                  if (entry.estado_limpieza === 'Limpia') color = '#22c55e'; // Green
-                                  if (entry.estado_limpieza === 'Sucia') color = '#f97316'; // Orange
-                                  if (entry.estado_limpieza === 'Mantenimiento') color = '#ef4444'; // Red
-                                  return <Cell key={`cell-${index}`} fill={color} />;
-                               })}
-                             </Pie>
-                             <Tooltip formatter={(value, name) => [value, name]} />
-                             <Legend />
-                           </PieChart>
-                        </ResponsiveContainer>
-                      ) : (
-                        <p className="text-muted-foreground text-center flex items-center justify-center h-full">No hay datos suficientes</p>
+                {/* Gráfica de Limpieza */}
+                <div className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden p-6 flex flex-col justify-center">
+                  <h3 className="text-lg font-bold text-foreground mb-4">Estado de Limpieza de Habitaciones</h3>
+                  <div className="h-64 w-full">
+                    {dashboardStats.cleanliness.length > 0 ? (
+                      <ResponsiveContainer width="100%" height="100%">
+                        <PieChart>
+                          <Pie
+                            data={dashboardStats.cleanliness}
+                            cx="50%"
+                            cy="50%"
+                            innerRadius={60}
+                            outerRadius={80}
+                            paddingAngle={5}
+                            dataKey="cantidad"
+                            nameKey="estado_limpieza"
+                          >
+                            {dashboardStats.cleanliness.map((entry, index) => {
+                              let color = '#a855f7'; // Purple default
+                              if (entry.estado_limpieza === 'Limpia') color = '#22c55e'; // Green
+                              if (entry.estado_limpieza === 'Sucia') color = '#f97316'; // Orange
+                              if (entry.estado_limpieza === 'Mantenimiento') color = '#ef4444'; // Red
+                              return <Cell key={`cell-${index}`} fill={color} />;
+                            })}
+                          </Pie>
+                          <Tooltip formatter={(value, name) => [value, name]} />
+                          <Legend />
+                        </PieChart>
+                      </ResponsiveContainer>
+                    ) : (
+                      <p className="text-muted-foreground text-center flex items-center justify-center h-full">No hay datos suficientes</p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Lista reducida de Habitaciones */}
+                <div className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden">
+                  <div className="p-6 border-b border-border flex justify-between items-center">
+                    <h3 className="text-lg font-bold text-foreground">Inventario</h3>
+                  </div>
+                  <div className="p-6">
+                    <div className="space-y-4 max-h-[300px] overflow-y-auto pr-2">
+                      {dashboardStats.roomsList?.map(room => (
+                        <div key={room.id} className="flex items-center justify-between p-4 bg-muted/30 rounded-xl border border-border">
+                          <div className="flex items-center gap-4">
+                            <div className="w-12 h-12 rounded-lg bg-card border border-border flex items-center justify-center">
+                              <BedDouble size={20} className="text-primary" />
+                            </div>
+                            <div>
+                              <h4 className="font-semibold text-foreground">Habitación {room.name}</h4>
+                              <p className="text-xs text-muted-foreground">Capacidad: {room.capacity} personas</p>
+                            </div>
+                          </div>
+                          <div>
+                            <select
+                              className="text-xs px-2 py-1 rounded bg-white border border-border focus:ring-1 focus:ring-primary"
+                              value={room.estado_limpieza}
+                              onChange={(e) => handleUpdateRoomCleanliness(room.id, e.target.value)}
+                            >
+                              <option value="Limpia">Limpia</option>
+                              <option value="Sucia">Sucia</option>
+                              <option value="Mantenimiento">Mantenimiento</option>
+                            </select>
+                          </div>
+                        </div>
+                      ))}
+                      {(!dashboardStats.roomsList || dashboardStats.roomsList.length === 0) && (
+                        <p className="text-sm text-muted-foreground text-center">No se encontraron habitaciones activas.</p>
                       )}
                     </div>
-                 </div>
-
-                 {/* Lista reducida de Habitaciones */}
-                 <div className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden">
-                   <div className="p-6 border-b border-border flex justify-between items-center">
-                     <h3 className="text-lg font-bold text-foreground">Inventario</h3>
-                   </div>
-                   <div className="p-6">
-                     <div className="space-y-4">
-                       {roomsConfig.map(room => (
-                         <div key={room.id} className="flex items-center justify-between p-4 bg-muted/30 rounded-xl border border-border">
-                           <div className="flex items-center gap-4">
-                             <div className="w-12 h-12 rounded-lg bg-card border border-border flex items-center justify-center">
-                               <BedDouble size={20} className="text-primary" />
-                             </div>
-                             <div>
-                               <h4 className="font-semibold text-foreground">{room.name}</h4>
-                               <p className="text-xs text-muted-foreground">Capacidad: {room.capacity} personas</p>
-                             </div>
-                           </div>
-                         </div>
-                       ))}
-                     </div>
-                   </div>
-                 </div>
+                  </div>
+                </div>
               </div>
             </div>
           )}
@@ -386,12 +549,12 @@ export function AdminDashboard() {
                   <table className="w-full text-sm text-left">
                     <thead className="bg-muted/50 border-b border-border text-muted-foreground sticky top-0">
                       <tr>
-                     <th className="px-6 py-4 font-semibold bg-muted/50 text-muted-foreground">ID / Huésped</th>
-                     <th className="px-6 py-4 font-semibold bg-muted/50 text-muted-foreground">Habitación</th>
-                     <th className="px-6 py-4 font-semibold bg-muted/50 text-muted-foreground">Fechas</th>
-                     <th className="px-6 py-4 font-semibold bg-muted/50 text-muted-foreground">Total</th>
-                     <th className="px-6 py-4 font-semibold bg-muted/50 text-muted-foreground">Estado Reserva</th>
-                     <th className="px-6 py-4 font-semibold bg-muted/50 text-muted-foreground">Estado Pago</th>
+                        <th className="px-6 py-4 font-semibold bg-muted/50 text-muted-foreground">ID / Huésped</th>
+                        <th className="px-6 py-4 font-semibold bg-muted/50 text-muted-foreground">Habitación</th>
+                        <th className="px-6 py-4 font-semibold bg-muted/50 text-muted-foreground">Fechas</th>
+                        <th className="px-6 py-4 font-semibold bg-muted/50 text-muted-foreground">Total</th>
+                        <th className="px-6 py-4 font-semibold bg-muted/50 text-muted-foreground">Estado Reserva</th>
+                        <th className="px-6 py-4 font-semibold bg-muted/50 text-muted-foreground">Estado Pago</th>
                         <th className="px-6 py-4 font-semibold text-right">Acciones</th>
                       </tr>
                     </thead>
@@ -412,12 +575,12 @@ export function AdminDashboard() {
                           <td className="px-6 py-4">{getPaymentBadge(reservation.paymentStatus)}</td>
                           <td className="px-6 py-4">
                             <div className="flex justify-end gap-2">
-                              <button className="p-1.5 hover:bg-primary/10 rounded-md transition-colors text-primary" title="Editar">
-                                <Edit size={16} />
-                              </button>
-                              <button className="p-1.5 hover:bg-destructive/10 rounded-md transition-colors text-destructive" title="Cancelar">
-                                <Trash2 size={16} />
-                              </button>
+                              {reservation.status !== 'Cancelada' && reservation.status !== 'Cancelada con Cobro' && (
+                                <button className="p-1.5 hover:bg-destructive/10 rounded-md transition-colors text-destructive" title="Cancelar Reserva"
+                                  onClick={() => handleAdminCancelReservation(reservation.id)}>
+                                  <Trash2 size={16} />
+                                </button>
+                              )}
                             </div>
                           </td>
                         </tr>
@@ -441,19 +604,19 @@ export function AdminDashboard() {
 
               <div className="bg-white rounded-2xl border border-border shadow-sm overflow-hidden mb-6">
                 <div className="flex border-b border-border overflow-x-auto">
-                  <button 
+                  <button
                     onClick={() => setActiveCmsTab('info')}
                     className={`px-6 py-4 text-sm font-semibold whitespace-nowrap transition-colors ${activeCmsTab === 'info' ? 'text-primary border-b-2 border-primary' : 'text-muted-foreground hover:text-foreground'}`}
                   >
                     Misión y Visión
                   </button>
-                  <button 
+                  <button
                     onClick={() => setActiveCmsTab('contact')}
                     className={`px-6 py-4 text-sm font-semibold whitespace-nowrap transition-colors ${activeCmsTab === 'contact' ? 'text-primary border-b-2 border-primary' : 'text-muted-foreground hover:text-foreground'}`}
                   >
                     Datos de Contacto
                   </button>
-                  <button 
+                  <button
                     onClick={() => setActiveCmsTab('rooms')}
                     className={`px-6 py-4 text-sm font-semibold whitespace-nowrap transition-colors ${activeCmsTab === 'rooms' ? 'text-primary border-b-2 border-primary' : 'text-muted-foreground hover:text-foreground'}`}
                   >
@@ -468,7 +631,7 @@ export function AdminDashboard() {
                         <label className="block text-sm font-semibold text-foreground mb-2">Misión del Hotel</label>
                         <textarea
                           value={hotelInfo.mision}
-                          onChange={(e) => setHotelInfo({...hotelInfo, mision: e.target.value})}
+                          onChange={(e) => setHotelInfo({ ...hotelInfo, mision: e.target.value })}
                           rows={4}
                           className="w-full p-4 rounded-xl border border-border bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 resize-none"
                         />
@@ -477,7 +640,7 @@ export function AdminDashboard() {
                         <label className="block text-sm font-semibold text-foreground mb-2">Visión del Hotel</label>
                         <textarea
                           value={hotelInfo.vision}
-                          onChange={(e) => setHotelInfo({...hotelInfo, vision: e.target.value})}
+                          onChange={(e) => setHotelInfo({ ...hotelInfo, vision: e.target.value })}
                           rows={4}
                           className="w-full p-4 rounded-xl border border-border bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 resize-none"
                         />
@@ -486,7 +649,7 @@ export function AdminDashboard() {
                         <label className="block text-sm font-semibold text-foreground mb-2">Texto "Acerca de Nosotros"</label>
                         <textarea
                           value={hotelInfo.about}
-                          onChange={(e) => setHotelInfo({...hotelInfo, about: e.target.value})}
+                          onChange={(e) => setHotelInfo({ ...hotelInfo, about: e.target.value })}
                           rows={3}
                           className="w-full p-4 rounded-xl border border-border bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 resize-none"
                         />
@@ -501,7 +664,7 @@ export function AdminDashboard() {
                         <input
                           type="text"
                           value={contactInfo.phone}
-                          onChange={(e) => setContactInfo({...contactInfo, phone: e.target.value})}
+                          onChange={(e) => setContactInfo({ ...contactInfo, phone: e.target.value })}
                           className="w-full px-4 py-3 rounded-xl border border-border bg-white focus:outline-none focus:ring-2 focus:ring-primary/20"
                         />
                       </div>
@@ -510,7 +673,7 @@ export function AdminDashboard() {
                         <input
                           type="email"
                           value={contactInfo.email}
-                          onChange={(e) => setContactInfo({...contactInfo, email: e.target.value})}
+                          onChange={(e) => setContactInfo({ ...contactInfo, email: e.target.value })}
                           className="w-full px-4 py-3 rounded-xl border border-border bg-white focus:outline-none focus:ring-2 focus:ring-primary/20"
                         />
                       </div>
@@ -518,7 +681,7 @@ export function AdminDashboard() {
                         <label className="block text-sm font-semibold text-foreground mb-2 flex items-center gap-2"><MapPin size={16} /> Dirección Física</label>
                         <textarea
                           value={contactInfo.address}
-                          onChange={(e) => setContactInfo({...contactInfo, address: e.target.value})}
+                          onChange={(e) => setContactInfo({ ...contactInfo, address: e.target.value })}
                           rows={2}
                           className="w-full p-4 rounded-xl border border-border bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 resize-none"
                         />
@@ -578,20 +741,23 @@ export function AdminDashboard() {
 
           {/* USERS / USUARIOS */}
           {activeMenu === 'users' && (
-             <div className="animate-in fade-in duration-300 max-w-5xl">
+            <div className="animate-in fade-in duration-300 max-w-5xl">
               <h2 className="text-2xl font-bold text-foreground mb-6">Gestión de Usuarios Administrativos</h2>
-              
+
               <div className="bg-card rounded-2xl border border-border shadow-sm p-6 mb-6">
                 <h3 className="text-lg font-bold text-foreground mb-4 flex items-center gap-2">
-                  <Plus size={20} className="text-primary" /> Agregar Nuevo Administrador
+                  {editingUserId ? <Edit size={20} className="text-primary" /> : <Plus size={20} className="text-primary" />}
+                  {editingUserId ? 'Modificar Usuario' : 'Agregar Nuevo Usuario'}
                 </h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
                   <div>
                     <label className="block text-sm font-semibold text-foreground mb-2">Usuario</label>
                     <input
                       type="text"
                       className="w-full px-4 py-2.5 rounded-xl border border-border bg-white focus:outline-none focus:ring-2 focus:ring-primary/20"
                       placeholder="Ej. recepcion_1"
+                      value={newUser.username}
+                      onChange={(e) => setNewUser({ ...newUser, username: e.target.value })}
                     />
                   </div>
                   <div>
@@ -600,11 +766,32 @@ export function AdminDashboard() {
                       type="password"
                       className="w-full px-4 py-2.5 rounded-xl border border-border bg-white focus:outline-none focus:ring-2 focus:ring-primary/20"
                       placeholder="********"
+                      value={newUser.password}
+                      onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
                     />
                   </div>
-                  <button className="btn-primary py-2.5 px-4 rounded-xl text-white font-medium text-sm shadow-sm">
-                    Crear Usuario
-                  </button>
+                  <div>
+                    <label className="block text-sm font-semibold text-foreground mb-2">Rol</label>
+                    <select
+                      className="w-full px-4 py-2.5 rounded-xl border border-border bg-white focus:outline-none focus:ring-2 focus:ring-primary/20"
+                      value={newUser.role}
+                      onChange={(e) => setNewUser({ ...newUser, role: e.target.value })}
+                    >
+                      <option value="Admin">Administrador</option>
+                      <option value="Recepcion">Recepción</option>
+                      <option value="Cliente">Cliente</option>
+                    </select>
+                  </div>
+                  <div className="flex gap-2">
+                    <button onClick={handleSaveUser} className="btn-primary flex-1 py-2.5 px-4 rounded-xl text-white font-medium text-sm shadow-sm h-[46px]">
+                      {editingUserId ? 'Guardar' : 'Crear'}
+                    </button>
+                    {editingUserId && (
+                      <button onClick={handleCancelEdit} className="flex-1 py-2.5 px-4 rounded-xl font-medium text-sm border border-border hover:bg-muted h-[46px]">
+                        Cancelar
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
 
@@ -620,17 +807,48 @@ export function AdminDashboard() {
                           <Users size={18} />
                         </div>
                         <div>
-                          <p className="font-bold text-foreground">{u.username}</p>
+                          <p className="font-bold text-foreground">
+                            {u.username}
+                            {u.id.toString() === user?.id?.toString() && <span className="ml-2 text-xs text-muted-foreground">(Tú)</span>}
+                          </p>
                           <span className="text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 font-medium">
                             {u.role.toUpperCase()}
                           </span>
+                          {u.estado === 'Inactivo' && (
+                            <span className="ml-2 text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 font-medium border border-slate-200">
+                              Inactivo
+                            </span>
+                          )}
                         </div>
                       </div>
-                      {u.id !== '1' && (
-                        <button className="p-2 text-destructive hover:bg-destructive/10 rounded-lg transition-colors">
-                          <Trash2 size={18} />
+                      <div className="flex gap-2">
+                        <button
+                          title="Editar"
+                          onClick={() => handleEditClick(u)}
+                          className="p-2 text-primary hover:bg-primary/10 rounded-lg transition-colors"
+                        >
+                          <Edit size={18} />
                         </button>
-                      )}
+                        {u.id.toString() !== user?.id?.toString() && (
+                          u.estado === 'Inactivo' ? (
+                            <button
+                              title="Dar de alta / Reactivar"
+                              onClick={() => handleReactivateUser(u.id.toString(), u.username)}
+                              className="p-2 text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
+                            >
+                              <CheckCircle2 size={18} />
+                            </button>
+                          ) : (
+                            <button
+                              title="Dar de baja"
+                              onClick={() => handleDeleteUser(u.id.toString(), u.username)}
+                              className="p-2 text-destructive hover:bg-destructive/10 rounded-lg transition-colors"
+                            >
+                              <Trash2 size={18} />
+                            </button>
+                          )
+                        )}
+                      </div>
                     </div>
                   ))}
                 </div>

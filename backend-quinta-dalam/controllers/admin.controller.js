@@ -1,4 +1,5 @@
 const pool = require('../database');
+const bcrypt = require('bcryptjs');
 
 const getDashboardStats = async (req, res) => {
     try {
@@ -20,6 +21,15 @@ const getDashboardStats = async (req, res) => {
         // 5. Estadísticas de Limpieza para el gráfico (Pastel)
         const limpiezaStats = await pool.query(`SELECT estado_limpieza, COUNT(*) as cantidad FROM habitaciones WHERE estado = 'Activo' GROUP BY estado_limpieza`);
 
+        // 6. Lista detallada de habitaciones para el inventario
+        const cuartosDetalle = await pool.query(`
+            SELECT h.id, h.numero as name, t.capacidad_maxima as capacity, h.estado_limpieza 
+            FROM habitaciones h 
+            JOIN tipo_habitacion t ON h.tipo_id = t.id 
+            WHERE h.estado = 'Activo'
+            ORDER BY h.id ASC
+        `);
+
         res.json({
             roomsInfo: {
                 totalRooms: parseInt(cuartosTot.rows[0].total) || 0,
@@ -28,7 +38,8 @@ const getDashboardStats = async (req, res) => {
             revenue: parseFloat(ingresos.rows[0].total_ingreso) || 0,
             activeReservations: parseInt(reservasActivas.rows[0].activas) || 0,
             pendingPayments: parseInt(pagosPendientes.rows[0].pendientes) || 0,
-            cleanliness: limpiezaStats.rows // ej: [{estado_limpieza: 'Limpia', cantidad: 3}, ...]
+            cleanliness: limpiezaStats.rows, // ej: [{estado_limpieza: 'Limpia', cantidad: 3}, ...]
+            roomsList: cuartosDetalle.rows // ej: [{id: 1, name: '101', capacity: 2, estado_limpieza: 'Limpia'}, ...]
         });
     } catch (error) {
         console.error(error);
@@ -80,4 +91,159 @@ const getAllReservations = async (req, res) => {
     }
 };
 
-module.exports = { getDashboardStats, getAllReservations };
+// ================= GESTION DE ADMINISTRADORES =================
+
+const getAdminUsers = async (req, res) => {
+    try {
+        const query = `
+            SELECT id, nombre as username, email, rol as role, estado 
+            FROM usuarios 
+            ORDER BY id DESC;
+        `;
+        const result = await pool.query(query);
+        res.json(result.rows);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error al obtener usuarios' });
+    }
+};
+
+const createAdminUser = async (req, res) => {
+    const { username, email, password, role } = req.body;
+    if (!username || !password || !role) {
+        return res.status(400).json({ message: 'Faltan campos obligatorios' });
+    }
+    
+    // Por si no mandan email, podemos asignar uno dummy o dejarlo nulo basado en esquema. Supondremos que email puede ser util para 'recepcion', asi que usaremos un fallback si no viene.
+    const userEmail = email || `${username}@hotel.com`;
+
+    try {
+        const checkExists = await pool.query('SELECT id FROM usuarios WHERE nombre = $1', [username]);
+        if (checkExists.rows.length > 0) {
+            return res.status(400).json({ message: 'El nombre de usuario ya existe' });
+        }
+
+        const salt = await bcrypt.genSalt(10);
+        const passwordHash = await bcrypt.hash(password, salt);
+
+        const newUser = await pool.query(
+            `INSERT INTO usuarios (nombre, email, password_hash, rol, estado, creado_en) 
+             VALUES ($1, $2, $3, $4, $5, NOW()) RETURNING id, nombre as username, email, rol as role, estado`,
+            [username, userEmail, passwordHash, role, 'Activo']
+        );
+
+        res.status(201).json({ message: 'Usuario creado', user: newUser.rows[0] });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error al crear usuario administrativo' });
+    }
+};
+
+const updateAdminUser = async (req, res) => {
+    const { id } = req.params;
+    const { username, email, role, password } = req.body;
+
+    try {
+        let updateQuery = 'UPDATE usuarios SET nombre = $1, email = $2, rol = $3';
+        const values = [username, email, role];
+        
+        let paramCount = 4;
+        if (password) {
+            const salt = await bcrypt.genSalt(10);
+            const passwordHash = await bcrypt.hash(password, salt);
+            updateQuery += `, password_hash = $${paramCount}`;
+            values.push(passwordHash);
+            paramCount++;
+        }
+        
+        updateQuery += ` WHERE id = $${paramCount} RETURNING id, nombre as username, email, rol as role, estado`;
+        values.push(id);
+
+        const updatedUser = await pool.query(updateQuery, values);
+        
+        if (updatedUser.rows.length === 0) {
+            return res.status(404).json({ message: 'Usuario no encontrado' });
+        }
+
+        res.json({ message: 'Usuario actualizado', user: updatedUser.rows[0] });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error al actualizar usuario' });
+    }
+};
+
+const deleteAdminUser = async (req, res) => {
+    const { id } = req.params;
+    try {
+        // Soft delete: cambiar estado a inactivo
+        const deleteRes = await pool.query(
+            'UPDATE usuarios SET estado = $1, eliminado_en = NOW() WHERE id = $2 RETURNING id',
+            ['Inactivo', id]
+        );
+
+        if (deleteRes.rows.length === 0) {
+            return res.status(404).json({ message: 'Usuario no encontrado' });
+        }
+
+        res.json({ message: 'Usuario dado de baja exitosamente' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error al dar de baja el usuario' });
+    }
+};
+
+const reactivateAdminUser = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const reactivateRes = await pool.query(
+            'UPDATE usuarios SET estado = $1, eliminado_en = NULL WHERE id = $2 RETURNING id',
+            ['Activo', id]
+        );
+        if (reactivateRes.rows.length === 0) {
+            return res.status(404).json({ message: 'Usuario no encontrado' });
+        }
+        res.json({ message: 'Usuario dado de alta exitosamente' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error al dar de alta el usuario' });
+    }
+};
+
+const updateReservationAdmin = async (req, res) => {
+    const { id } = req.params;
+    const { status } = req.body;
+    try {
+        const updateRes = await pool.query(
+            'UPDATE reservaciones SET estado_reservacion = $1 WHERE id = $2 RETURNING id',
+            [status, id]
+        );
+        if (updateRes.rows.length === 0) {
+            return res.status(404).json({ message: 'Reservación no encontrada' });
+        }
+        res.json({ message: 'Estado de reservación modificado exitosamente' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error interno al actualizar la reservación' });
+    }
+};
+
+const updateRoomCleanliness = async (req, res) => {
+    const { id } = req.params;
+    const { estado_limpieza } = req.body;
+    try {
+        // estado_limpieza can be Limpia, Sucia, Mantenimiento
+        const cleanRes = await pool.query(
+            'UPDATE habitaciones SET estado_limpieza = $1 WHERE id = $2 RETURNING id',
+            [estado_limpieza, id]
+        );
+        if (cleanRes.rows.length === 0) {
+            return res.status(404).json({ message: 'Habitación no encontrada' });
+        }
+        res.json({ message: 'Estado de limpieza actualizado' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error al actualizar habitación' });
+    }
+};
+
+module.exports = { getDashboardStats, getAllReservations, getAdminUsers, createAdminUser, updateAdminUser, deleteAdminUser, reactivateAdminUser, updateReservationAdmin, updateRoomCleanliness };

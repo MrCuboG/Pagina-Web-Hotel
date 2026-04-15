@@ -23,11 +23,23 @@ const crearReservacion = async (req, res) => {
             huespedId = insertHuesped.rows[0].id;
         }
 
-        // 2. Establecer la habitacion a usar (como prueba, tomamos la primera activa disponible si coincide el tipo_id, si no, cualquier activa)
-        // Ya que probaremos con bypass, buscaremos una habitacion al azar que esté Activa.
-        const habitacionData = await pool.query(`SELECT id FROM habitaciones WHERE estado = 'Activo' LIMIT 1`);
+        // 2. Comprobar que no esté ocupada en las fechas (Manejo de Overlap)
+        const habitacionData = await pool.query(`
+            SELECT h.id 
+            FROM habitaciones h
+            WHERE h.estado = 'Activo'
+            AND h.id NOT IN (
+                SELECT dr.habitacion_id 
+                FROM detalle_reservacion dr
+                JOIN reservaciones r ON dr.reservacion_id = r.id
+                WHERE r.estado_reservacion NOT IN ('Cancelada', 'Cancelada con Cobro')
+                AND dr.check_in < $2 AND dr.check_out > $1
+            )
+            LIMIT 1
+        `, [checkIn, checkOut]);
+
         if (habitacionData.rows.length === 0) {
-            return res.status(404).json({ message: 'No hay habitaciones disponibles actualmente' });
+            return res.status(404).json({ message: 'No hay habitaciones disponibles para estas fechas' });
         }
         const habitacionId = habitacionData.rows[0].id;
 
@@ -90,4 +102,51 @@ const obtenerMisReservaciones = async (req, res) => {
     }
 };
 
-module.exports = { crearReservacion, obtenerMisReservaciones };
+const cancelarReservacionCliente = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { userId } = req.body; // or fetch it if needed, we assume it comes in body
+        
+        // Obtenemos los detalles de la reserva
+        const queryRes = await pool.query(`
+            SELECT r.id, r.estado_reservacion, dr.check_in 
+            FROM reservaciones r
+            JOIN detalle_reservacion dr ON dr.reservacion_id = r.id
+            WHERE r.id = $1
+        `, [id]);
+
+        if (queryRes.rows.length === 0) {
+            return res.status(404).json({ message: 'Reservación no encontrada' });
+        }
+
+        const reserva = queryRes.rows[0];
+        
+        if (reserva.estado_reservacion === 'Cancelada' || reserva.estado_reservacion === 'Cancelada con Cobro') {
+            return res.status(400).json({ message: 'La reservación ya se encuentra cancelada' });
+        }
+
+        const checkInDate = new Date(reserva.check_in);
+        const hoy = new Date();
+        const diffTiempo = checkInDate.getTime() - hoy.getTime();
+        const diffDias = diffTiempo / (1000 * 3600 * 24);
+
+        let nuevoEstado = 'Cancelada';
+        let mensaje = 'Reservación cancelada exitosamente';
+
+        if (diffDias < 2 && diffDias > 0) {
+            // Cancelada con menos de 48 horas de anticipación
+            nuevoEstado = 'Cancelada con Cobro';
+            mensaje = 'Reservación cancelada. Se ha aplicado un cobro por cancelación tardía.';
+        }
+
+        await pool.query('UPDATE reservaciones SET estado_reservacion = $1 WHERE id = $2', [nuevoEstado, id]);
+
+        res.json({ message: mensaje, status: nuevoEstado });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error interno al cancelar la reservación' });
+    }
+};
+
+module.exports = { crearReservacion, obtenerMisReservaciones, cancelarReservacionCliente };
