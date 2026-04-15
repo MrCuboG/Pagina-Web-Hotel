@@ -4,7 +4,7 @@ const obtenerHabitacionesCards = async (req, res) => {
     try {
         const query = `
             SELECT 
-                h.id, h.numero, t.nombre as tipo, t.descripcion, 
+                h.id, h.numero, h.nombre, t.nombre as tipo, t.descripcion, 
                 t.precio_base as precio, t.capacidad_maxima as capacidad
             FROM habitaciones h
             JOIN tipo_habitacion t ON h.tipo_id = t.id
@@ -22,7 +22,7 @@ const obtenerHabitaciones = async (req, res) => {
     try {
         const query = `
             SELECT 
-                h.id, h.numero, t.nombre as tipo, t.descripcion, 
+                h.id, h.numero, h.nombre, t.nombre as tipo, t.descripcion, 
                 t.precio_base as precio, t.capacidad_maxima as capacidad
             FROM habitaciones h
             JOIN tipo_habitacion t ON h.tipo_id = t.id

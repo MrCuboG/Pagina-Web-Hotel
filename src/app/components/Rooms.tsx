@@ -14,7 +14,7 @@ const SobreNosotros = () => {
   useEffect(() => {
     const obtenerContenidos = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/habitaciones/cards');
+        const res = await fetch('http://localhost:5000/api/contenidos');
         const datos = await res.json();
 
         // Transformamos el array en un objeto simple: { mision: "texto", vision: "texto" }
@@ -142,7 +142,7 @@ export function Rooms() {
                 <div className="relative h-64 overflow-hidden">
                   <img
                     src={imagenesDefault[index] || img5}
-                    alt={room.tipo}
+                    alt={room.nombre}
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute top-4 right-4 bg-purple-900 text-white px-3 py-1 rounded-full text-sm">
@@ -151,7 +151,7 @@ export function Rooms() {
                 </div>
 
                 <div className="p-6">
-                  <h3 className="text-2xl mb-2">{room.tipo} #{room.numero}</h3>
+                  <h3 className="text-2xl font-serif mb-2">{room.nombre || room.tipo} #{room.numero}</h3>
                   <p className="text-muted-foreground mb-4">{room.descripcion}</p>
 
                   <div className="flex items-center gap-2 mb-4 text-sm text-muted-foreground">

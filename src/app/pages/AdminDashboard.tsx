@@ -47,13 +47,33 @@ export function AdminDashboard() {
     // Solo si estamos en el cliente y cargando info de admin
     const fetchAdminData = async () => {
         try {
-            const [dashRes, rsvRes] = await Promise.all([
+            const [dashRes, rsvRes, contRes] = await Promise.all([
                  fetch('http://localhost:5000/api/admin/dashboard'),
-                 fetch('http://localhost:5000/api/admin/reservaciones')
+                 fetch('http://localhost:5000/api/admin/reservaciones'),
+                 fetch('http://localhost:5000/api/contenidos')
             ]);
             
             if (dashRes.ok) setDashboardStats(await dashRes.json());
             if (rsvRes.ok) setReservations(await rsvRes.json());
+            if (contRes.ok) {
+                const contenidos = await contRes.json();
+                const datosFormateados = contenidos.reduce((acumulador: { [x: string]: any; }, item: { clave: string | number; valor: any; }) => {
+                   acumulador[item.clave] = item.valor;
+                   return acumulador;
+                }, {});
+                setHotelInfo(prev => ({
+                    ...prev,
+                    mision: datosFormateados.mision || prev.mision,
+                    vision: datosFormateados.vision || prev.vision,
+                    about: datosFormateados.about || prev.about
+                }));
+                setContactInfo(prev => ({
+                    ...prev,
+                    phone: datosFormateados.phone || prev.phone,
+                    email: datosFormateados.email || prev.email,
+                    address: datosFormateados.address || prev.address
+                }));
+            }
         } catch(err) {
             console.error("Error al obtener datos admin:", err);
         }
@@ -82,6 +102,25 @@ export function AdminDashboard() {
     { id: 2, name: 'Habitación Deluxe', price: 1800, capacity: 2, available: 3 },
     { id: 3, name: 'Suite Junior', price: 2500, capacity: 4, available: 2 },
   ]);
+
+  const handleSaveCMS = async () => {
+      try {
+          const bodyData = { ...hotelInfo, ...contactInfo };
+          const res = await fetch('http://localhost:5000/api/contenidos', {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(bodyData)
+          });
+          if (res.ok) {
+              alert("Contenidos guardados y reflejados en Inicio exitosamente.");
+          } else {
+              alert("Error al guardar contenido.");
+          }
+      } catch (err) {
+           console.error(err);
+           alert("Error de red al intentar guardar.");
+      }
+  };
 
   const handleLogout = () => {
     logout();
@@ -395,7 +434,7 @@ export function AdminDashboard() {
             <div className="animate-in fade-in duration-300 max-w-4xl">
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-2xl font-bold text-foreground">Gestor de Contenido (CMS)</h2>
-                <button className="flex items-center gap-2 btn-primary px-4 py-2 rounded-lg text-white font-medium text-sm">
+                <button onClick={handleSaveCMS} className="flex items-center gap-2 btn-primary px-4 py-2 rounded-lg text-white font-medium text-sm">
                   <Save size={16} /> Guardar Cambios
                 </button>
               </div>
