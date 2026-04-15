@@ -38,7 +38,10 @@ export function Reservations() {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [reservationId, setReservationId] = useState('');
 
-  // Handle fallback select changes if they didn't come with pre-selected state
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const handleRoomChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedRoom = fallbackRooms.find(r => r.label === e.target.value);
     if (selectedRoom) {
