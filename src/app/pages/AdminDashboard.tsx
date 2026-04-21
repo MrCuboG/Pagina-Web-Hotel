@@ -55,13 +55,22 @@ export function AdminDashboard() {
   });
 
   useEffect(() => {
-    // Solo si estamos en el cliente y cargando info de admin
+    if (!user?.id) return; // Esperar a que el usuario esté autenticado
+
     const fetchAdminData = async () => {
       try {
+        const adminHeaders = { 'x-admin-id': user.id };
+
         const [dashRes, rsvRes, contRes] = await Promise.all([
+<<<<<<< Updated upstream
           fetch(`${import.meta.env.VITE_API_URL}/api/admin/dashboard`),
           fetch(`${import.meta.env.VITE_API_URL}/api/admin/reservaciones`),
           fetch(`${import.meta.env.VITE_API_URL}/api/contenidos`)
+=======
+          fetch('http://localhost:5000/api/admin/dashboard', { headers: adminHeaders }),
+          fetch('http://localhost:5000/api/admin/reservaciones', { headers: adminHeaders }),
+          fetch('http://localhost:5000/api/contenidos')
+>>>>>>> Stashed changes
         ]);
 
         if (dashRes.ok) setDashboardStats(await dashRes.json());
@@ -90,7 +99,7 @@ export function AdminDashboard() {
       }
     };
     fetchAdminData();
-  }, []);
+  }, [user]);
 
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [newUser, setNewUser] = useState<NewUser>({ username: '', password: '', role: 'Admin', email: '' });
@@ -256,17 +265,29 @@ export function AdminDashboard() {
   const handleAdminCancelReservation = async (resId: string) => {
     if (!confirm("¿Deseas dar de baja (cancelar) esta reservación manualmente?")) return;
     try {
+<<<<<<< Updated upstream
       const res = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/reservaciones/${resId}`, {
+=======
+      // El ID viene como "R-123", extraer solo el número
+      const numericId = resId.replace('R-', '');
+      const res = await fetch(`http://localhost:5000/api/admin/reservaciones/${numericId}`, {
+>>>>>>> Stashed changes
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', 'x-admin-id': user?.id || '' },
         body: JSON.stringify({ status: 'Cancelada' })
       });
       if (res.ok) {
+<<<<<<< Updated upstream
         alert("Reservación cancelada.");
         const rsvRes = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/reservaciones`, { headers: { 'x-admin-id': user?.id || '' } });
+=======
+        alert("Reservación cancelada exitosamente.");
+        const rsvRes = await fetch('http://localhost:5000/api/admin/reservaciones', { headers: { 'x-admin-id': user?.id || '' } });
+>>>>>>> Stashed changes
         if (rsvRes.ok) setReservations(await rsvRes.json());
       } else {
-        alert("Error al cancelar la reserva.");
+        const errorData = await res.json().catch(() => ({}));
+        alert(errorData.message || "Error al cancelar la reserva.");
       }
     } catch (err) {
       console.error(err);
@@ -508,7 +529,7 @@ export function AdminDashboard() {
                           </div>
                           <div>
                             <select
-                              className="text-xs px-2 py-1 rounded bg-white border border-border focus:ring-1 focus:ring-primary"
+                              className="text-xs px-2 py-1 rounded bg-card border border-border focus:ring-1 focus:ring-primary"
                               value={room.estado_limpieza}
                               onChange={(e) => handleUpdateRoomCleanliness(room.id, e.target.value)}
                             >
@@ -539,7 +560,7 @@ export function AdminDashboard() {
                   <input
                     type="text"
                     placeholder="Buscar huésped, id..."
-                    className="w-full sm:w-64 pl-10 pr-4 py-2 text-sm rounded-xl border border-border bg-white focus:outline-none focus:ring-2 focus:ring-primary"
+                    className="w-full sm:w-64 pl-10 pr-4 py-2 text-sm rounded-xl border border-border bg-card focus:outline-none focus:ring-2 focus:ring-primary"
                   />
                 </div>
               </div>
@@ -602,7 +623,7 @@ export function AdminDashboard() {
                 </button>
               </div>
 
-              <div className="bg-white rounded-2xl border border-border shadow-sm overflow-hidden mb-6">
+              <div className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden mb-6">
                 <div className="flex border-b border-border overflow-x-auto">
                   <button
                     onClick={() => setActiveCmsTab('info')}
@@ -633,7 +654,7 @@ export function AdminDashboard() {
                           value={hotelInfo.mision}
                           onChange={(e) => setHotelInfo({ ...hotelInfo, mision: e.target.value })}
                           rows={4}
-                          className="w-full p-4 rounded-xl border border-border bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 resize-none"
+                          className="w-full p-4 rounded-xl border border-border bg-card focus:outline-none focus:ring-2 focus:ring-primary/20 resize-none"
                         />
                       </div>
                       <div>
@@ -642,7 +663,7 @@ export function AdminDashboard() {
                           value={hotelInfo.vision}
                           onChange={(e) => setHotelInfo({ ...hotelInfo, vision: e.target.value })}
                           rows={4}
-                          className="w-full p-4 rounded-xl border border-border bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 resize-none"
+                          className="w-full p-4 rounded-xl border border-border bg-card focus:outline-none focus:ring-2 focus:ring-primary/20 resize-none"
                         />
                       </div>
                       <div>
@@ -651,7 +672,7 @@ export function AdminDashboard() {
                           value={hotelInfo.about}
                           onChange={(e) => setHotelInfo({ ...hotelInfo, about: e.target.value })}
                           rows={3}
-                          className="w-full p-4 rounded-xl border border-border bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 resize-none"
+                          className="w-full p-4 rounded-xl border border-border bg-card focus:outline-none focus:ring-2 focus:ring-primary/20 resize-none"
                         />
                       </div>
                     </div>
@@ -665,7 +686,7 @@ export function AdminDashboard() {
                           type="text"
                           value={contactInfo.phone}
                           onChange={(e) => setContactInfo({ ...contactInfo, phone: e.target.value })}
-                          className="w-full px-4 py-3 rounded-xl border border-border bg-white focus:outline-none focus:ring-2 focus:ring-primary/20"
+                          className="w-full px-4 py-3 rounded-xl border border-border bg-card focus:outline-none focus:ring-2 focus:ring-primary/20"
                         />
                       </div>
                       <div>
@@ -674,7 +695,7 @@ export function AdminDashboard() {
                           type="email"
                           value={contactInfo.email}
                           onChange={(e) => setContactInfo({ ...contactInfo, email: e.target.value })}
-                          className="w-full px-4 py-3 rounded-xl border border-border bg-white focus:outline-none focus:ring-2 focus:ring-primary/20"
+                          className="w-full px-4 py-3 rounded-xl border border-border bg-card focus:outline-none focus:ring-2 focus:ring-primary/20"
                         />
                       </div>
                       <div>
@@ -683,7 +704,7 @@ export function AdminDashboard() {
                           value={contactInfo.address}
                           onChange={(e) => setContactInfo({ ...contactInfo, address: e.target.value })}
                           rows={2}
-                          className="w-full p-4 rounded-xl border border-border bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 resize-none"
+                          className="w-full p-4 rounded-xl border border-border bg-card focus:outline-none focus:ring-2 focus:ring-primary/20 resize-none"
                         />
                       </div>
                     </div>
@@ -699,7 +720,7 @@ export function AdminDashboard() {
                               type="text"
                               value={room.name}
                               readOnly
-                              className="w-full px-3 py-2 rounded-lg border border-border bg-white font-medium"
+                              className="w-full px-3 py-2 rounded-lg border border-border bg-card font-medium"
                             />
                           </div>
                           <div>
@@ -713,7 +734,7 @@ export function AdminDashboard() {
                                 newRooms[index].price = Number(e.target.value);
                                 setRoomsConfig(newRooms);
                               }}
-                              className="w-full px-3 py-2 rounded-lg border border-border bg-white"
+                              className="w-full px-3 py-2 rounded-lg border border-border bg-card"
                             />
                           </div>
                           <div>
@@ -727,7 +748,7 @@ export function AdminDashboard() {
                                 newRooms[index].available = Number(e.target.value);
                                 setRoomsConfig(newRooms);
                               }}
-                              className="w-full px-3 py-2 rounded-lg border border-border bg-white"
+                              className="w-full px-3 py-2 rounded-lg border border-border bg-card"
                             />
                           </div>
                         </div>
@@ -754,7 +775,7 @@ export function AdminDashboard() {
                     <label className="block text-sm font-semibold text-foreground mb-2">Usuario</label>
                     <input
                       type="text"
-                      className="w-full px-4 py-2.5 rounded-xl border border-border bg-white focus:outline-none focus:ring-2 focus:ring-primary/20"
+                      className="w-full px-4 py-2.5 rounded-xl border border-border bg-card focus:outline-none focus:ring-2 focus:ring-primary/20"
                       placeholder="Ej. recepcion_1"
                       value={newUser.username}
                       onChange={(e) => setNewUser({ ...newUser, username: e.target.value })}
@@ -764,7 +785,7 @@ export function AdminDashboard() {
                     <label className="block text-sm font-semibold text-foreground mb-2">Contraseña</label>
                     <input
                       type="password"
-                      className="w-full px-4 py-2.5 rounded-xl border border-border bg-white focus:outline-none focus:ring-2 focus:ring-primary/20"
+                      className="w-full px-4 py-2.5 rounded-xl border border-border bg-card focus:outline-none focus:ring-2 focus:ring-primary/20"
                       placeholder="********"
                       value={newUser.password}
                       onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
@@ -773,7 +794,7 @@ export function AdminDashboard() {
                   <div>
                     <label className="block text-sm font-semibold text-foreground mb-2">Rol</label>
                     <select
-                      className="w-full px-4 py-2.5 rounded-xl border border-border bg-white focus:outline-none focus:ring-2 focus:ring-primary/20"
+                      className="w-full px-4 py-2.5 rounded-xl border border-border bg-card focus:outline-none focus:ring-2 focus:ring-primary/20"
                       value={newUser.role}
                       onChange={(e) => setNewUser({ ...newUser, role: e.target.value })}
                     >
@@ -795,7 +816,7 @@ export function AdminDashboard() {
                 </div>
               </div>
 
-              <div className="bg-white rounded-2xl border border-border shadow-sm overflow-hidden">
+              <div className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden">
                 <div className="p-4 border-b border-border bg-muted/30">
                   <h3 className="font-bold text-foreground">Usuarios Registrados</h3>
                 </div>

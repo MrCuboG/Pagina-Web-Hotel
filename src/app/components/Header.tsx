@@ -58,8 +58,8 @@ export function Header() {
     <header className="bg-background/95 backdrop-blur-sm shadow-md fixed w-full top-0 z-50 border-b border-purple-200/20 dark:border-purple-800/30 transition-all duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4">
-          <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
-            <h1 className="text-2xl font-serif text-primary tracking-wide">Quinta Dalam</h1>
+          <div className="flex items-center cursor-pointer shrink-0 mr-6" onClick={() => navigate('/')}>
+            <h1 className="text-2xl font-serif text-primary tracking-wide hover:opacity-80 transition-opacity">Quinta Dalam</h1>
           </div>
 
           <nav className="hidden md:flex space-x-8">

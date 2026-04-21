@@ -150,8 +150,8 @@ export function Rooms() {
                 </div>
 
                 <div className="p-6">
-                  <h3 className="text-2xl font-serif mb-2">{room.nombre || room.tipo} #{room.numero}</h3>
-                  <p className="text-muted-foreground mb-4">{room.descripcion}</p>
+                  <h3 className="text-2xl font-serif mb-2 text-foreground dark:text-white">{room.nombre || room.tipo} #{room.numero}</h3>
+                  <p className="text-muted-foreground dark:text-purple-200 mb-4">{room.descripcion}</p>
 
                   <div className="flex items-center gap-2 mb-4 text-sm text-muted-foreground">
                     <Users size={16} className="text-primary" />

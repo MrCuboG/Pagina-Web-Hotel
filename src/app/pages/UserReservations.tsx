@@ -120,25 +120,25 @@ export function UserReservations() {
         return {
           icon: <CheckCircle2 size={18} className="text-green-500" />,
           text: 'Confirmada',
-          classes: 'bg-green-50 text-green-700 border-green-200'
+          classes: 'bg-green-500/10 text-green-500 border-green-500/20'
         };
       case 'pending':
         return {
           icon: <Clock size={18} className="text-yellow-500" />,
           text: 'Pendiente de Pago',
-          classes: 'bg-yellow-50 text-yellow-700 border-yellow-200'
+          classes: 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20'
         };
       case 'cancelled':
         return {
           icon: <XCircle size={18} className="text-red-500" />,
           text: 'Cancelada',
-          classes: 'bg-red-50 text-red-700 border-red-200'
+          classes: 'bg-red-500/10 text-red-500 border-red-500/20'
         };
       default:
         return {
           icon: <Clock size={18} className="text-gray-500" />,
           text: 'Desconocido',
-          classes: 'bg-gray-50 text-gray-700 border-gray-200'
+          classes: 'bg-muted text-muted-foreground border-border'
         };
     }
   };
@@ -156,7 +156,7 @@ export function UserReservations() {
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-50/30 to-white flex flex-col">
+    <div className="min-h-screen bg-gradient-to-b from-primary/5 to-background flex flex-col">
       <Header />
       
       <main className="flex-grow pt-28 pb-24">
@@ -184,7 +184,7 @@ export function UserReservations() {
               className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
                 activeFilter === 'all' 
                   ? 'bg-primary text-white shadow-md' 
-                  : 'bg-white text-muted-foreground border border-border hover:bg-muted'
+                  : 'bg-card text-muted-foreground border border-border hover:bg-muted'
               }`}
             >
               Todas
@@ -194,7 +194,7 @@ export function UserReservations() {
               className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
                 activeFilter === 'upcoming' 
                   ? 'bg-primary text-white shadow-md' 
-                  : 'bg-white text-muted-foreground border border-border hover:bg-muted'
+                  : 'bg-card text-muted-foreground border border-border hover:bg-muted'
               }`}
             >
               Próximas Estancias
@@ -204,7 +204,7 @@ export function UserReservations() {
               className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
                 activeFilter === 'past' 
                   ? 'bg-primary text-white shadow-md' 
-                  : 'bg-white text-muted-foreground border border-border hover:bg-muted'
+                  : 'bg-card text-muted-foreground border border-border hover:bg-muted'
               }`}
             >
               Historial
@@ -272,7 +272,7 @@ export function UserReservations() {
                           </button>
                         )}
                         {reservation.status === 'confirmed' && (
-                          <button className="bg-white border border-primary text-primary w-full py-2.5 rounded-xl font-medium text-sm hover:bg-primary/5 transition-all">
+                          <button className="bg-card border border-primary text-primary w-full py-2.5 rounded-xl font-medium text-sm hover:bg-primary/5 transition-all">
                             Ver Detalles
                           </button>
                         )}
@@ -290,7 +290,7 @@ export function UserReservations() {
                 );
               })
             ) : (
-              <div className="text-center py-16 bg-white rounded-2xl border border-border border-dashed">
+              <div className="text-center py-16 bg-card rounded-2xl border border-border border-dashed">
                 <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-4 text-muted-foreground">
                   <Calendar size={32} />
                 </div>

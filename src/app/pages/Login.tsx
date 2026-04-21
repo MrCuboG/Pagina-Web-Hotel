@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router';
 import { useAuth } from '../context/AuthContext';
 import { Lock, User, ArrowLeft } from 'lucide-react';
+import lobbyImg from '../../imports/lobby.jpg';
 
 export function Login() {
   const [username, setUsername] = useState('');
@@ -42,7 +43,7 @@ export function Login() {
       <div className="hidden lg:block lg:w-1/2 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent z-10" />
         <img
-          src="https://images.unsplash.com/photo-1662990782404-a5d704ea323a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxlbGVnYW50JTIwZGFyayUyMGx1eHVyeSUyMGhvdGVsJTIwcm9vbSUyMG5pZ2h0fGVufDF8fHx8MTc3NjEwNjU3M3ww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
+          src={lobbyImg}
           alt="Hotel Room"
           className="absolute inset-0 w-full h-full object-cover"
         />

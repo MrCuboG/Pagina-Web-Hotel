@@ -84,7 +84,7 @@ function RoomCard({ room }: { room: Room }) {
     };
 
     return (
-        <div className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 group border border-purple-100/60 flex flex-col">
+        <div className="bg-card rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 group border border-border flex flex-col">
             {/* Image */}
             <div className="relative h-56 overflow-hidden shrink-0">
                 <img
@@ -102,26 +102,26 @@ function RoomCard({ room }: { room: Room }) {
                 </span>
 
                 {/* Price pill */}
-                <div className="absolute bottom-3 right-3 bg-white/95 backdrop-blur-sm px-4 py-1.5 rounded-full shadow-lg transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                    <span className="font-bold text-purple-900">${room.price.toLocaleString()}</span>
-                    <span className="text-xs text-gray-500 ml-1">/noche</span>
+                <div className="absolute bottom-3 right-3 bg-card/95 backdrop-blur-sm px-4 py-1.5 rounded-full shadow-lg transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+                    <span className="font-bold text-primary">${room.price.toLocaleString()}</span>
+                    <span className="text-xs text-muted-foreground ml-1">/noche</span>
                 </div>
             </div>
 
             {/* Content Container */}
             <div className="p-6 flex flex-col flex-1">
                 <div className="flex justify-between items-start mb-3">
-                    <h3 className="text-xl font-serif text-purple-900 leading-tight">{room.name}</h3>
+                    <h3 className="text-xl font-serif text-foreground dark:text-white leading-tight">{room.name}</h3>
                 </div>
 
                 {/* Stats row */}
-                <div className="flex items-center gap-4 text-sm text-gray-500 mb-4 pb-4 border-b border-gray-100">
+                <div className="flex items-center gap-4 text-sm text-muted-foreground dark:text-purple-200 mb-4 pb-4 border-b border-border">
                     <div className="flex items-center gap-1.5">
-                        <Users size={16} className="text-purple-600/70" />
+                        <Users size={16} className="text-primary/70" />
                         <span>{room.capacity}</span>
                     </div>
                     <div className="flex items-center gap-1.5">
-                        <Bed size={16} className="text-purple-600/70" />
+                        <Bed size={16} className="text-primary/70" />
                         <span>{room.size}</span>
                     </div>
                 </div>
@@ -131,8 +131,8 @@ function RoomCard({ room }: { room: Room }) {
                     {room.amenities.slice(0, 3).map((amenity) => {
                         const Icon = amenityIcons[amenity] || Coffee;
                         return (
-                            <div key={amenity} className="flex items-center gap-1 text-xs text-gray-600 bg-gray-50 px-2 py-1 rounded-md">
-                                <Icon size={12} className="text-purple-500" />
+                            <div key={amenity} className="flex items-center gap-1 text-xs text-muted-foreground dark:text-purple-200 bg-muted px-2 py-1 rounded-md">
+                                <Icon size={12} className="text-primary" />
                                 <span>{amenityLabels[amenity] ?? amenity}</span>
                             </div>
                         );
@@ -140,7 +140,7 @@ function RoomCard({ room }: { room: Room }) {
                 </div>
 
                 {/* Long description */}
-                <p className="text-xs text-gray-400 mb-5 leading-relaxed flex-1">{room.longDescription}</p>
+                <p className="text-xs text-muted-foreground dark:text-purple-200/80 mb-5 leading-relaxed flex-1">{room.longDescription}</p>
 
                 {/* CTA */}
                 <button
@@ -235,8 +235,8 @@ export function RoomsPage() {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gray-50 flex justify-center items-center">
-                <p className="text-xl text-purple-800 animate-pulse font-semibold">Cargando nuestras habitaciones...</p>
+            <div className="min-h-screen bg-background flex justify-center items-center">
+                <p className="text-xl text-primary animate-pulse font-semibold">Cargando nuestras habitaciones...</p>
             </div>
         );
     }
@@ -292,18 +292,19 @@ export function RoomsPage() {
             </div>
 
             {/* Filter Bar */}
-            <div className="sticky top-[72px] z-40 bg-white border-b border-purple-100 shadow-sm py-3 transition-all">
+            <div className="sticky top-0 z-40 bg-card">
+              <div className="pt-[72px] border-b border-border shadow-sm py-3 transition-all">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row flex-wrap items-center gap-4 lg:gap-8 justify-between">
 
                     <div className="flex items-center gap-2 flex-wrap flex-1">
-                        <span className="text-sm text-gray-500 font-medium mr-1">Mostrar:</span>
+                        <span className="text-sm text-muted-foreground font-medium mr-1">Mostrar:</span>
                         {categories.map((cat) => (
                             <button
                                 key={cat}
                                 onClick={() => setActiveCategory(cat)}
                                 className={`px-4 py-1.5 rounded-full text-sm border transition-all ${activeCategory === cat
-                                    ? 'bg-purple-800 text-white border-purple-800 shadow-md'
-                                    : 'border-purple-200 text-purple-700 hover:bg-purple-700 hover:text-white hover:border-purple-700'
+                                    ? 'bg-primary text-white border-primary shadow-md'
+                                    : 'border-border text-primary hover:bg-primary hover:text-white hover:border-primary'
                                     }`}
                             >
                                 {cat}
@@ -312,14 +313,14 @@ export function RoomsPage() {
                         ))}
                     </div>
 
-                    <div className="flex items-center flex-wrap gap-4 bg-gray-50/80 p-2.5 rounded-2xl border border-gray-100">
+                    <div className="flex items-center flex-wrap gap-4 bg-muted/80 p-2.5 rounded-2xl border border-border">
                         {/* Huéspedes Filter */}
                         <div className="flex items-center gap-2 lg:pr-4">
-                            <span className="text-xs text-gray-500 font-bold uppercase tracking-wide">Personas:</span>
+                            <span className="text-xs text-muted-foreground font-bold uppercase tracking-wide">Personas:</span>
                             <select
                                 value={minCapacity}
                                 onChange={(e) => setMinCapacity(Number(e.target.value))}
-                                className="bg-white border border-gray-200 shadow-sm text-sm font-medium rounded-lg px-3 py-1.5 outline-none text-purple-900 cursor-pointer focus:ring-2 focus:ring-purple-200 transition-all"
+                                className="bg-card border border-border shadow-sm text-sm font-medium rounded-lg px-3 py-1.5 outline-none text-foreground cursor-pointer focus:ring-2 focus:ring-primary/30 transition-all"
                             >
                                 <option value={1}>1+ personas</option>
                                 <option value={2}>2+ personas</option>
@@ -330,13 +331,13 @@ export function RoomsPage() {
                         </div>
 
                         {/* Separator */}
-                        <div className="hidden lg:block w-px h-8 bg-gray-200" />
+                        <div className="hidden lg:block w-px h-8 bg-border" />
 
                         {/* Price Filter */}
                         <div className="flex items-center gap-3">
                             <div className="flex flex-col">
-                                <span className="text-xs text-gray-500 font-bold uppercase tracking-wide">Precio Máximo</span>
-                                <span className="text-sm text-purple-900 font-black leading-none">${maxPrice.toLocaleString()} <span className="text-xs font-normal text-gray-500">MXN</span></span>
+                                <span className="text-xs text-muted-foreground font-bold uppercase tracking-wide">Precio Máximo</span>
+                                <span className="text-sm text-foreground font-black leading-none">${maxPrice.toLocaleString()} <span className="text-xs font-normal text-muted-foreground">MXN</span></span>
                             </div>
                             <input
                                 type="range"
@@ -345,26 +346,27 @@ export function RoomsPage() {
                                 step={100}
                                 value={maxPrice}
                                 onChange={(e) => setMaxPrice(Number(e.target.value))}
-                                className="w-24 lg:w-32 accent-purple-700 cursor-pointer h-1.5 bg-gray-200 rounded-lg appearance-none"
+                                className="w-24 lg:w-32 accent-primary cursor-pointer h-1.5 bg-muted rounded-lg appearance-none"
                             />
                         </div>
                     </div>
 
                 </div>
+              </div>
             </div>
 
             {/* Rooms Grid */}
             <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-16">
                 {filteredRooms.length === 0 ? (
-                    <div className="text-center py-20 bg-white rounded-3xl border border-purple-100/50 shadow-sm">
+                    <div className="text-center py-20 bg-card rounded-3xl border border-border shadow-sm">
                         <div className="text-6xl mb-6">🔍</div>
-                        <h3 className="text-2xl font-serif text-purple-900 mb-2">No encontramos habitaciones</h3>
-                        <p className="text-gray-500 mb-6 max-w-md mx-auto">
+                        <h3 className="text-2xl font-serif text-foreground mb-2">No encontramos habitaciones</h3>
+                        <p className="text-muted-foreground mb-6 max-w-md mx-auto">
                             Actualmente no hay habitaciones que coincidan con exactamente esos filtros (Categoría, Personas o Precio).
                         </p>
                         <button
                             onClick={() => { setActiveCategory("Todas"); setMaxPrice(absoluteMaxPrice); setMinCapacity(1); }}
-                            className="bg-purple-100 text-purple-800 hover:bg-purple-200 font-medium px-6 py-2 rounded-xl transition-all"
+                            className="bg-primary/10 text-primary hover:bg-primary/20 font-medium px-6 py-2 rounded-xl transition-all"
                         >
                             Limpiar todos los filtros
                         </button>
@@ -375,11 +377,11 @@ export function RoomsPage() {
                         {featuredRoom && (
                             <div className="mb-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
                                 <div className="inline-flex items-center gap-2 mb-6">
-                                    <div className="h-px w-8 bg-purple-300" />
-                                    <span className="text-purple-700 text-sm uppercase tracking-widest">
+                                    <div className="h-px w-8 bg-primary/40" />
+                                    <span className="text-primary text-sm uppercase tracking-widest">
                                         {activeCategory === "Todas" ? "Destacada" : `Destacada en ${activeCategory}`}
                                     </span>
-                                    <div className="h-px w-8 bg-purple-300" />
+                                    <div className="h-px w-8 bg-primary/40" />
                                 </div>
 
                                 <FeaturedRoomCard room={featuredRoom} />
@@ -389,11 +391,11 @@ export function RoomsPage() {
                         {/* Divider */}
                         {otherRooms.length > 0 && (
                             <div className="flex items-center gap-4 mb-10 opacity-70">
-                                <div className="flex-1 h-px bg-gradient-to-r from-transparent via-purple-300 to-transparent" />
-                                <span className="text-purple-600/80 text-sm uppercase tracking-widest">
+                                <div className="flex-1 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+                                <span className="text-primary/80 text-sm uppercase tracking-widest">
                                     {activeCategory === "Todas" ? "Todas las habitaciones" : `Más de ${activeCategory}`}
                                 </span>
-                                <div className="flex-1 h-px bg-gradient-to-r from-transparent via-purple-300 to-transparent" />
+                                <div className="flex-1 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
                             </div>
                         )}
 
@@ -457,7 +459,7 @@ function FeaturedRoomCard({ room }: { room: Room }) {
     };
 
     return (
-        <div className="bg-white rounded-2xl overflow-hidden shadow-xl border border-purple-100/60 flex flex-col lg:flex-row group">
+        <div className="bg-card rounded-2xl overflow-hidden shadow-xl border border-border flex flex-col lg:flex-row group">
             {/* Image */}
             <div className="relative h-72 lg:h-auto lg:w-1/2 overflow-hidden shrink-0">
                 <img
@@ -480,19 +482,19 @@ function FeaturedRoomCard({ room }: { room: Room }) {
                         <Star size={14} className="text-amber-500 fill-amber-500" />
                         <Star size={14} className="text-amber-500 fill-amber-500" />
                         <Star size={14} className="text-amber-500 fill-amber-500" />
-                        <span className="text-xs text-gray-400 ml-1">Mejor valorada</span>
+                        <span className="text-xs text-muted-foreground ml-1">Mejor valorada</span>
                     </div>
 
-                    <h2 className="text-3xl md:text-4xl text-purple-900 mb-3 font-serif">{room.name}</h2>
-                    <p className="text-gray-500 mb-5 leading-relaxed max-w-lg">{room.longDescription}</p>
+                    <h2 className="text-3xl md:text-4xl text-foreground dark:text-white mb-3 font-serif">{room.name}</h2>
+                    <p className="text-muted-foreground dark:text-purple-200 mb-5 leading-relaxed max-w-lg">{room.longDescription}</p>
 
-                    <div className="flex items-center gap-4 mb-5 text-sm text-gray-500">
+                    <div className="flex items-center gap-4 mb-5 text-sm text-muted-foreground dark:text-purple-200">
                         <div className="flex items-center gap-1.5">
-                            <Users size={15} className="text-purple-600" />
+                            <Users size={15} className="text-primary" />
                             <span>{room.capacity}</span>
                         </div>
                         <div className="flex items-center gap-1.5">
-                            <Bed size={15} className="text-purple-600" />
+                            <Bed size={15} className="text-primary" />
                             <span>{room.size}</span>
                         </div>
                     </div>
@@ -501,7 +503,7 @@ function FeaturedRoomCard({ room }: { room: Room }) {
                         {room.amenities.map((amenity) => {
                             const Icon = amenityIcons[amenity] || Coffee;
                             return (
-                                <div key={amenity} className="flex items-center gap-1.5 bg-purple-50 text-purple-700 px-3 py-1.5 rounded-full text-xs border border-purple-100 hover:bg-purple-100 transition-colors cursor-default">
+                                <div key={amenity} className="flex items-center gap-1.5 bg-primary/10 text-primary px-3 py-1.5 rounded-full text-xs border border-primary/20 hover:bg-primary/20 transition-colors cursor-default">
                                     <Icon size={12} />
                                     <span>{amenityLabels[amenity] ?? amenity}</span>
                                 </div>
@@ -512,8 +514,8 @@ function FeaturedRoomCard({ room }: { room: Room }) {
 
                 <div className="flex items-center justify-between flex-wrap gap-4">
                     <div>
-                        <div className="text-3xl text-purple-900 font-bold tracking-tight">${room.price.toLocaleString()}</div>
-                        <div className="text-sm text-gray-400">por noche · impuestos incluidos</div>
+                        <div className="text-3xl text-foreground dark:text-white font-bold tracking-tight">${room.price.toLocaleString()}</div>
+                        <div className="text-sm text-muted-foreground dark:text-purple-200">por noche · impuestos incluidos</div>
                     </div>
                     <button
                         onClick={handleReserve}

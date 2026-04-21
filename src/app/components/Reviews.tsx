@@ -152,7 +152,7 @@ export function Reviews() {
               <p className="text-muted-foreground mb-4">Inicia sesión para dejar una reseña y compartir tu experiencia con otros viajeros.</p>
               <button
                 onClick={() => window.location.href = '/login'}
-                className="btn-secondary px-6 py-2 rounded-xl text-primary font-medium hover:bg-white transition-colors"
+                className="btn-secondary px-6 py-2 rounded-xl text-primary font-medium hover:bg-card transition-colors"
               >
                 Iniciar Sesión
               </button>

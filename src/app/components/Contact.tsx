@@ -101,7 +101,7 @@ export function Contact() {
                 <label className="block mb-2 text-foreground">Mensaje</label>
                 <textarea
                   rows={4}
-                  className="w-full px-4 py-3 rounded-lg border border-purple-200/50 bg-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
+                  className="w-full px-4 py-3 rounded-lg border border-border bg-card text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
                   placeholder="¿En qué podemos ayudarte?"
                 ></textarea>
               </div>
