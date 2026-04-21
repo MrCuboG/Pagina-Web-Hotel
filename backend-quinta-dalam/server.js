@@ -6,7 +6,14 @@ const cors = require('cors');
 const app = express();
 
 // 1. Middlewares
-app.use(cors());
+app.use(cors({
+  origin: [
+    'https://pagina-web-hotel.vercel.app',
+    'http://localhost:5173',
+    'http://localhost:5174'
+  ],
+  credentials: true
+}));
 app.use(express.json());
 
 // 2. Importar Rutas
@@ -29,7 +36,13 @@ app.get('/', (req, res) => {
 });
 
 // 4. Iniciar servidor
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-    console.log(`🚀 Servidor corriendo en el puerto http://localhost:${PORT}`);
-});
+
+if (process.env.NODE_ENV !== 'production') {
+    const PORT = process.env.PORT || 5000;
+    app.listen(PORT, () => {
+        console.log(`🚀 Servidor corriendo en el puerto http://localhost:${PORT}`);
+    });
+}
+
+// ESTO ES CLAVE PARA VERCEL: Exportar la app
+module.exports = app;

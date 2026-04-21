@@ -14,7 +14,7 @@ const SobreNosotros = () => {
   useEffect(() => {
     const obtenerContenidos = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/contenidos');
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/contenidos`);
         const datos = await res.json();
 
         // Transformamos el array en un objeto simple: { mision: "texto", vision: "texto" }
@@ -102,7 +102,7 @@ export function Rooms() {
   useEffect(() => {
     const fetchRooms = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/habitaciones/cards');
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/habitaciones/cards`);
         const data = await res.json();
         setHabitacionesDb(data);
         setCargando(false);

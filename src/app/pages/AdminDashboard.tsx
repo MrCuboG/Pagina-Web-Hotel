@@ -59,9 +59,9 @@ export function AdminDashboard() {
     const fetchAdminData = async () => {
       try {
         const [dashRes, rsvRes, contRes] = await Promise.all([
-          fetch('http://localhost:5000/api/admin/dashboard'),
-          fetch('http://localhost:5000/api/admin/reservaciones'),
-          fetch('http://localhost:5000/api/contenidos')
+          fetch(`${import.meta.env.VITE_API_URL}/api/admin/dashboard`),
+          fetch(`${import.meta.env.VITE_API_URL}/api/admin/reservaciones`),
+          fetch(`${import.meta.env.VITE_API_URL}/api/contenidos`)
         ]);
 
         if (dashRes.ok) setDashboardStats(await dashRes.json());
@@ -99,7 +99,7 @@ export function AdminDashboard() {
   const fetchUsers = async () => {
     if (user?.role !== 'admin') return;
     try {
-      const res = await fetch('http://localhost:5000/api/admin/usuarios', {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/usuarios`, {
         headers: { 'x-admin-id': user.id }
       });
       if (res.ok) {
@@ -120,8 +120,8 @@ export function AdminDashboard() {
     if (!newUser.username || (!newUser.password && !editingUserId)) return alert('Completa los campos obligatorios');
     try {
       const url = editingUserId
-        ? `http://localhost:5000/api/admin/usuarios/${editingUserId}`
-        : 'http://localhost:5000/api/admin/usuarios';
+        ? `${import.meta.env.VITE_API_URL}/api/admin/usuarios/${editingUserId}`
+        : `${import.meta.env.VITE_API_URL}/api/admin/usuarios`;
       const method = editingUserId ? 'PUT' : 'POST';
 
       const res = await fetch(url, {
@@ -160,7 +160,7 @@ export function AdminDashboard() {
   const handleReactivateUser = async (id: string, username: string) => {
     if (!confirm(`¿Estás seguro de que deseas reactivar a ${username}?`)) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/admin/usuarios/${id}/reactivate`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/usuarios/${id}/reactivate`, {
         method: 'PUT',
         headers: { 'x-admin-id': user?.id || '' }
       });
@@ -180,7 +180,7 @@ export function AdminDashboard() {
   const handleDeleteUser = async (id: string, username: string) => {
     if (!confirm(`¿Estás seguro de que deseas dar de baja a ${username}?`)) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/admin/usuarios/${id}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/usuarios/${id}`, {
         method: 'DELETE',
         headers: { 'x-admin-id': user?.id || '' }
       });
@@ -219,7 +219,7 @@ export function AdminDashboard() {
   const handleSaveCMS = async () => {
     try {
       const bodyData = { ...hotelInfo, ...contactInfo };
-      const res = await fetch('http://localhost:5000/api/contenidos', {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/contenidos`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(bodyData)
@@ -237,13 +237,13 @@ export function AdminDashboard() {
 
   const handleUpdateRoomCleanliness = async (roomId: number, status: string) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/admin/habitaciones/${roomId}/limpieza`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/habitaciones/${roomId}/limpieza`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', 'x-admin-id': user?.id || '' },
         body: JSON.stringify({ estado_limpieza: status })
       });
       if (res.ok) {
-        const dashRes = await fetch('http://localhost:5000/api/admin/dashboard', { headers: { 'x-admin-id': user?.id || '' } });
+        const dashRes = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/dashboard`, { headers: { 'x-admin-id': user?.id || '' } });
         if (dashRes.ok) setDashboardStats(await dashRes.json());
       } else {
         alert("Error al actualizar la limpieza");
@@ -256,14 +256,14 @@ export function AdminDashboard() {
   const handleAdminCancelReservation = async (resId: string) => {
     if (!confirm("¿Deseas dar de baja (cancelar) esta reservación manualmente?")) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/admin/reservaciones/${resId}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/reservaciones/${resId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', 'x-admin-id': user?.id || '' },
         body: JSON.stringify({ status: 'Cancelada' })
       });
       if (res.ok) {
         alert("Reservación cancelada.");
-        const rsvRes = await fetch('http://localhost:5000/api/admin/reservaciones', { headers: { 'x-admin-id': user?.id || '' } });
+        const rsvRes = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/reservaciones`, { headers: { 'x-admin-id': user?.id || '' } });
         if (rsvRes.ok) setReservations(await rsvRes.json());
       } else {
         alert("Error al cancelar la reserva.");
