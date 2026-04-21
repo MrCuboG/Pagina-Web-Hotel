@@ -62,15 +62,9 @@ export function AdminDashboard() {
         const adminHeaders = { 'x-admin-id': user.id };
 
         const [dashRes, rsvRes, contRes] = await Promise.all([
-<<<<<<< Updated upstream
           fetch(`${import.meta.env.VITE_API_URL}/api/admin/dashboard`),
           fetch(`${import.meta.env.VITE_API_URL}/api/admin/reservaciones`),
           fetch(`${import.meta.env.VITE_API_URL}/api/contenidos`)
-=======
-          fetch('http://localhost:5000/api/admin/dashboard', { headers: adminHeaders }),
-          fetch('http://localhost:5000/api/admin/reservaciones', { headers: adminHeaders }),
-          fetch('http://localhost:5000/api/contenidos')
->>>>>>> Stashed changes
         ]);
 
         if (dashRes.ok) setDashboardStats(await dashRes.json());
@@ -265,25 +259,16 @@ export function AdminDashboard() {
   const handleAdminCancelReservation = async (resId: string) => {
     if (!confirm("¿Deseas dar de baja (cancelar) esta reservación manualmente?")) return;
     try {
-<<<<<<< Updated upstream
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/reservaciones/${resId}`, {
-=======
       // El ID viene como "R-123", extraer solo el número
       const numericId = resId.replace('R-', '');
-      const res = await fetch(`http://localhost:5000/api/admin/reservaciones/${numericId}`, {
->>>>>>> Stashed changes
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/reservaciones/${resId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', 'x-admin-id': user?.id || '' },
         body: JSON.stringify({ status: 'Cancelada' })
       });
       if (res.ok) {
-<<<<<<< Updated upstream
-        alert("Reservación cancelada.");
-        const rsvRes = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/reservaciones`, { headers: { 'x-admin-id': user?.id || '' } });
-=======
         alert("Reservación cancelada exitosamente.");
-        const rsvRes = await fetch('http://localhost:5000/api/admin/reservaciones', { headers: { 'x-admin-id': user?.id || '' } });
->>>>>>> Stashed changes
+        const rsvRes = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/reservaciones`, { headers: { 'x-admin-id': user?.id || '' } });
         if (rsvRes.ok) setReservations(await rsvRes.json());
       } else {
         const errorData = await res.json().catch(() => ({}));
