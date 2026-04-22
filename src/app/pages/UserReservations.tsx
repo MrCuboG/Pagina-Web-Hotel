@@ -31,7 +31,7 @@ export function UserReservations() {
 
     const fetchReservations = async () => {
        try {
-         const response = await fetch(`http://localhost:5000/api/reservaciones/usuario/${user.id}`);
+         const response = await fetch(`${import.meta.env.VITE_API_URL}/api/reservaciones/usuario/${user.id}`);
          const data = await response.json();
          
          const mapped: Reservation[] = data.map((r: any) => ({
@@ -72,7 +72,7 @@ export function UserReservations() {
       if (!window.confirm(confirmMessage)) return;
 
       setLoading(true);
-      const res = await fetch(`http://localhost:5000/api/reservaciones/${realId}/cancelar`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/reservaciones/${realId}/cancelar`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
@@ -85,7 +85,7 @@ export function UserReservations() {
         alert(data.message);
         // Refetch or update state locally (simplest is to force a re-trigger of useEffect by just copying the fetch block or reloading)
         const fetchReservations = async () => {
-          const response = await fetch(`http://localhost:5000/api/reservaciones/usuario/${user?.id}`);
+          const response = await fetch(`${import.meta.env.VITE_API_URL}/api/reservaciones/usuario/${user?.id}`);
           const resData = await response.json();
           const mapped: Reservation[] = resData.map((r: any) => ({
               id: `R-${r.reservacion_id}`,

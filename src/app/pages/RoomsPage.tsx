@@ -170,7 +170,7 @@ export function RoomsPage() {
     useEffect(() => {
         const fetchRooms = async () => {
             try {
-                const res = await fetch('http://localhost:5000/api/habitaciones');
+                const res = await fetch(`${import.meta.env.VITE_API_URL}/api/habitaciones`);
                 const data = await res.json();
 
                 const formattedRooms: Room[] = data.map((room: any, idx: number) => {
