@@ -62,8 +62,8 @@ export function AdminDashboard() {
         const adminHeaders = { 'x-admin-id': user.id };
 
         const [dashRes, rsvRes, contRes] = await Promise.all([
-          fetch(`${import.meta.env.VITE_API_URL}/api/admin/dashboard`),
-          fetch(`${import.meta.env.VITE_API_URL}/api/admin/reservaciones`),
+          fetch(`${import.meta.env.VITE_API_URL}/api/admin/dashboard`, { headers: adminHeaders }),
+          fetch(`${import.meta.env.VITE_API_URL}/api/admin/reservaciones`, { headers: adminHeaders }),
           fetch(`${import.meta.env.VITE_API_URL}/api/contenidos`)
         ]);
 
@@ -261,7 +261,7 @@ export function AdminDashboard() {
     try {
       // El ID viene como "R-123", extraer solo el número
       const numericId = resId.replace('R-', '');
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/reservaciones/${resId}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/reservaciones/${numericId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', 'x-admin-id': user?.id || '' },
         body: JSON.stringify({ status: 'Cancelada' })
