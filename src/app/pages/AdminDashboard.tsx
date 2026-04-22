@@ -35,6 +35,14 @@ interface NewUser {
   email: string;
 }
 
+interface RoomType {
+  id: number;
+  nombre: string;
+  descripcion: string;
+  precio_base: string | number;
+  capacidad_maxima: number;
+}
+
 
 export function AdminDashboard() {
   const { user, logout } = useAuth();
@@ -61,10 +69,11 @@ export function AdminDashboard() {
       try {
         const adminHeaders = { 'x-admin-id': user.id };
 
-        const [dashRes, rsvRes, contRes] = await Promise.all([
+        const [dashRes, rsvRes, contRes, typeRes] = await Promise.all([
           fetch(`${import.meta.env.VITE_API_URL}/api/admin/dashboard`, { headers: adminHeaders }),
           fetch(`${import.meta.env.VITE_API_URL}/api/admin/reservaciones`, { headers: adminHeaders }),
-          fetch(`${import.meta.env.VITE_API_URL}/api/contenidos`)
+          fetch(`${import.meta.env.VITE_API_URL}/api/contenidos`),
+          fetch(`${import.meta.env.VITE_API_URL}/api/admin/tipo-habitacion`, { headers: adminHeaders })
         ]);
 
         if (dashRes.ok) setDashboardStats(await dashRes.json());
@@ -88,6 +97,7 @@ export function AdminDashboard() {
             address: datosFormateados.address || prev.address
           }));
         }
+        if (typeRes.ok) setRoomsConfig(await typeRes.json());
       } catch (err) {
         console.error("Error al obtener datos admin:", err);
       }
@@ -213,11 +223,8 @@ export function AdminDashboard() {
     address: 'Av. Madero 123, Centro Histórico, Morelia, Michoacán'
   });
 
-  const [roomsConfig, setRoomsConfig] = useState([
-    { id: 1, name: 'Habitación Estándar', price: 1200, capacity: 2, available: 5 },
-    { id: 2, name: 'Habitación Deluxe', price: 1800, capacity: 2, available: 3 },
-    { id: 3, name: 'Suite Junior', price: 2500, capacity: 4, available: 2 },
-  ]);
+  const [roomsConfig, setRoomsConfig] = useState<RoomType[]>([]);
+  const [newRoomType, setNewRoomType] = useState<Partial<RoomType>>({ nombre: '', descripcion: '', precio_base: '', capacidad_maxima: 2 });
 
   const handleSaveCMS = async () => {
     try {
@@ -237,6 +244,61 @@ export function AdminDashboard() {
       alert("Error de red al intentar guardar.");
     }
   };
+
+  const fetchRoomTypes = async () => {
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/tipo-habitacion`, { headers: { 'x-admin-id': user?.id || '' } });
+      if (res.ok) setRoomsConfig(await res.json());
+    } catch (err) { console.error(err); }
+  };
+
+  const handleAddRoomType = async () => {
+    if (!newRoomType.nombre || !newRoomType.precio_base || !newRoomType.capacidad_maxima) {
+      return alert("Completa al menos el nombre, precio y capacidad.");
+    }
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/tipo-habitacion`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-admin-id': user?.id || '' },
+        body: JSON.stringify(newRoomType)
+      });
+      if (res.ok) {
+        alert("Tipo de habitación creado exitosamente");
+        setNewRoomType({ nombre: '', descripcion: '', precio_base: '', capacidad_maxima: 2 });
+        fetchRoomTypes();
+      } else {
+        const errorData = await res.json();
+        alert(errorData.message || "Error al crear tipo de habitación");
+      }
+    } catch (err) { console.error(err); }
+  };
+
+  const handleUpdateRoomType = async (room: RoomType) => {
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/tipo-habitacion/${room.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'x-admin-id': user?.id || '' },
+        body: JSON.stringify(room)
+      });
+      if (res.ok) alert("Tipo de habitación actualizado.");
+      else alert("Error al actualizar.");
+    } catch (err) { console.error(err); }
+  };
+
+  const handleDeleteRoomType = async (id: number, nombre: string) => {
+    if (!confirm(`¿Estás seguro de eliminar (dar de baja) la habitación "${nombre}"?`)) return;
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/tipo-habitacion/${id}`, {
+        method: 'DELETE',
+        headers: { 'x-admin-id': user?.id || '' }
+      });
+      if (res.ok) {
+        alert("Eliminado exitosamente.");
+        fetchRoomTypes();
+      } else alert("Error al eliminar.");
+    } catch (err) { console.error(err); }
+  };
+
 
   const handleUpdateRoomCleanliness = async (roomId: number, status: string) => {
     try {
@@ -470,9 +532,9 @@ export function AdminDashboard() {
                             data={dashboardStats.cleanliness}
                             cx="50%"
                             cy="50%"
-                            innerRadius={60}
+                            innerRadius={0}
                             outerRadius={80}
-                            paddingAngle={5}
+                            paddingAngle={2}
                             dataKey="cantidad"
                             nameKey="estado_limpieza"
                           >
@@ -696,48 +758,134 @@ export function AdminDashboard() {
                   )}
 
                   {activeCmsTab === 'rooms' && (
-                    <div className="space-y-4">
-                      {roomsConfig.map(room => (
-                        <div key={room.id} className="p-4 rounded-xl border border-border bg-muted/30 grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
-                          <div className="md:col-span-2">
-                            <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Nombre de la Habitación</label>
+                    <div className="space-y-6">
+                      <div className="bg-card rounded-2xl border border-border shadow-sm p-6 mb-6">
+                        <h3 className="text-lg font-bold text-foreground mb-4 flex items-center gap-2">
+                          <Plus size={20} className="text-primary" /> Agregar Nuevo Tipo de Habitación
+                        </h3>
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                          <div>
+                            <label className="block text-sm font-semibold text-foreground mb-2">Nombre</label>
                             <input
                               type="text"
-                              value={room.name}
-                              readOnly
-                              className="w-full px-3 py-2 rounded-lg border border-border bg-card font-medium"
+                              className="w-full px-4 py-2.5 rounded-xl border border-border bg-card focus:outline-none focus:ring-2 focus:ring-primary/20"
+                              placeholder="Ej. Suite Premium"
+                              value={newRoomType.nombre}
+                              onChange={(e) => setNewRoomType({ ...newRoomType, nombre: e.target.value })}
                             />
                           </div>
                           <div>
-                            <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Precio x Noche (MXN)</label>
+                            <label className="block text-sm font-semibold text-foreground mb-2">Precio Base (MXN)</label>
                             <input
                               type="number"
-                              value={room.price}
-                              onChange={(e) => {
-                                const newRooms = [...roomsConfig];
-                                const index = newRooms.findIndex(r => r.id === room.id);
-                                newRooms[index].price = Number(e.target.value);
-                                setRoomsConfig(newRooms);
-                              }}
-                              className="w-full px-3 py-2 rounded-lg border border-border bg-card"
+                              className="w-full px-4 py-2.5 rounded-xl border border-border bg-card focus:outline-none focus:ring-2 focus:ring-primary/20"
+                              placeholder="Ej. 1500"
+                              value={newRoomType.precio_base}
+                              onChange={(e) => setNewRoomType({ ...newRoomType, precio_base: e.target.value })}
                             />
                           </div>
                           <div>
-                            <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Inventario Total</label>
+                            <label className="block text-sm font-semibold text-foreground mb-2">Capacidad Máx.</label>
                             <input
                               type="number"
-                              value={room.available}
-                              onChange={(e) => {
-                                const newRooms = [...roomsConfig];
-                                const index = newRooms.findIndex(r => r.id === room.id);
-                                newRooms[index].available = Number(e.target.value);
-                                setRoomsConfig(newRooms);
-                              }}
-                              className="w-full px-3 py-2 rounded-lg border border-border bg-card"
+                              className="w-full px-4 py-2.5 rounded-xl border border-border bg-card focus:outline-none focus:ring-2 focus:ring-primary/20"
+                              placeholder="Ej. 2"
+                              value={newRoomType.capacidad_maxima}
+                              onChange={(e) => setNewRoomType({ ...newRoomType, capacidad_maxima: Number(e.target.value) })}
                             />
+                          </div>
+                          <div className="flex gap-2">
+                            <button onClick={handleAddRoomType} className="btn-primary flex-1 py-2.5 px-4 rounded-xl text-white font-medium text-sm shadow-sm h-[46px]">
+                              Agregar
+                            </button>
                           </div>
                         </div>
-                      ))}
+                        <div className="mt-4">
+                            <label className="block text-sm font-semibold text-foreground mb-2">Descripción</label>
+                            <textarea
+                              className="w-full px-4 py-2.5 rounded-xl border border-border bg-card focus:outline-none focus:ring-2 focus:ring-primary/20 resize-none"
+                              placeholder="Breve descripción de la habitación"
+                              rows={2}
+                              value={newRoomType.descripcion}
+                              onChange={(e) => setNewRoomType({ ...newRoomType, descripcion: e.target.value })}
+                            />
+                        </div>
+                      </div>
+
+                      <div className="space-y-4">
+                        {roomsConfig.map(room => (
+                          <div key={room.id} className="p-4 rounded-xl border border-border bg-muted/30 flex flex-col gap-4">
+                            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                              <div className="md:col-span-2">
+                                <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Nombre</label>
+                                <input
+                                  type="text"
+                                  value={room.nombre}
+                                  onChange={(e) => {
+                                    const newRooms = [...roomsConfig];
+                                    const index = newRooms.findIndex(r => r.id === room.id);
+                                    newRooms[index].nombre = e.target.value;
+                                    setRoomsConfig(newRooms);
+                                  }}
+                                  className="w-full px-3 py-2 rounded-lg border border-border bg-card font-medium"
+                                />
+                              </div>
+                              <div>
+                                <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Precio x Noche (MXN)</label>
+                                <input
+                                  type="number"
+                                  value={room.precio_base}
+                                  onChange={(e) => {
+                                    const newRooms = [...roomsConfig];
+                                    const index = newRooms.findIndex(r => r.id === room.id);
+                                    newRooms[index].precio_base = Number(e.target.value);
+                                    setRoomsConfig(newRooms);
+                                  }}
+                                  className="w-full px-3 py-2 rounded-lg border border-border bg-card"
+                                />
+                              </div>
+                              <div>
+                                <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Capacidad Máx.</label>
+                                <input
+                                  type="number"
+                                  value={room.capacidad_maxima}
+                                  onChange={(e) => {
+                                    const newRooms = [...roomsConfig];
+                                    const index = newRooms.findIndex(r => r.id === room.id);
+                                    newRooms[index].capacidad_maxima = Number(e.target.value);
+                                    setRoomsConfig(newRooms);
+                                  }}
+                                  className="w-full px-3 py-2 rounded-lg border border-border bg-card"
+                                />
+                              </div>
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                              <div className="md:col-span-3">
+                                <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Descripción</label>
+                                <textarea
+                                  value={room.descripcion || ''}
+                                  onChange={(e) => {
+                                    const newRooms = [...roomsConfig];
+                                    const index = newRooms.findIndex(r => r.id === room.id);
+                                    newRooms[index].descripcion = e.target.value;
+                                    setRoomsConfig(newRooms);
+                                  }}
+                                  rows={1}
+                                  className="w-full px-3 py-2 rounded-lg border border-border bg-card text-sm resize-none"
+                                />
+                              </div>
+                              <div className="flex gap-2">
+                                <button onClick={() => handleUpdateRoomType(room)} className="flex-1 px-3 py-2 bg-primary/10 text-primary hover:bg-primary/20 rounded-lg text-xs font-semibold transition-colors flex justify-center items-center gap-1">
+                                  <Save size={14}/> Guardar
+                                </button>
+                                <button onClick={() => handleDeleteRoomType(room.id, room.nombre)} className="flex-1 px-3 py-2 bg-red-500/10 text-red-600 hover:bg-red-500/20 rounded-lg text-xs font-semibold transition-colors flex justify-center items-center gap-1">
+                                  <Trash2 size={14}/> Borrar
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   )}
                 </div>

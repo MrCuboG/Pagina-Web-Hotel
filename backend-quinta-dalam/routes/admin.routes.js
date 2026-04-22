@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getDashboardStats, getAllReservations, getAdminUsers, createAdminUser, updateAdminUser, deleteAdminUser, reactivateAdminUser, updateReservationAdmin, updateRoomCleanliness } = require('../controllers/admin.controller');
+const { getDashboardStats, getAllReservations, getAdminUsers, createAdminUser, updateAdminUser, deleteAdminUser, reactivateAdminUser, updateReservationAdmin, updateRoomCleanliness, getRoomTypes, createRoomType, updateRoomType, deleteRoomType } = require('../controllers/admin.controller');
 const verifyAdmin = require('../middlewares/verifyAdmin');
 
 // =========== METRICAS Y RESERVAS ===========
@@ -11,6 +11,12 @@ router.put('/reservaciones/:id', verifyAdmin, updateReservationAdmin);
 
 // =========== HABITACIONES ===========
 router.put('/habitaciones/:id/limpieza', verifyAdmin, updateRoomCleanliness);
+
+// =========== TIPOS DE HABITACION (CMS) ===========
+router.get('/tipo-habitacion', verifyAdmin, getRoomTypes);
+router.post('/tipo-habitacion', verifyAdmin, createRoomType);
+router.put('/tipo-habitacion/:id', verifyAdmin, updateRoomType);
+router.delete('/tipo-habitacion/:id', verifyAdmin, deleteRoomType);
 
 // =========== GESTION DE ADMINISTRADORES ===========
 // Rutas protegidas por middleware verifyAdmin

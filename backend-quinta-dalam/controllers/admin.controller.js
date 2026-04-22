@@ -246,4 +246,71 @@ const updateRoomCleanliness = async (req, res) => {
     }
 };
 
-module.exports = { getDashboardStats, getAllReservations, getAdminUsers, createAdminUser, updateAdminUser, deleteAdminUser, reactivateAdminUser, updateReservationAdmin, updateRoomCleanliness };
+const getRoomTypes = async (req, res) => {
+    try {
+        const query = `SELECT id, nombre, descripcion, precio_base, capacidad_maxima, estado FROM tipo_habitacion WHERE estado = 'Activo' ORDER BY id ASC`;
+        const result = await pool.query(query);
+        res.json(result.rows);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error al obtener tipos de habitación' });
+    }
+};
+
+const createRoomType = async (req, res) => {
+    const { nombre, descripcion, precio_base, capacidad_maxima } = req.body;
+    if (!nombre || !precio_base || !capacidad_maxima) {
+        return res.status(400).json({ message: 'Faltan campos obligatorios' });
+    }
+    try {
+        const result = await pool.query(
+            `INSERT INTO tipo_habitacion (nombre, descripcion, precio_base, capacidad_maxima, estado) 
+             VALUES ($1, $2, $3, $4, 'Activo') RETURNING *`,
+            [nombre, descripcion, precio_base, capacidad_maxima]
+        );
+        res.status(201).json({ message: 'Tipo de habitación creado', roomType: result.rows[0] });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error al crear tipo de habitación' });
+    }
+};
+
+const updateRoomType = async (req, res) => {
+    const { id } = req.params;
+    const { nombre, descripcion, precio_base, capacidad_maxima } = req.body;
+    try {
+        const updateQuery = `
+            UPDATE tipo_habitacion 
+            SET nombre = $1, descripcion = $2, precio_base = $3, capacidad_maxima = $4 
+            WHERE id = $5 RETURNING *
+        `;
+        const result = await pool.query(updateQuery, [nombre, descripcion, precio_base, capacidad_maxima, id]);
+        
+        if (result.rows.length === 0) {
+            return res.status(404).json({ message: 'Tipo de habitación no encontrado' });
+        }
+        res.json({ message: 'Tipo de habitación actualizado', roomType: result.rows[0] });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error al actualizar tipo de habitación' });
+    }
+};
+
+const deleteRoomType = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const result = await pool.query(
+            'UPDATE tipo_habitacion SET estado = $1 WHERE id = $2 RETURNING id',
+            ['Inactivo', id]
+        );
+        if (result.rows.length === 0) {
+            return res.status(404).json({ message: 'Tipo de habitación no encontrado' });
+        }
+        res.json({ message: 'Tipo de habitación eliminado exitosamente' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error al eliminar tipo de habitación' });
+    }
+};
+
+module.exports = { getDashboardStats, getAllReservations, getAdminUsers, createAdminUser, updateAdminUser, deleteAdminUser, reactivateAdminUser, updateReservationAdmin, updateRoomCleanliness, getRoomTypes, createRoomType, updateRoomType, deleteRoomType };
