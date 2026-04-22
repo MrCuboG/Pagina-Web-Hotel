@@ -225,6 +225,7 @@ export function AdminDashboard() {
 
   const [roomsConfig, setRoomsConfig] = useState<RoomType[]>([]);
   const [newRoomType, setNewRoomType] = useState<Partial<RoomType>>({ nombre: '', descripcion: '', precio_base: '', capacidad_maxima: 2 });
+  const [selectedRoomTypeId, setSelectedRoomTypeId] = useState<number | ''>('');
 
   const handleSaveCMS = async () => {
     try {
@@ -813,78 +814,103 @@ export function AdminDashboard() {
                       </div>
 
                       <div className="space-y-4">
-                        {roomsConfig.map(room => (
-                          <div key={room.id} className="p-4 rounded-xl border border-border bg-muted/30 flex flex-col gap-4">
-                            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
-                              <div className="md:col-span-2">
-                                <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Nombre</label>
-                                <input
-                                  type="text"
-                                  value={room.nombre}
-                                  onChange={(e) => {
-                                    const newRooms = [...roomsConfig];
-                                    const index = newRooms.findIndex(r => r.id === room.id);
-                                    newRooms[index].nombre = e.target.value;
-                                    setRoomsConfig(newRooms);
-                                  }}
-                                  className="w-full px-3 py-2 rounded-lg border border-border bg-card font-medium"
-                                />
-                              </div>
-                              <div>
-                                <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Precio x Noche (MXN)</label>
-                                <input
-                                  type="number"
-                                  value={room.precio_base}
-                                  onChange={(e) => {
-                                    const newRooms = [...roomsConfig];
-                                    const index = newRooms.findIndex(r => r.id === room.id);
-                                    newRooms[index].precio_base = Number(e.target.value);
-                                    setRoomsConfig(newRooms);
-                                  }}
-                                  className="w-full px-3 py-2 rounded-lg border border-border bg-card"
-                                />
-                              </div>
-                              <div>
-                                <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Capacidad Máx.</label>
-                                <input
-                                  type="number"
-                                  value={room.capacidad_maxima}
-                                  onChange={(e) => {
-                                    const newRooms = [...roomsConfig];
-                                    const index = newRooms.findIndex(r => r.id === room.id);
-                                    newRooms[index].capacidad_maxima = Number(e.target.value);
-                                    setRoomsConfig(newRooms);
-                                  }}
-                                  className="w-full px-3 py-2 rounded-lg border border-border bg-card"
-                                />
-                              </div>
-                            </div>
-                            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
-                              <div className="md:col-span-3">
-                                <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Descripción</label>
-                                <textarea
-                                  value={room.descripcion || ''}
-                                  onChange={(e) => {
-                                    const newRooms = [...roomsConfig];
-                                    const index = newRooms.findIndex(r => r.id === room.id);
-                                    newRooms[index].descripcion = e.target.value;
-                                    setRoomsConfig(newRooms);
-                                  }}
-                                  rows={1}
-                                  className="w-full px-3 py-2 rounded-lg border border-border bg-card text-sm resize-none"
-                                />
-                              </div>
-                              <div className="flex gap-2">
-                                <button onClick={() => handleUpdateRoomType(room)} className="flex-1 px-3 py-2 bg-primary/10 text-primary hover:bg-primary/20 rounded-lg text-xs font-semibold transition-colors flex justify-center items-center gap-1">
-                                  <Save size={14}/> Guardar
-                                </button>
-                                <button onClick={() => handleDeleteRoomType(room.id, room.nombre)} className="flex-1 px-3 py-2 bg-red-500/10 text-red-600 hover:bg-red-500/20 rounded-lg text-xs font-semibold transition-colors flex justify-center items-center gap-1">
-                                  <Trash2 size={14}/> Borrar
-                                </button>
-                              </div>
-                            </div>
+                        <div className="bg-card rounded-2xl border border-border shadow-sm p-6">
+                          <h3 className="text-lg font-bold text-foreground mb-4 flex items-center gap-2">
+                            <Edit size={20} className="text-primary" /> Modificar Tipo de Habitación
+                          </h3>
+                          <div className="mb-6">
+                            <label className="block text-sm font-semibold text-foreground mb-2">Seleccionar tipo a editar:</label>
+                            <select 
+                              className="w-full px-4 py-2.5 rounded-xl border border-border bg-card focus:outline-none focus:ring-2 focus:ring-primary/20"
+                              value={selectedRoomTypeId}
+                              onChange={(e) => setSelectedRoomTypeId(e.target.value ? Number(e.target.value) : '')}
+                            >
+                              <option value="">-- Seleccionar Habitación --</option>
+                              {roomsConfig.map(r => (
+                                <option key={r.id} value={r.id}>{r.nombre}</option>
+                              ))}
+                            </select>
                           </div>
-                        ))}
+
+                          {selectedRoomTypeId !== '' && roomsConfig.find(r => r.id === selectedRoomTypeId) && (() => {
+                            const room = roomsConfig.find(r => r.id === selectedRoomTypeId)!;
+                            return (
+                              <div className="border-t border-border pt-6 flex flex-col gap-4">
+                                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                                  <div className="md:col-span-2">
+                                    <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Nombre</label>
+                                    <input
+                                      type="text"
+                                      value={room.nombre}
+                                      onChange={(e) => {
+                                        const newRooms = [...roomsConfig];
+                                        const index = newRooms.findIndex(r => r.id === room.id);
+                                        newRooms[index].nombre = e.target.value;
+                                        setRoomsConfig(newRooms);
+                                      }}
+                                      className="w-full px-3 py-2 rounded-lg border border-border bg-card font-medium focus:outline-none focus:ring-2 focus:ring-primary/20"
+                                    />
+                                  </div>
+                                  <div>
+                                    <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Precio x Noche (MXN)</label>
+                                    <input
+                                      type="number"
+                                      value={room.precio_base}
+                                      onChange={(e) => {
+                                        const newRooms = [...roomsConfig];
+                                        const index = newRooms.findIndex(r => r.id === room.id);
+                                        newRooms[index].precio_base = Number(e.target.value);
+                                        setRoomsConfig(newRooms);
+                                      }}
+                                      className="w-full px-3 py-2 rounded-lg border border-border bg-card focus:outline-none focus:ring-2 focus:ring-primary/20"
+                                    />
+                                  </div>
+                                  <div>
+                                    <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Capacidad Máx.</label>
+                                    <input
+                                      type="number"
+                                      value={room.capacidad_maxima}
+                                      onChange={(e) => {
+                                        const newRooms = [...roomsConfig];
+                                        const index = newRooms.findIndex(r => r.id === room.id);
+                                        newRooms[index].capacidad_maxima = Number(e.target.value);
+                                        setRoomsConfig(newRooms);
+                                      }}
+                                      className="w-full px-3 py-2 rounded-lg border border-border bg-card focus:outline-none focus:ring-2 focus:ring-primary/20"
+                                    />
+                                  </div>
+                                </div>
+                                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                                  <div className="md:col-span-3">
+                                    <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Descripción</label>
+                                    <textarea
+                                      value={room.descripcion || ''}
+                                      onChange={(e) => {
+                                        const newRooms = [...roomsConfig];
+                                        const index = newRooms.findIndex(r => r.id === room.id);
+                                        newRooms[index].descripcion = e.target.value;
+                                        setRoomsConfig(newRooms);
+                                      }}
+                                      rows={2}
+                                      className="w-full px-3 py-2 rounded-lg border border-border bg-card text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary/20"
+                                    />
+                                  </div>
+                                  <div className="flex gap-2">
+                                    <button onClick={() => handleUpdateRoomType(room)} className="flex-1 px-3 py-2 bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg text-xs font-semibold transition-colors flex justify-center items-center gap-1 shadow-sm">
+                                      <Save size={14}/> Guardar
+                                    </button>
+                                    <button onClick={() => {
+                                      handleDeleteRoomType(room.id, room.nombre);
+                                      setSelectedRoomTypeId('');
+                                    }} className="flex-1 px-3 py-2 bg-red-500/10 text-red-600 hover:bg-red-500/20 rounded-lg text-xs font-semibold transition-colors flex justify-center items-center gap-1">
+                                      <Trash2 size={14}/> Borrar
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })()}
+                        </div>
                       </div>
                     </div>
                   )}
