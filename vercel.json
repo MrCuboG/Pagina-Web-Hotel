@@ -1,8 +1,8 @@
 {
   "rewrites": [
-    {
-      "source": "/((?!api/).*)",
-      "destination": "/index.html"
-    }
+    { "source": "/admin(.*)", "destination": "/index.html" },
+    { "source": "/login(.*)", "destination": "/index.html" },
+    { "source": "/register(.*)", "destination": "/index.html" },
+    { "source": "/habitaciones(.*)", "destination": "/index.html" }
   ]
 }
