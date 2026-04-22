@@ -43,12 +43,21 @@ interface RoomType {
   capacidad_maxima: number;
 }
 
+interface InventoryRoom {
+  id: number;
+  numero: string;
+  nombre: string;
+  tipo_id: number;
+  tipo?: string;
+  estado_limpieza?: string;
+}
+
 
 export function AdminDashboard() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [activeMenu, setActiveMenu] = useState<'overview' | 'reservations' | 'cms' | 'users'>('overview');
-  const [activeCmsTab, setActiveCmsTab] = useState<'info' | 'contact' | 'rooms'>('info');
+  const [activeCmsTab, setActiveCmsTab] = useState<'info' | 'contact' | 'rooms' | 'inventory'>('info');
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   // Data mocks replaced by real states
@@ -69,11 +78,12 @@ export function AdminDashboard() {
       try {
         const adminHeaders = { 'x-admin-id': user.id };
 
-        const [dashRes, rsvRes, contRes, typeRes] = await Promise.all([
+        const [dashRes, rsvRes, contRes, typeRes, invRes] = await Promise.all([
           fetch(`${import.meta.env.VITE_API_URL}/api/admin/dashboard`, { headers: adminHeaders }),
           fetch(`${import.meta.env.VITE_API_URL}/api/admin/reservaciones`, { headers: adminHeaders }),
           fetch(`${import.meta.env.VITE_API_URL}/api/contenidos`),
-          fetch(`${import.meta.env.VITE_API_URL}/api/admin/tipo-habitacion`, { headers: adminHeaders })
+          fetch(`${import.meta.env.VITE_API_URL}/api/admin/tipo-habitacion`, { headers: adminHeaders }),
+          fetch(`${import.meta.env.VITE_API_URL}/api/admin/inventario-habitaciones`, { headers: adminHeaders })
         ]);
 
         if (dashRes.ok) setDashboardStats(await dashRes.json());
@@ -98,6 +108,7 @@ export function AdminDashboard() {
           }));
         }
         if (typeRes.ok) setRoomsConfig(await typeRes.json());
+        if (invRes.ok) setInventoryRooms(await invRes.json());
       } catch (err) {
         console.error("Error al obtener datos admin:", err);
       }
@@ -227,6 +238,10 @@ export function AdminDashboard() {
   const [newRoomType, setNewRoomType] = useState<Partial<RoomType>>({ nombre: '', descripcion: '', precio_base: '', capacidad_maxima: 2 });
   const [selectedRoomTypeId, setSelectedRoomTypeId] = useState<number | ''>('');
 
+  const [inventoryRooms, setInventoryRooms] = useState<InventoryRoom[]>([]);
+  const [newInventoryRoom, setNewInventoryRoom] = useState<Partial<InventoryRoom>>({ numero: '', nombre: '', tipo_id: 0 });
+  const [selectedInventoryRoomId, setSelectedInventoryRoomId] = useState<number | ''>('');
+
   const handleSaveCMS = async () => {
     try {
       const bodyData = { ...hotelInfo, ...contactInfo };
@@ -299,6 +314,62 @@ export function AdminDashboard() {
       } else alert("Error al eliminar.");
     } catch (err) { console.error(err); }
   };
+
+  const fetchInventoryRooms = async () => {
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/inventario-habitaciones`, { headers: { 'x-admin-id': user?.id || '' } });
+      if (res.ok) setInventoryRooms(await res.json());
+    } catch (err) { console.error(err); }
+  };
+
+  const handleAddInventoryRoom = async () => {
+    if (!newInventoryRoom.numero || !newInventoryRoom.nombre || !newInventoryRoom.tipo_id) {
+      return alert("Completa número, nombre y tipo de habitación.");
+    }
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/inventario-habitaciones`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-admin-id': user?.id || '' },
+        body: JSON.stringify(newInventoryRoom)
+      });
+      if (res.ok) {
+        alert("Habitación creada exitosamente");
+        setNewInventoryRoom({ numero: '', nombre: '', tipo_id: 0 });
+        fetchInventoryRooms();
+      } else {
+        const errorData = await res.json();
+        alert(errorData.message || "Error al crear habitación");
+      }
+    } catch (err) { console.error(err); }
+  };
+
+  const handleUpdateInventoryRoom = async (room: InventoryRoom) => {
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/inventario-habitaciones/${room.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'x-admin-id': user?.id || '' },
+        body: JSON.stringify(room)
+      });
+      if (res.ok) alert("Habitación actualizada.");
+      else alert("Error al actualizar.");
+    } catch (err) { console.error(err); }
+  };
+
+  const handleDeleteInventoryRoom = async (id: number, nombre: string) => {
+    if (!confirm(`¿Estás seguro de eliminar (dar de baja) la habitación "${nombre}"?`)) return;
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/inventario-habitaciones/${id}`, {
+        method: 'DELETE',
+        headers: { 'x-admin-id': user?.id || '' }
+      });
+      if (res.ok) {
+        alert("Eliminada exitosamente.");
+        fetchInventoryRooms();
+        setSelectedInventoryRoomId('');
+      } else alert("Error al eliminar.");
+    } catch (err) { console.error(err); }
+  };
+
 
 
   const handleUpdateRoomCleanliness = async (roomId: number, status: string) => {
@@ -689,7 +760,13 @@ export function AdminDashboard() {
                     onClick={() => setActiveCmsTab('rooms')}
                     className={`px-6 py-4 text-sm font-semibold whitespace-nowrap transition-colors ${activeCmsTab === 'rooms' ? 'text-primary border-b-2 border-primary' : 'text-muted-foreground hover:text-foreground'}`}
                   >
-                    Detalles de Habitaciones
+                    Tipos de Habitación
+                  </button>
+                  <button
+                    onClick={() => setActiveCmsTab('inventory')}
+                    className={`px-6 py-4 text-sm font-semibold whitespace-nowrap transition-colors ${activeCmsTab === 'inventory' ? 'text-primary border-b-2 border-primary' : 'text-muted-foreground hover:text-foreground'}`}
+                  >
+                    Inventario de Habitaciones
                   </button>
                 </div>
 
@@ -903,6 +980,140 @@ export function AdminDashboard() {
                                       handleDeleteRoomType(room.id, room.nombre);
                                       setSelectedRoomTypeId('');
                                     }} className="flex-1 px-3 py-2 bg-red-500/10 text-red-600 hover:bg-red-500/20 rounded-lg text-xs font-semibold transition-colors flex justify-center items-center gap-1">
+                                      <Trash2 size={14}/> Borrar
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })()}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {activeCmsTab === 'inventory' && (
+                    <div className="space-y-6">
+                      <div className="bg-card rounded-2xl border border-border shadow-sm p-6 mb-6">
+                        <h3 className="text-lg font-bold text-foreground mb-4 flex items-center gap-2">
+                          <Plus size={20} className="text-primary" /> Agregar Nueva Habitación
+                        </h3>
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                          <div>
+                            <label className="block text-sm font-semibold text-foreground mb-2">Número</label>
+                            <input
+                              type="text"
+                              className="w-full px-4 py-2.5 rounded-xl border border-border bg-card focus:outline-none focus:ring-2 focus:ring-primary/20"
+                              placeholder="Ej. 101"
+                              value={newInventoryRoom.numero}
+                              onChange={(e) => setNewInventoryRoom({ ...newInventoryRoom, numero: e.target.value })}
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-semibold text-foreground mb-2">Nombre</label>
+                            <input
+                              type="text"
+                              className="w-full px-4 py-2.5 rounded-xl border border-border bg-card focus:outline-none focus:ring-2 focus:ring-primary/20"
+                              placeholder="Ej. Suite Luna"
+                              value={newInventoryRoom.nombre}
+                              onChange={(e) => setNewInventoryRoom({ ...newInventoryRoom, nombre: e.target.value })}
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-semibold text-foreground mb-2">Tipo de Habitación</label>
+                            <select
+                              className="w-full px-4 py-2.5 rounded-xl border border-border bg-card focus:outline-none focus:ring-2 focus:ring-primary/20"
+                              value={newInventoryRoom.tipo_id}
+                              onChange={(e) => setNewInventoryRoom({ ...newInventoryRoom, tipo_id: Number(e.target.value) })}
+                            >
+                              <option value={0}>-- Seleccionar Tipo --</option>
+                              {roomsConfig.map(r => (
+                                <option key={r.id} value={r.id}>{r.nombre}</option>
+                              ))}
+                            </select>
+                          </div>
+                          <div className="flex gap-2">
+                            <button onClick={handleAddInventoryRoom} className="btn-primary flex-1 py-2.5 px-4 rounded-xl text-white font-medium text-sm shadow-sm h-[46px]">
+                              Agregar
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="space-y-4">
+                        <div className="bg-card rounded-2xl border border-border shadow-sm p-6">
+                          <h3 className="text-lg font-bold text-foreground mb-4 flex items-center gap-2">
+                            <Edit size={20} className="text-primary" /> Modificar Inventario
+                          </h3>
+                          <div className="mb-6">
+                            <label className="block text-sm font-semibold text-foreground mb-2">Seleccionar habitación a editar:</label>
+                            <select 
+                              className="w-full px-4 py-2.5 rounded-xl border border-border bg-card focus:outline-none focus:ring-2 focus:ring-primary/20"
+                              value={selectedInventoryRoomId}
+                              onChange={(e) => setSelectedInventoryRoomId(e.target.value ? Number(e.target.value) : '')}
+                            >
+                              <option value="">-- Seleccionar Habitación --</option>
+                              {inventoryRooms.map(r => (
+                                <option key={r.id} value={r.id}>{r.numero} - {r.nombre} ({r.tipo})</option>
+                              ))}
+                            </select>
+                          </div>
+
+                          {selectedInventoryRoomId !== '' && inventoryRooms.find(r => r.id === selectedInventoryRoomId) && (() => {
+                            const room = inventoryRooms.find(r => r.id === selectedInventoryRoomId)!;
+                            return (
+                              <div className="border-t border-border pt-6 flex flex-col gap-4">
+                                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                                  <div>
+                                    <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Número</label>
+                                    <input
+                                      type="text"
+                                      value={room.numero}
+                                      onChange={(e) => {
+                                        const newRooms = [...inventoryRooms];
+                                        const index = newRooms.findIndex(r => r.id === room.id);
+                                        newRooms[index].numero = e.target.value;
+                                        setInventoryRooms(newRooms);
+                                      }}
+                                      className="w-full px-3 py-2 rounded-lg border border-border bg-card font-medium focus:outline-none focus:ring-2 focus:ring-primary/20"
+                                    />
+                                  </div>
+                                  <div>
+                                    <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Nombre</label>
+                                    <input
+                                      type="text"
+                                      value={room.nombre}
+                                      onChange={(e) => {
+                                        const newRooms = [...inventoryRooms];
+                                        const index = newRooms.findIndex(r => r.id === room.id);
+                                        newRooms[index].nombre = e.target.value;
+                                        setInventoryRooms(newRooms);
+                                      }}
+                                      className="w-full px-3 py-2 rounded-lg border border-border bg-card focus:outline-none focus:ring-2 focus:ring-primary/20"
+                                    />
+                                  </div>
+                                  <div>
+                                    <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Tipo de Habitación</label>
+                                    <select
+                                      value={room.tipo_id}
+                                      onChange={(e) => {
+                                        const newRooms = [...inventoryRooms];
+                                        const index = newRooms.findIndex(r => r.id === room.id);
+                                        newRooms[index].tipo_id = Number(e.target.value);
+                                        setInventoryRooms(newRooms);
+                                      }}
+                                      className="w-full px-3 py-2 rounded-lg border border-border bg-card focus:outline-none focus:ring-2 focus:ring-primary/20"
+                                    >
+                                      {roomsConfig.map(rt => (
+                                        <option key={rt.id} value={rt.id}>{rt.nombre}</option>
+                                      ))}
+                                    </select>
+                                  </div>
+                                  <div className="flex gap-2">
+                                    <button onClick={() => handleUpdateInventoryRoom(room)} className="flex-1 px-3 py-2 bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg text-xs font-semibold transition-colors flex justify-center items-center gap-1 shadow-sm">
+                                      <Save size={14}/> Guardar
+                                    </button>
+                                    <button onClick={() => handleDeleteInventoryRoom(room.id, room.nombre)} className="flex-1 px-3 py-2 bg-red-500/10 text-red-600 hover:bg-red-500/20 rounded-lg text-xs font-semibold transition-colors flex justify-center items-center gap-1">
                                       <Trash2 size={14}/> Borrar
                                     </button>
                                   </div>

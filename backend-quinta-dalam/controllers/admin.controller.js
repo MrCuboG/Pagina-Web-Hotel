@@ -313,4 +313,77 @@ const deleteRoomType = async (req, res) => {
     }
 };
 
-module.exports = { getDashboardStats, getAllReservations, getAdminUsers, createAdminUser, updateAdminUser, deleteAdminUser, reactivateAdminUser, updateReservationAdmin, updateRoomCleanliness, getRoomTypes, createRoomType, updateRoomType, deleteRoomType };
+const getRoomsInventory = async (req, res) => {
+    try {
+        const query = `
+            SELECT h.id, h.numero, h.nombre, h.tipo_id, h.estado_limpieza, t.nombre as tipo 
+            FROM habitaciones h 
+            LEFT JOIN tipo_habitacion t ON h.tipo_id = t.id 
+            WHERE h.estado = 'Activo' 
+            ORDER BY h.numero ASC
+        `;
+        const result = await pool.query(query);
+        res.json(result.rows);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error al obtener inventario de habitaciones' });
+    }
+};
+
+const createRoomInventory = async (req, res) => {
+    const { numero, nombre, tipo_id } = req.body;
+    if (!numero || !nombre || !tipo_id) {
+        return res.status(400).json({ message: 'Faltan campos obligatorios' });
+    }
+    try {
+        const result = await pool.query(
+            `INSERT INTO habitaciones (numero, nombre, tipo_id, estado, estado_limpieza) 
+             VALUES ($1, $2, $3, 'Activo', 'Limpia') RETURNING *`,
+            [numero, nombre, tipo_id]
+        );
+        res.status(201).json({ message: 'Habitación creada', room: result.rows[0] });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error al crear habitación' });
+    }
+};
+
+const updateRoomInventory = async (req, res) => {
+    const { id } = req.params;
+    const { numero, nombre, tipo_id } = req.body;
+    try {
+        const updateQuery = `
+            UPDATE habitaciones 
+            SET numero = $1, nombre = $2, tipo_id = $3 
+            WHERE id = $4 RETURNING *
+        `;
+        const result = await pool.query(updateQuery, [numero, nombre, tipo_id, id]);
+        
+        if (result.rows.length === 0) {
+            return res.status(404).json({ message: 'Habitación no encontrada' });
+        }
+        res.json({ message: 'Habitación actualizada', room: result.rows[0] });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error al actualizar habitación' });
+    }
+};
+
+const deleteRoomInventory = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const result = await pool.query(
+            "UPDATE habitaciones SET estado = 'Inactivo' WHERE id = $1 RETURNING id",
+            [id]
+        );
+        if (result.rows.length === 0) {
+            return res.status(404).json({ message: 'Habitación no encontrada' });
+        }
+        res.json({ message: 'Habitación eliminada exitosamente' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error al eliminar habitación' });
+    }
+};
+
+module.exports = { getDashboardStats, getAllReservations, getAdminUsers, createAdminUser, updateAdminUser, deleteAdminUser, reactivateAdminUser, updateReservationAdmin, updateRoomCleanliness, getRoomTypes, createRoomType, updateRoomType, deleteRoomType, getRoomsInventory, createRoomInventory, updateRoomInventory, deleteRoomInventory };
